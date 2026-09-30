@@ -1,0 +1,249 @@
+/* Generated from docs.manifest.json and the Trillion app's own looks. Run npm run docs:generate. */
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("/fonts/SF-Pro-Text-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("/fonts/SF-Pro-Text-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("/fonts/SF-Pro-Text-Semibold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Recoleta";
+  src: url("/fonts/Recoleta-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Recoleta";
+  src: url("/fonts/Recoleta-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Recoleta";
+  src: url("/fonts/Recoleta-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* Light: the "trillion" look. */
+:root {
+  color-scheme: light;
+  --trillion-black-pure: #f4f0e8;
+  --trillion-black-rich: #fffdf8;
+  --trillion-surface-base: #f4f0e8;
+  --trillion-bg-primary: #f4f0e8;
+  --trillion-bg-surface: #fffdf8;
+  --trillion-glass-bg-primary: #fffdf8;
+  --trillion-glass-bg-secondary: rgba(25, 25, 25, 0.03);
+  --trillion-glass-bg-tertiary: rgba(255, 253, 248, 0.6);
+  --trillion-glass-bg-input: rgba(25, 25, 25, 0.04);
+  --trillion-glass-bg-popover: rgba(255, 253, 248, 0.98);
+  --trillion-glass-bg-hover: rgba(25, 25, 25, 0.05);
+  --trillion-glass-bg-active: rgba(25, 25, 25, 0.08);
+  --trillion-glass-bg-subtle: rgba(25, 25, 25, 0.035);
+  --trillion-glass-popover-background: rgba(255, 253, 248, 0.98);
+  --trillion-glass-overlay-background: rgba(25, 25, 25, 0.3);
+  --trillion-border-primary: rgba(25, 25, 25, 0.1);
+  --trillion-border-secondary: rgba(25, 25, 25, 0.16);
+  --trillion-border-focus: rgba(255, 29, 29, 0.6);
+  --trillion-high-contrast-border-primary: rgba(25, 25, 25, 0.25);
+  --trillion-high-contrast-border-secondary: rgba(25, 25, 25, 0.35);
+  --trillion-high-contrast-border-focus: rgba(255, 29, 29, 0.8);
+  --trillion-text-primary: #191919;
+  --trillion-text-strong: rgba(25, 25, 25, 0.92);
+  --trillion-text-secondary: rgba(25, 25, 25, 0.72);
+  --trillion-text-tertiary: rgba(25, 25, 25, 0.6);
+  --trillion-text-muted: rgba(25, 25, 25, 0.45);
+  --trillion-text-subtle: rgba(25, 25, 25, 0.54);
+  --trillion-text-ghost: rgba(25, 25, 25, 0.32);
+  --trillion-text-dim: rgba(25, 25, 25, 0.2);
+  --trillion-high-contrast-text-secondary: rgba(25, 25, 25, 0.85);
+  --trillion-high-contrast-text-tertiary: rgba(25, 25, 25, 0.75);
+  --trillion-high-contrast-text-muted: rgba(25, 25, 25, 0.6);
+  --trillion-inverse-bg: #191919;
+  --trillion-inverse-surface: rgba(244, 240, 232, 0.06);
+  --trillion-inverse-text-primary: #f4f0e8;
+  --trillion-inverse-text-strong: rgba(244, 240, 232, 0.92);
+  --trillion-inverse-text-secondary: rgba(244, 240, 232, 0.72);
+  --trillion-inverse-text-tertiary: rgba(244, 240, 232, 0.58);
+  --trillion-inverse-text-muted: rgba(244, 240, 232, 0.46);
+  --trillion-inverse-border-primary: rgba(244, 240, 232, 0.24);
+  --trillion-inverse-border-secondary: rgba(244, 240, 232, 0.16);
+  --trillion-inverse-action-bg: #f4f0e8;
+  --trillion-inverse-action-text: #191919;
+  --trillion-inverse-action-bg-hover: rgba(244, 240, 232, 0.87);
+  --trillion-inverse-shadow-prominent: 0 38px 100px rgba(0, 0, 0, 0.48);
+  --trillion-accent-primary: #ff1d1d;
+  --trillion-accent-blue: #191919;
+  --trillion-accent-cyan: #191919;
+  --trillion-accent-purple: #ff1d1d;
+  --trillion-accent-emerald: #191919;
+  --trillion-accent-indigo: #191919;
+  --trillion-button-primary-bg: #ff1d1d;
+  --trillion-button-primary-text: #ffffff;
+  --trillion-button-primary-bg-hover: #e01212;
+  --trillion-color-info: #191919;
+  --trillion-scrollbar-thumb: rgba(25, 25, 25, 0.14);
+  --trillion-scrollbar-thumb-hover: rgba(25, 25, 25, 0.24);
+  --trillion-chat-input-bg: rgba(255, 253, 248, 0.92);
+  --trillion-chat-input-border: rgba(255, 29, 29, 0.24);
+  --trillion-chat-composer-radius: 14px;
+  --trillion-radius-default: 14px;
+  --trillion-radius-card: 14px;
+  --trillion-radius-control: 11px;
+  --trillion-radius-chip: 5px;
+  --trillion-radius-pill: 999px;
+  --trillion-button-highlight: inset 0 1px 0px rgba(255, 255, 255, 0.18);
+  --trillion-button-shadow: 0 1px 2px rgba(25, 25, 25, 0.14);
+  --trillion-button-pressed-highlight: inset 0 1px 0px rgba(0, 0, 0, 0.08);
+  --trillion-button-pressed-scale: 0.98;
+  --trillion-font-primary: SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-font-display: Recoleta, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-default-font-family: SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-font-size-display: 3rem;
+  --trillion-font-size-heading-2xl: 1.875rem;
+  --trillion-font-size-heading-xl: 1.5rem;
+  --trillion-font-size-heading-lg: 1.125rem;
+  --trillion-font-size-heading: 0.875rem;
+  --trillion-font-size-heading-xs: 0.75rem;
+  --trillion-font-size-body-lg: 1.125rem;
+  --trillion-font-size-body: 0.875rem;
+  --trillion-font-size-body-xs: 0.75rem;
+  --trillion-font-size-label: 0.75rem;
+  --trillion-font-size-caption: 0.75rem;
+  --trillion-font-size-overline: 0.75rem;
+  --trillion-font-size-micro: 0.625rem;
+  --trillion-white-pure: #ffffff;
+  --trillion-color-success: #191919;
+  --trillion-color-warning: #b45309;
+  --trillion-color-error: #e01212;
+  --trillion-diff-added-bg: rgba(25, 25, 25, 0.06);
+  --trillion-diff-added-text: #191919;
+  --trillion-diff-removed-bg: rgba(255, 29, 29, 0.1);
+  --trillion-diff-removed-text: #e01212;
+  --trillion-surface-shadow: 0 1px 2px rgba(25, 25, 25, 0.05), 0 8px 24px -16px rgba(25, 25, 25, 0.18);
+  --trillion-surface-shadow-raised: 0 12px 40px -12px rgba(25, 25, 25, 0.28);
+}
+
+/* Dark: the "trillion-black" look. */
+html.dark {
+  color-scheme: dark;
+  --trillion-black-pure: #000000;
+  --trillion-black-rich: #0d0d0d;
+  --trillion-surface-base: #000000;
+  --trillion-bg-primary: #000000;
+  --trillion-bg-surface: #0d0d0d;
+  --trillion-glass-bg-primary: #0d0d0d;
+  --trillion-glass-bg-secondary: rgba(255, 255, 255, 0.03);
+  --trillion-glass-bg-tertiary: rgba(13, 13, 13, 0.6);
+  --trillion-glass-bg-input: rgba(255, 255, 255, 0.04);
+  --trillion-glass-bg-popover: rgba(13, 13, 13, 0.98);
+  --trillion-glass-bg-hover: rgba(255, 255, 255, 0.05);
+  --trillion-glass-bg-active: rgba(255, 255, 255, 0.08);
+  --trillion-glass-bg-subtle: rgba(255, 255, 255, 0.035);
+  --trillion-glass-popover-background: rgba(13, 13, 13, 0.98);
+  --trillion-glass-overlay-background: rgba(0, 0, 0, 0.3);
+  --trillion-border-primary: rgba(255, 255, 255, 0.1);
+  --trillion-border-secondary: rgba(255, 255, 255, 0.16);
+  --trillion-border-focus: rgba(255, 29, 29, 0.6);
+  --trillion-high-contrast-border-primary: rgba(255, 255, 255, 0.25);
+  --trillion-high-contrast-border-secondary: rgba(255, 255, 255, 0.35);
+  --trillion-high-contrast-border-focus: rgba(255, 29, 29, 0.8);
+  --trillion-text-primary: #ffffff;
+  --trillion-text-strong: rgba(255, 255, 255, 0.92);
+  --trillion-text-secondary: rgba(255, 255, 255, 0.72);
+  --trillion-text-tertiary: rgba(255, 255, 255, 0.6);
+  --trillion-text-muted: rgba(255, 255, 255, 0.45);
+  --trillion-text-subtle: rgba(255, 255, 255, 0.54);
+  --trillion-text-ghost: rgba(255, 255, 255, 0.32);
+  --trillion-text-dim: rgba(255, 255, 255, 0.2);
+  --trillion-high-contrast-text-secondary: rgba(255, 255, 255, 0.85);
+  --trillion-high-contrast-text-tertiary: rgba(255, 255, 255, 0.75);
+  --trillion-high-contrast-text-muted: rgba(255, 255, 255, 0.6);
+  --trillion-inverse-bg: #ffffff;
+  --trillion-inverse-surface: rgba(0, 0, 0, 0.06);
+  --trillion-inverse-text-primary: #000000;
+  --trillion-inverse-text-strong: rgba(0, 0, 0, 0.92);
+  --trillion-inverse-text-secondary: rgba(0, 0, 0, 0.72);
+  --trillion-inverse-text-tertiary: rgba(0, 0, 0, 0.58);
+  --trillion-inverse-text-muted: rgba(0, 0, 0, 0.46);
+  --trillion-inverse-border-primary: rgba(0, 0, 0, 0.24);
+  --trillion-inverse-border-secondary: rgba(0, 0, 0, 0.16);
+  --trillion-inverse-action-bg: #000000;
+  --trillion-inverse-action-text: #ffffff;
+  --trillion-inverse-action-bg-hover: rgba(0, 0, 0, 0.87);
+  --trillion-inverse-shadow-prominent: 0 38px 100px rgba(0, 0, 0, 0.48);
+  --trillion-accent-primary: #ff1d1d;
+  --trillion-accent-blue: #ffffff;
+  --trillion-accent-cyan: #ffffff;
+  --trillion-accent-purple: #ff1d1d;
+  --trillion-accent-emerald: #ffffff;
+  --trillion-accent-indigo: #ffffff;
+  --trillion-button-primary-bg: #ff1d1d;
+  --trillion-button-primary-text: #ffffff;
+  --trillion-button-primary-bg-hover: #e01212;
+  --trillion-color-info: #ffffff;
+  --trillion-scrollbar-thumb: rgba(255, 255, 255, 0.14);
+  --trillion-scrollbar-thumb-hover: rgba(255, 255, 255, 0.24);
+  --trillion-chat-input-bg: rgba(13, 13, 13, 0.92);
+  --trillion-chat-input-border: rgba(255, 29, 29, 0.24);
+  --trillion-chat-composer-radius: 14px;
+  --trillion-radius-default: 14px;
+  --trillion-radius-card: 14px;
+  --trillion-radius-control: 11px;
+  --trillion-radius-chip: 5px;
+  --trillion-radius-pill: 999px;
+  --trillion-button-highlight: inset 0 1px 0px rgba(255, 255, 255, 0.18);
+  --trillion-button-shadow: 0 1px 2px rgba(25, 25, 25, 0.14);
+  --trillion-button-pressed-highlight: inset 0 1px 0px rgba(0, 0, 0, 0.08);
+  --trillion-button-pressed-scale: 0.98;
+  --trillion-font-primary: SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-font-display: Recoleta, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-default-font-family: SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --trillion-font-size-display: 3rem;
+  --trillion-font-size-heading-2xl: 1.875rem;
+  --trillion-font-size-heading-xl: 1.5rem;
+  --trillion-font-size-heading-lg: 1.125rem;
+  --trillion-font-size-heading: 0.875rem;
+  --trillion-font-size-heading-xs: 0.75rem;
+  --trillion-font-size-body-lg: 1.125rem;
+  --trillion-font-size-body: 0.875rem;
+  --trillion-font-size-body-xs: 0.75rem;
+  --trillion-font-size-label: 0.75rem;
+  --trillion-font-size-caption: 0.75rem;
+  --trillion-font-size-overline: 0.75rem;
+  --trillion-font-size-micro: 0.625rem;
+  --trillion-white-pure: #ffffff;
+  --trillion-color-success: #ffffff;
+  --trillion-color-warning: #f59e0b;
+  --trillion-color-error: #e01212;
+  --trillion-diff-added-bg: rgba(255, 255, 255, 0.06);
+  --trillion-diff-added-text: #ffffff;
+  --trillion-diff-removed-bg: rgba(255, 29, 29, 0.1);
+  --trillion-diff-removed-text: #e01212;
+  --trillion-surface-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 8px 24px -16px rgba(0, 0, 0, 0.18);
+  --trillion-surface-shadow-raised: 0 12px 40px -12px rgba(0, 0, 0, 0.28);
+}

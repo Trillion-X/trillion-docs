@@ -1,0 +1,43 @@
+---
+title: "Cursor"
+description: "Add Trillion to the Cursor editor with one click, or by hand in mcp.json."
+---
+
+For the Cursor editor. Do it once on each computer you use.
+
+<Steps>
+  <Step title="Click Add to Cursor">
+    Cursor opens and asks whether to install trillion. Confirm it.
+
+    [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=trillion&config=eyJ1cmwiOiJodHRwczovL2FwcC5nZXR0cmlsbGlvbi5haS9tY3AifQ%3D%3D)
+
+    **When it worked:** trillion is in Cursor Settings, in the MCP section.
+
+    **If not:** if nothing opened, do the next step instead.
+  </Step>
+  <Step title="Only if nothing opened: add it by hand">
+    Open Cursor Settings (Command and comma), go to the MCP section and add a new MCP server. Cursor opens a file called `mcp.json`. Replace what is in it with the lines below and save with Command and S.
+
+    ```json mcp.json
+    {
+      "mcpServers": {
+        "trillion": { "url": "https://app.gettrillion.ai/mcp" }
+      }
+    }
+    ```
+  </Step>
+  <Step title="Sign in">
+    In Cursor Settings, MCP section, click **Connect** next to trillion. Your browser opens: tap your passkey and allow Cursor.
+
+    **When it worked:** a green dot next to trillion and a list of its tools.
+
+    **If not:** if Connect does nothing, quit Cursor completely (Command and Q), open it again and click **Connect** once more.
+  </Step>
+  <Step title="Ask for something">
+    Open Cursor's chat and ask in plain words, for example:
+
+    ```text
+    Use Trillion to help me decide how to split this feature into releases.
+    ```
+  </Step>
+</Steps>

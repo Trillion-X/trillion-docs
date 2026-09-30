@@ -1,0 +1,62 @@
+---
+title: "Decide before building"
+description: "A hook that stops your coding AI from editing files or saving work until it has made a Trillion decision in the same turn."
+---
+
+Coding AIs start building the moment you ask. This hook makes your AI decide first: until it has finished a Trillion decision in the current turn, it cannot edit a file inside a code project or save work with `git commit`. A reminder to decide first gets skipped; a refusal at the moment of the change holds every time.
+
+## What counts as deciding
+
+- A call to `decide` that comes back with a decision (the option chosen, the reason, the next step and how success will be measured), or
+- A call to `export_decision` on a case that is already decided, whose answer shows **Status: Decided** and a **Decision** section.
+
+Opening a decision with `start_decision` or answering its questions does not count: those only work the method. A "turn" is everything since your last message, so each new request needs its own decision or an export of one already made.
+
+When a change is refused, your AI sees this message and can carry on by deciding:
+
+```text
+Before changing files, finish a Trillion decision in this turn: answer its questions, call decide, or export an already decided case. Opening a case is not a decision.
+```
+
+Deciding never needs a file change, so a refused AI can always decide and continue.
+
+## What it checks and what it leaves alone
+
+| Checked | Left alone |
+|---|---|
+| Edits and new files inside any folder that is a git repository | Files outside a git repository |
+| `git commit` run from the terminal | Other terminal commands |
+| | Scratch folders you list as free, such as `/tmp` |
+
+A helper AI started by your AI (a subagent) is judged by its own conversation, so it needs its own decision.
+
+## Install
+
+<Tabs>
+  <Tab title="Claude Code">
+    Add this to `hooks.PreToolUse` in `~/.claude/settings.json`:
+
+    ```json
+    {
+      "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+      "hooks": [{ "type": "command", "command": "node <hooks folder>/decide-before-building.mjs" }]
+    }
+    ```
+  </Tab>
+  <Tab title="Codex">
+    Add this to `hooks.PreToolUse` in `~/.codex/hooks.json`:
+
+    ```json
+    {
+      "matcher": "apply_patch|exec_command|shell|exec|Bash|Edit|Write",
+      "hooks": [{ "type": "command", "command": "node <hooks folder>/decide-before-building.mjs", "timeoutSec": 10 }]
+    }
+    ```
+
+    Codex skips a new or changed hook until you trust it. Open Codex's hook review and approve it once.
+  </Tab>
+</Tabs>
+
+## Change what it checks
+
+Everything the hook looks for lives in `decide-before-building.json`: which tools change files, which calls count as deciding, and which folders are free. To let your AI change files somewhere without deciding, add that folder to `free_folders`. To cover a new AI app's file tool, add its name to `file_tools`.

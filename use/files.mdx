@@ -1,0 +1,76 @@
+---
+title: "Files"
+description: "Keep files in your Trillion so every AI you use can read them: upload from the browser, let your AI save and show files, and open them in Finder."
+---
+
+Your Trillion has a place for files. Anything kept there can be read by every AI signed in to your account and by any app you give a key, so a video one AI made or a note another AI wrote is there for the next one. Your files come with a paid plan.
+
+<Frame caption="The Files screen: every file and folder, with search, views and Upload files.">
+  <img src="/images/files-screen.png" alt="The Files screen listing two text files with their kind, size and modified date, a search box, view switches and an Upload files button, with a notice saying a file is in your files" />
+</Frame>
+
+## Upload files
+
+<Steps>
+  <Step title="Open Files">
+    Open **Files** in the sidebar at [app.gettrillion.ai](https://app.gettrillion.ai/files).
+  </Step>
+  <Step title="Add them">
+    Choose **Upload files** and pick files from your computer, or drop them anywhere on the screen.
+  </Step>
+  <Step title="See them arrive">
+    A notice tells you when each file is in your files. A large file can be found, read and played by its name while the rest of it is still arriving.
+  </Step>
+</Steps>
+
+Files also arrive from other places:
+
+| From | Where it lands |
+| --- | --- |
+| The iPhone share sheet | A folder under **Shared from iPhone** |
+| A voice memo recorded in the iPhone app | **Recordings from iPhone**, by date, with its transcript |
+| The Android share menu | A folder under **Shared from Android** |
+| The Chrome extension | A picture of the page, kept in your files |
+| Your AI | Wherever it saves it (below) |
+| Claude Code or Codex, with the [keep written files hook](/harness/other-hooks#keep-written-files) | The destination you chose for each watched folder |
+
+## Open and preview
+
+Open any file to see it in place: a video or sound plays, and a picture, PDF, text, code or Office document shows. In the list, pictures show as themselves, videos get a still and a strip of frames you can scrub, and sounds get a waveform. These small previews are made once and kept with the file.
+
+**Media** gathers your recordings and what your tools made, and lets you search for what is said in them.
+
+## What your AI can do with your files
+
+Ask in plain words ("save this transcript to my files", "show me the video you just made") and your AI picks the tool.
+
+- **Save a file.** From text it wrote, from a small file's contents, from a web address that serves the file (any size), or from a file you attached to the chat. Bytes you already have are not stored twice: the new name simply points at them.
+- **Upload a big file from a computer.** Your AI starts an upload and sends the file's bytes straight from the computer it runs on, in parts when it is large.
+- **Read a file.** Text comes back as text, and a picture comes back as an image your AI can look at.
+- **Show you a file.** A picture, video or sound appears right in the chat, where the app draws tool results. Reading a file does not show it to you; showing does.
+- **Find and list.** By name or folder. Several versions of the same file in one folder (copies, numbered versions, exports, backups) are grouped so your AI works from the latest.
+- **Remember what it worked out.** A transcript, a summary or measured facts about a file are kept with it, so no AI has to work them out again.
+
+For every file tool and its inputs, see the [files reference](/reference/files).
+
+## Open your files in Finder
+
+Your files can be opened in Finder, or any app that opens a network folder, by the names they were given. This folder is read-only.
+
+<Steps>
+  <Step title="Make a personal key">
+    Open **Account & security** and make a personal key. Copy it once.
+  </Step>
+  <Step title="Connect to the folder">
+    In Finder choose **Go**, then **Connect to Server**, and enter:
+
+    ```text
+    https://app.gettrillion.ai/dav/
+    ```
+  </Step>
+  <Step title="Sign in">
+    Use any name, and paste your personal key as the password.
+  </Step>
+</Steps>
+
+You see only your own files. A file whose bytes are still arriving is left out until it is complete, so an editing app never opens an empty file.

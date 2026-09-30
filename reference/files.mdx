@@ -1,0 +1,320 @@
+---
+title: "Files and media"
+description: "Save, find, read and show your files, and find moments in your recordings."
+---
+
+Your files live in your Trillion, where any AI you connect can find, read and show them. Big files are sent in pieces or straight from a computer. What an AI works out about a file, like a transcript or a summary, is kept so no AI has to work it out again. Files come with a paid plan.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## List a folder of my files
+
+`list_files` · Reads only
+
+Lists one folder of this person's namespace: the folders inside it (folders), and each file named in it with its content identity and whether its bytes are stored (stored: true), or are still arriving (stored: false with uploading: its upload id, bytes_held and byte_length). A file that is one of several versions of the same file in that folder (the same name with a copy number, a version number, an export time or a backup mark) carries version &#123; family, latest, latest_name, versions &#125;: work from the one with latest: true, and the older ones stay there to go back to. A file whose same bytes are also kept under other names carries also_named (how many), so the same work is not done twice. Start at folder "/" and open a folder by passing its name as folder; pass next_after as after for the next page of files.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `folder` | string |  |  |
+| `after` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "folder": "/"
+}
+```
+
+## Find one of my files
+
+`find_file` · Reads only
+
+Finds one of this person's files in their namespace by its path name (starting with /) or its content identity (1f: or 12: then 64 hex). Returns the size, type, where it is kept, every name it has, and a url that reads it (ranges supported) until url_expires_at, plus its locator rows for any resolver.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name_or_identity` | string | Yes |  |
+| `seconds` | integer |  | How long the url keeps working (default 6 hours) |
+
+```json Example
+{
+  "name_or_identity": "/contracts/lease.pdf"
+}
+```
+
+## Read one of my files
+
+`read_file` · Reads only
+
+Reads what one of this person's files contains, by its path name (starting with /) or content identity: up to 256 KiB from offset, as text when those bytes are UTF-8 text and as base64 otherwise. Read longer files a range at a time. A picture (PNG, JPEG, GIF or WebP) up to 3 MiB comes back whole as an image you can look at, with a link to it; a bigger picture comes back as a link. Reading a file does not show it to the person: use `show_file` for that.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name_or_identity` | string | Yes |  |
+| `offset` | integer |  |  |
+| `length` | integer |  |  |
+
+```json Example
+{
+  "name_or_identity": "/notes/ideas.md"
+}
+```
+
+## Show a file
+
+`show_file` · Reads only
+
+Shows one of this person's files to them in this chat, by its path name (starting with /) or content identity: a picture, video or sound appears in the conversation where the app draws tool results, from an address that works for an hour. A picture up to 3 MiB is also handed to you as an image. Use it whenever the person should see a file, such as a picture or video a tool made; describing a file does not show it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name_or_identity` | string | Yes |  |
+
+```json Example
+{
+  "name_or_identity": "/edits/cover-cut.mp4"
+}
+```
+
+## Save a file
+
+`write_file` · Changes things
+
+Saves a file in this person's namespace under name (a path starting with /, such as /edits/cover-cut.json), from exactly one of: text (UTF-8: a transcript, a note, an edit as JSON); content_base64 (a small file's bytes, at most 16 MiB); from_url (an https address that serves the file itself, which Trillion reads, any size); or file (a file from this chat, as the app hands it over: &#123;download_url, file_id&#125;). Never type a large file out as base64: give its address, or `start_file_upload` and send its bytes from your computer to send_bytes_to. With only file, name defaults to /&#60;its file name&#62;. media_type (optional) is its type, such as audio/mpeg or application/json; text without one is saved as text/plain. Returns the file's content identity (1f: then 64 hex), which `run_tool` accepts wherever a tool takes a file, and its name. Bytes this person already has are only given the name (already_kept: true). A name already in use then points at the new file; the earlier file stays readable by its identity.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name` | string |  |  |
+| `content_base64` | string |  | The bytes, base64 |
+| `text` | string |  | The bytes as UTF-8 text, instead of content_base64 |
+| `from_url` | string |  | An https address that serves the file itself; Trillion reads the bytes from it |
+| `file` | object |  | A file from this chat: &#123;download_url, file_id&#125;, as the app hands it over |
+| `file.download_url` | string | Yes |  |
+| `file.file_id` | string | Yes |  |
+| `file.mime_type` | string |  |  |
+| `file.file_name` | string |  |  |
+| `media_type` | string |  |  |
+
+```json Example
+{
+  "name": "/notes/ideas.md",
+  "text": "Three ideas for the launch email."
+}
+```
+
+## Start saving a big file
+
+`start_file_upload` · Changes things
+
+Starts saving a file that is on a computer you can run commands on, or too big for one `write_file` call: name (a path starting with /), byte_length (its exact size in bytes) and media_type. Returns upload (its id), send_bytes_to and send_with: from that computer run curl -sS -T &#60;file&#62; "&#60;send_bytes_to&#62;" and the file is finished when its last byte arrives (a file over 90 MB goes in parts, each with &offset=&#60;its first byte&#62;). Without a computer, send it with `put_file_piece`, piece 0 first (at most max_piece_bytes each), then `finish_file_upload`. Starting the same name again stops the earlier unfinished upload of that name. From its first piece the file can be found, read and played by its name while the rest arrives. If you know the file's BLAKE3 identity, give it as identity: a file this person already has is then only named (state: present) and nothing needs sending.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name` | string | Yes |  |
+| `byte_length` | integer | Yes |  |
+| `media_type` | string |  |  |
+| `identity` | string |  |  |
+
+```json Example
+{
+  "name": "/recordings/interview.mp4",
+  "byte_length": 734003200,
+  "media_type": "video/mp4"
+}
+```
+
+## Send a piece of a file
+
+`put_file_piece` · Changes things
+
+Sends one piece of an upload from `start_file_upload`: piece is its number from 0, offset is where it starts in the file (the total size of the pieces before it), and its bytes as content_base64 (or text), at most max_piece_bytes. Pieces go in order; sending the same piece again changes nothing. Returns how many bytes the pieces now cover.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `upload` | string | Yes |  |
+| `piece` | integer | Yes |  |
+| `offset` | integer | Yes |  |
+| `content_base64` | string |  | The bytes, base64 |
+| `text` | string |  | The bytes as UTF-8 text, instead of content_base64 |
+
+```json Example
+{
+  "upload": "<upload>",
+  "piece": 1,
+  "offset": 1
+}
+```
+
+## Finish saving a file
+
+`finish_file_upload` · Changes things
+
+Completes an upload once its pieces cover the whole file, and returns the file with its content identity (1f: then 64 hex) and its names. identity (optional) is the file's BLAKE3 identity if you worked it out; left out, it is worked out from the stored bytes.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `upload` | string | Yes |  |
+| `identity` | string |  |  |
+
+```json Example
+{
+  "upload": "<upload>"
+}
+```
+
+## Stop saving a file
+
+`cancel_file_upload` · Changes things and can remove them
+
+Stops an upload from `start_file_upload` that will not be finished: its name is removed and the room it held is given back. Files already finished are not touched.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `upload` | string | Yes |  |
+
+```json Example
+{
+  "upload": "<upload>"
+}
+```
+
+## Summarize my stored files
+
+`files_summary` · Reads only
+
+Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with `start_file_upload` under the same name) or stopped (`cancel_file_upload`). Needs nothing and changes nothing; `list_files` and `find_file` show the files themselves.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Read what is known about a file
+
+`read_file_results` · Reads only
+
+Reads what has already been worked out about one of this person's files, by its content identity (1f: or 12: then 64 hex): its transcript, summary, measured facts, the folders it is filed in, and anything else a tool recorded. kind (optional) reads one of them. A read by any identity of the file finds results recorded under its others.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `identity` | string | Yes |  |
+| `kind` | string |  | For example transcript, summary, facts or folders |
+
+```json Example
+{
+  "identity": "<identity>"
+}
+```
+
+## List what is known about my files
+
+`list_file_results` · Reads only
+
+Lists one kind of result across every file in this person's namespace, a page at a time in identity order (pass next_after as after), so a filter or search can run over titles, summaries or facts without the files themselves. With no kind, returns how many results of each kind are kept.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `kind` | string |  |  |
+| `after` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Record what was worked out about files
+
+`record_file_results` · Changes things
+
+Records what was worked out about files, so no AI has to work it out again: results is a list (at most 500) of &#123; identity, kind, value, produced_by &#125;. identity is the file's content identity; kind names what the value is (transcript, summary, facts, folders or a new kind); value is any JSON. Recording the same value again changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `results` | object[] | Yes |  |
+| `results[].identity` | string | Yes |  |
+| `results[].kind` | string | Yes |  |
+| `results[].value` | any | Yes |  |
+| `results[].produced_by` | string |  |  |
+
+```json Example
+{
+  "results": [
+    {
+      "identity": "1f:<64 hex>",
+      "kind": "summary",
+      "value": "Interview with a customer about onboarding."
+    }
+  ]
+}
+```
+
+## List my media
+
+`list_media` · Reads only
+
+Lists this person's recordings and media made by their tools, with the file identity, playback address, measured duration, title, transcript word count and whether an edit uses it. Pass revision from the earlier reply to read only when the library changes. An unknown duration is null; never invent clip end times.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `revision` | string |  |  |
+
+```json Example
+{}
+```
+
+## Find moments in my media
+
+`search_media` · Reads only
+
+Finds real moments in this person's recordings by words said, meaning or file name. Returns each source identity and start/end in seconds, with the measured words and search lanes. unavailable names a search lane that could not run. Use the returned range in a media-composition tool; never infer a timestamp from a title.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `question` | string | Yes |  |
+
+```json Example
+{
+  "question": "where I talk about pricing"
+}
+```
+
+## Read my next edit suggestion
+
+`next_media_edit` · Reads only
+
+Reads the same next-edit suggestion the person sees in Media: which real clips to use, their measured lengths, why, and the chosen destination. It changes nothing and runs no render. Use `run_tool` with the media-composition tools to make the edit.
+
+It takes no inputs.
+
+```json Example
+{}
+```

@@ -1,0 +1,182 @@
+{
+  "site": {
+    "name": "Trillion",
+    "description": "Trillion helps your AI find the needle mover, then gives it the tools, people and files to get it done.",
+    "canonicalUrl": "https://docs.gettrillion.ai",
+    "searchPrompt": "Search Trillion docs...",
+    "keywords": [
+      "Trillion",
+      "needle mover",
+      "AI tools",
+      "Claude Code",
+      "Codex",
+      "ChatGPT",
+      "Claude Desktop",
+      "Cursor",
+      "MCP",
+      "decisions",
+      "spaces",
+      "files"
+    ],
+    "social": {
+      "siteName": "Trillion Docs",
+      "title": "Trillion Docs",
+      "description": "Connect the AI you already use. Trillion helps it find the needle mover and get it done.",
+      "image": "https://gettrillion.ai/share/home-needle-thread.png",
+      "imageAlt": "Trillion and its needle and thread mark"
+    },
+    "navbar": {
+      "links": [
+        {
+          "label": "gettrillion.ai",
+          "href": "https://gettrillion.ai"
+        }
+      ],
+      "primary": {
+        "label": "Open Trillion",
+        "href": "https://app.gettrillion.ai"
+      }
+    },
+    "contextual": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "cursor",
+      "vscode"
+    ],
+    "look": {
+      "repository": {
+        "directoryBesideThisOne": "trillion",
+        "environmentOverride": "TRILLION_REPO"
+      },
+      "looks": "src/workspace/looks.json",
+      "resolver": "parts/screen-look/read-data/resolve-screen-look-palette.js",
+      "light": "trillion",
+      "dark": "trillion-black",
+      "appearance": "light"
+    },
+    "fontFaces": [
+      {
+        "family": "SF Pro Text",
+        "source": "/fonts/SF-Pro-Text-Regular.woff2",
+        "weight": 400
+      },
+      {
+        "family": "SF Pro Text",
+        "source": "/fonts/SF-Pro-Text-Medium.woff2",
+        "weight": 500
+      },
+      {
+        "family": "SF Pro Text",
+        "source": "/fonts/SF-Pro-Text-Semibold.woff2",
+        "weight": 600
+      },
+      {
+        "family": "Recoleta",
+        "source": "/fonts/Recoleta-Regular.woff2",
+        "weight": 400
+      },
+      {
+        "family": "Recoleta",
+        "source": "/fonts/Recoleta-Medium.woff2",
+        "weight": 500
+      },
+      {
+        "family": "Recoleta",
+        "source": "/fonts/Recoleta-SemiBold.woff2",
+        "weight": 600
+      }
+    ],
+    "fonts": {
+      "heading": {
+        "family": "Recoleta",
+        "weight": 500
+      },
+      "body": {
+        "family": "SF Pro Text",
+        "weight": 400
+      }
+    }
+  },
+  "navigation": [
+    {
+      "tab": "Guides",
+      "groups": [
+        {
+          "group": "Get started",
+          "pages": [
+            "index",
+            "quickstart"
+          ]
+        },
+        {
+          "group": "Connect your AI",
+          "pages": [
+            "connect/overview",
+            "connect/claude-code",
+            "connect/codex",
+            "connect/chatgpt",
+            "connect/claude-desktop",
+            "connect/cursor",
+            "connect/gemini-cli",
+            "connect/muse",
+            "connect/other-apps"
+          ]
+        },
+        {
+          "group": "Use Trillion",
+          "pages": [
+            "use/decisions",
+            "use/spaces",
+            "use/files",
+            "use/messages-and-handoffs",
+            "use/pursuits-and-progress"
+          ]
+        },
+        {
+          "group": "Apps",
+          "pages": [
+            "apps/chrome-extension",
+            "apps/iphone"
+          ]
+        },
+        {
+          "group": "For builders",
+          "pages": [
+            "harness/overview",
+            "harness/decide-before-building",
+            "harness/record-every-message",
+            "harness/other-hooks"
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "Tool reference",
+      "groups": [
+        {
+          "group": "Tool reference",
+          "pages": [
+            "reference/overview",
+            "reference/setup-and-goals",
+            "reference/decisions",
+            "reference/messages",
+            "reference/tools",
+            "reference/workflows",
+            "reference/automations",
+            "reference/files",
+            "reference/hand-off",
+            "reference/spaces",
+            "reference/sharing",
+            "reference/people",
+            "reference/communities",
+            "reference/sessions",
+            "reference/writing"
+          ]
+        }
+      ]
+    }
+  ]
+}

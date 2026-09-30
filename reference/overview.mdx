@@ -1,0 +1,221 @@
+---
+title: "Tools reference"
+description: "Every tool Trillion gives your AI, grouped by the job you want done. 155 tools in all."
+---
+
+When your AI is connected to Trillion, it gets a set of tools. You never call them by name: you ask in plain words, like "Use Trillion to help me decide what to focus on this week", and your AI picks the tools that do it.
+
+These pages list every tool, grouped by the job a person does, with what it does, what it takes, and an example of what your AI sends.
+
+<CardGroup cols={2}>
+  <Card title="Setup and goals" icon="flag" href="/reference/setup-and-goals">
+    Start Trillion with a new person and keep what they are working toward.
+  </Card>
+  <Card title="Decisions" icon="compass" href="/reference/decisions">
+    Walk a decision through its questions, record the choice, and learn from how it turned out.
+  </Card>
+  <Card title="Messages and activity" icon="comments" href="/reference/messages">
+    Keep conversations word for word so every AI you use can read them, and see what your AIs did.
+  </Card>
+  <Card title="Workshop tools" icon="wrench" href="/reference/tools">
+    Find a tool that does the job, run it, build your own and offer it to others.
+  </Card>
+  <Card title="Workflows" icon="list-check" href="/reference/workflows">
+    Get a job done in several checked steps, and keep your own step-by-step methods.
+  </Card>
+  <Card title="Rules, schedules and connected accounts" icon="bolt" href="/reference/automations">
+    Make Trillion run a tool or workflow by itself when something happens or at a set time.
+  </Card>
+  <Card title="Files and media" icon="folder-open" href="/reference/files">
+    Save, find, read and show your files, and find moments in your recordings.
+  </Card>
+  <Card title="Hand off work" icon="right-left" href="/reference/hand-off">
+    Let the AIs you use find each other and hand work on, on your account or inside a shared space.
+  </Card>
+  <Card title="Shared spaces" icon="users" href="/reference/spaces">
+    Work with other people in a group, project or event: invite them, share into it, and decide who may do what.
+  </Card>
+  <Card title="Sharing" icon="share-nodes" href="/reference/sharing">
+    Choose who sees each thing you keep, where the things you send to Trillion go, and read what others shared with you.
+  </Card>
+  <Card title="People and introductions" icon="handshake" href="/reference/people">
+    Find people on the Trillion network who offer what you need, and ask to meet them.
+  </Card>
+  <Card title="Communities" icon="people-group" href="/reference/communities">
+    Join a community, post, go to events, take courses and meet other members.
+  </Card>
+  <Card title="Book a session" icon="calendar-days" href="/reference/sessions">
+    See the sessions you can book with a person, pay, pick a time, and move or cancel it.
+  </Card>
+  <Card title="Writing" icon="pen" href="/reference/writing">
+    Write in your own formats, and keep private answers to the questions your audience asks.
+  </Card>
+</CardGroup>
+
+## How the tools work
+
+- **One address, every AI.** Every AI app reaches the same tools at `https://app.gettrillion.ai/mcp`, and every AI signed in to your account reads and writes the same Trillion. What you start in one AI, another can pick up.
+- **Signed in as you.** Your AI signs in with your passkey once. It only ever reaches your own Trillion and the spaces you are in.
+- **Reads only, or changes things.** Each tool is marked so your AI app knows which ones only read and which change something. Apps that ask before a tool runs use this to decide what to ask about.
+- **Safe to send twice.** Tools that start something take a `request_key` or `source_id`: sending the same one again returns what was already started instead of doing it twice.
+- **Some tools come with a paid plan.** The free plan includes 5 decisions a month and keeps none of them. A paid plan keeps every decision, note and result, and adds the Workshop, files, shared spaces, the network, handing work between your AIs, and fast picks with `score_candidates`. Communities and connecting any AI app come with every account.
+
+## Every tool
+
+| Tool | What it does | Page | Effect |
+| --- | --- | --- | --- |
+| [`start_setup`](/reference/setup-and-goals) | Start Trillion setup | Setup and goals | Reads only |
+| [`list_pursuits`](/reference/setup-and-goals) | List what I am pursuing | Setup and goals | Reads only |
+| [`record_pursuits`](/reference/setup-and-goals) | Record what I am pursuing | Setup and goals | Changes things |
+| [`list_methods`](/reference/decisions) | List decision methods | Decisions | Reads only |
+| [`start_decision`](/reference/decisions) | Start a decision | Decisions | Changes things |
+| [`next_question`](/reference/decisions) | Get the next question | Decisions | Reads only |
+| [`answer_question`](/reference/decisions) | Answer a question | Decisions | Changes things |
+| [`revise_evidence`](/reference/decisions) | Revise the evidence | Decisions | Changes things |
+| [`add_note`](/reference/decisions) | Add a note | Decisions | Changes things |
+| [`decide`](/reference/decisions) | Record the decision | Decisions | Changes things |
+| [`report_result`](/reference/decisions) | Report how it went | Decisions | Changes things |
+| [`list_decisions`](/reference/decisions) | List my decisions | Decisions | Reads only |
+| [`export_decision`](/reference/decisions) | Export a decision | Decisions | Reads only |
+| [`related_decisions`](/reference/decisions) | Find similar decisions | Decisions | Reads only |
+| [`read_shared_decision`](/reference/decisions) | Read the shared decision behind a question | Decisions | Reads only |
+| [`what_helped`](/reference/decisions) | What has helped | Decisions | Reads only |
+| [`score_candidates`](/reference/decisions) | Score known answers | Decisions | Reads only |
+| [`record_messages`](/reference/messages) | Record messages | Messages and activity | Changes things |
+| [`read_messages`](/reference/messages) | Read messages from all AIs | Messages and activity | Reads only |
+| [`bring_in_chat`](/reference/messages) | Bring in one chat | Messages and activity | Changes things |
+| [`bring_in_chat_export`](/reference/messages) | Bring in a chat export | Messages and activity | Changes things |
+| [`read_activity`](/reference/messages) | Read what my AIs did | Messages and activity | Reads only |
+| [`trace_item`](/reference/messages) | Trace how something came about | Messages and activity | Reads only |
+| [`find_tool_for_job`](/reference/tools) | Find a tool for a job | Workshop tools | Reads only |
+| [`run_tool`](/reference/tools) | Run a tool | Workshop tools | Changes things |
+| [`read_task`](/reference/tools) | Read a tool run | Workshop tools | Reads only |
+| [`describe_tool`](/reference/tools) | Read a tool's descriptor | Workshop tools | Reads only |
+| [`save_tool`](/reference/tools) | Save a tool | Workshop tools | Changes things |
+| [`delete_tool`](/reference/tools) | Delete a saved tool | Workshop tools | Changes things and can remove them |
+| [`publish_tool`](/reference/tools) | Publish a tool | Workshop tools | Changes things |
+| [`unpublish_tool`](/reference/tools) | Withdraw a published tool | Workshop tools | Changes things and can remove them |
+| [`find_workflow`](/reference/workflows) | Find a workflow for a job | Workflows | Reads only |
+| [`describe_workflow`](/reference/workflows) | Read a workflow | Workflows | Reads only |
+| [`start_workflow`](/reference/workflows) | Start a workflow | Workflows | Changes things |
+| [`submit_workflow_step`](/reference/workflows) | Submit a workflow step | Workflows | Changes things |
+| [`read_workflow_run`](/reference/workflows) | Read a workflow run | Workflows | Changes things |
+| [`save_workflow`](/reference/workflows) | Save a workflow | Workflows | Changes things |
+| [`publish_workflow`](/reference/workflows) | Publish a workflow | Workflows | Changes things |
+| [`unpublish_workflow`](/reference/workflows) | Withdraw a published workflow | Workflows | Changes things and can remove them |
+| [`set_rule`](/reference/automations) | Set what happens by itself when something happens | Rules, schedules and connected accounts | Changes things |
+| [`list_rules`](/reference/automations) | List my rules | Rules, schedules and connected accounts | Reads only |
+| [`remove_rule`](/reference/automations) | Remove a rule | Rules, schedules and connected accounts | Changes things and can remove them |
+| [`set_schedule`](/reference/automations) | Set something to run at a time | Rules, schedules and connected accounts | Changes things |
+| [`list_schedules`](/reference/automations) | List my schedules | Rules, schedules and connected accounts | Reads only |
+| [`run_now`](/reference/automations) | Run a rule or schedule now | Rules, schedules and connected accounts | Changes things |
+| [`remove_schedule`](/reference/automations) | Remove a schedule | Rules, schedules and connected accounts | Changes things and can remove them |
+| [`list_connections`](/reference/automations) | List my connected accounts | Rules, schedules and connected accounts | Reads only |
+| [`connect_service`](/reference/automations) | Connect one of my accounts | Rules, schedules and connected accounts | Changes things |
+| [`listen_for_events`](/reference/automations) | Start receiving comments and messages | Rules, schedules and connected accounts | Changes things |
+| [`list_files`](/reference/files) | List a folder of my files | Files and media | Reads only |
+| [`find_file`](/reference/files) | Find one of my files | Files and media | Reads only |
+| [`read_file`](/reference/files) | Read one of my files | Files and media | Reads only |
+| [`show_file`](/reference/files) | Show a file | Files and media | Reads only |
+| [`write_file`](/reference/files) | Save a file | Files and media | Changes things |
+| [`start_file_upload`](/reference/files) | Start saving a big file | Files and media | Changes things |
+| [`put_file_piece`](/reference/files) | Send a piece of a file | Files and media | Changes things |
+| [`finish_file_upload`](/reference/files) | Finish saving a file | Files and media | Changes things |
+| [`cancel_file_upload`](/reference/files) | Stop saving a file | Files and media | Changes things and can remove them |
+| [`files_summary`](/reference/files) | Summarize my stored files | Files and media | Reads only |
+| [`read_file_results`](/reference/files) | Read what is known about a file | Files and media | Reads only |
+| [`list_file_results`](/reference/files) | List what is known about my files | Files and media | Reads only |
+| [`record_file_results`](/reference/files) | Record what was worked out about files | Files and media | Changes things |
+| [`list_media`](/reference/files) | List my media | Files and media | Reads only |
+| [`search_media`](/reference/files) | Find moments in my media | Files and media | Reads only |
+| [`next_media_edit`](/reference/files) | Read my next edit suggestion | Files and media | Reads only |
+| [`publish_agent`](/reference/hand-off) | Say what this agent does | Hand off work | Changes things |
+| [`set_agent_capacity`](/reference/hand-off) | Report this agent’s capacity | Hand off work | Changes things |
+| [`agent_presence`](/reference/hand-off) | Say this agent is present | Hand off work | Changes things |
+| [`find_agents`](/reference/hand-off) | Find agents for a job | Hand off work | Reads only |
+| [`hand_off`](/reference/hand-off) | Hand a job to another agent | Hand off work | Changes things |
+| [`take_work`](/reference/hand-off) | Take waiting work | Hand off work | Changes things |
+| [`finish_work`](/reference/hand-off) | Finish taken work | Hand off work | Changes things |
+| [`read_handoff`](/reference/hand-off) | Read a handoff | Hand off work | Reads only |
+| [`address_open_work`](/reference/hand-off) | Name the agent for waiting work | Hand off work | Changes things |
+| [`send_agent_event`](/reference/hand-off) | Wake an agent with an event | Hand off work | Changes things |
+| [`read_agent_events`](/reference/hand-off) | Read the events sent about something | Hand off work | Reads only |
+| [`saved_instructions`](/reference/hand-off) | Read or change saved instructions | Hand off work | Changes things |
+| [`make_agent_key`](/reference/hand-off) | Make a key with a chosen reach | Hand off work | Changes things |
+| [`publish_space_agent`](/reference/hand-off) | Put an agent to work in a space | Hand off work | Changes things |
+| [`withdraw_space_agent`](/reference/hand-off) | Stop an agent working in a space | Hand off work | Changes things and can remove them |
+| [`find_space_agents`](/reference/hand-off) | Find agents in a space | Hand off work | Reads only |
+| [`hand_off_in_space`](/reference/hand-off) | Hand work to an agent in a space | Hand off work | Changes things |
+| [`take_space_work`](/reference/hand-off) | Take work in a space | Hand off work | Changes things |
+| [`finish_space_work`](/reference/hand-off) | Finish work in a space | Hand off work | Changes things |
+| [`read_space_handoff`](/reference/hand-off) | Read a handoff in a space | Hand off work | Reads only |
+| [`list_spaces`](/reference/spaces) | List my shared spaces | Shared spaces | Reads only |
+| [`open_space`](/reference/spaces) | Open a shared space | Shared spaces | Reads only |
+| [`create_membership`](/reference/spaces) | Start a shared space | Shared spaces | Changes things |
+| [`read_space`](/reference/spaces) | Read a shared space | Shared spaces | Reads only |
+| [`add_to_space`](/reference/spaces) | Add to a shared space | Shared spaces | Changes things |
+| [`share_to_space`](/reference/spaces) | Share one record into a space | Shared spaces | Changes things |
+| [`withdraw_from_space`](/reference/spaces) | Withdraw from a space | Shared spaces | Changes things and can remove them |
+| [`read_shared_file`](/reference/spaces) | Read a shared file | Shared spaces | Reads only |
+| [`mark_space_seen`](/reference/spaces) | Mark a space seen | Shared spaces | Changes things |
+| [`describe_space`](/reference/spaces) | Describe a space and set its picture | Shared spaces | Changes things |
+| [`read_space_picture`](/reference/spaces) | Read a space's picture | Shared spaces | Reads only |
+| [`name_in_space`](/reference/spaces) | Set my name in a space | Shared spaces | Changes things |
+| [`make_space_invite`](/reference/spaces) | Make an invite link to a space | Shared spaces | Changes things |
+| [`list_space_invites`](/reference/spaces) | List my invite links to a space | Shared spaces | Reads only |
+| [`revoke_space_invite`](/reference/spaces) | Revoke an invite link | Shared spaces | Changes things and can remove them |
+| [`join_space`](/reference/spaces) | Join a space with an invite link | Shared spaces | Changes things |
+| [`leave_membership`](/reference/spaces) | Leave a group, event or introduction | Shared spaces | Changes things and can remove them |
+| [`read_space_rules`](/reference/spaces) | Read who may do what in a space | Shared spaces | Reads only |
+| [`set_space_rules`](/reference/spaces) | Change who may do what in a space | Shared spaces | Changes things and can remove them |
+| [`set_member_type`](/reference/spaces) | Give a member a type in a space | Shared spaces | Changes things |
+| [`add_member_type`](/reference/spaces) | Add a member type to a space | Shared spaces | Changes things |
+| [`remove_member_type`](/reference/spaces) | Remove a member type from a space | Shared spaces | Changes things and can remove them |
+| [`hide_in_space`](/reference/spaces) | Hide or show a thing in a space | Shared spaces | Changes things |
+| [`sharing_of`](/reference/sharing) | See who a record is shared with | Sharing | Reads only |
+| [`set_sharing`](/reference/sharing) | Choose who a record is shared with | Sharing | Changes things |
+| [`shared_with_me`](/reference/sharing) | See what people shared with me | Sharing | Reads only |
+| [`read_shared`](/reference/sharing) | Read something shared with me | Sharing | Reads only |
+| [`share_destinations`](/reference/sharing) | Read where my shares go | Sharing | Reads only |
+| [`save_share_destinations`](/reference/sharing) | Change where my shares go | Sharing | Changes things |
+| [`network_profile`](/reference/people) | Set how people can find me | People and introductions | Changes things |
+| [`find_people`](/reference/people) | Find people | People and introductions | Reads only |
+| [`request_introduction`](/reference/people) | Ask to meet someone | People and introductions | Changes things |
+| [`network`](/reference/people) | My network | People and introductions | Reads only |
+| [`answer_introduction`](/reference/people) | Answer a request to meet | People and introductions | Changes things |
+| [`label_person`](/reference/people) | Label a person | People and introductions | Changes things |
+| [`list_communities`](/reference/communities) | Communities | Communities | Reads only |
+| [`community`](/reference/communities) | Open a community | Communities | Reads only |
+| [`join_community`](/reference/communities) | Join a community | Communities | Changes things |
+| [`whats_new`](/reference/communities) | What is new in a community | Communities | Changes things |
+| [`post_to_community`](/reference/communities) | Post in a community | Communities | Changes things |
+| [`vote_post`](/reference/communities) | Vote for a post | Communities | Changes things |
+| [`remove_post`](/reference/communities) | Remove a post | Communities | Changes things and can remove them |
+| [`rsvp_event`](/reference/communities) | Answer an event | Communities | Changes things |
+| [`create_community_event`](/reference/communities) | Put on an event | Communities | Changes things |
+| [`complete_lesson`](/reference/communities) | Mark a lesson done | Communities | Changes things |
+| [`claim_reward`](/reference/communities) | Claim a reward | Communities | Changes things |
+| [`community_notifications`](/reference/communities) | Community email digest | Communities | Changes things |
+| [`my_matches`](/reference/communities) | My matches in a community | Communities | Reads only |
+| [`set_matching`](/reference/communities) | Pair me automatically | Communities | Changes things |
+| [`score_match_candidates`](/reference/communities) | Score who to meet | Communities | Changes things |
+| [`suggest_match_topics`](/reference/communities) | Suggest what to talk about | Communities | Changes things |
+| [`pass_match`](/reference/communities) | Pass on a match | Communities | Changes things |
+| [`change_community`](/reference/communities) | Change a community | Communities | Changes things |
+| [`set_member_role`](/reference/communities) | Give a member a role | Communities | Changes things |
+| [`send_community_digests`](/reference/communities) | Send community digests now | Communities | Changes things |
+| [`run_matching_round`](/reference/communities) | Start a pairing round | Communities | Changes things |
+| [`hand_over_community`](/reference/communities) | Hand a community over | Communities | Changes things |
+| [`session_offers`](/reference/sessions) | Sessions I can book with a person | Book a session | Changes things |
+| [`open_session_times`](/reference/sessions) | Open times for a session | Book a session | Reads only |
+| [`buy_session`](/reference/sessions) | Pick a time and get the checkout for a session | Book a session | Changes things |
+| [`book_session_time`](/reference/sessions) | Book a session time | Book a session | Changes things |
+| [`change_session`](/reference/sessions) | Move or cancel a session | Book a session | Changes things and can remove them |
+| [`content_formats`](/reference/writing) | Read my content formats | Writing | Reads only |
+| [`save_content_formats`](/reference/writing) | Save my content formats | Writing | Changes things |
+| [`list_audience_questions`](/reference/writing) | Read audience questions | Writing | Reads only |
+| [`observe_audience_source`](/reference/writing) | Check a public source | Writing | Changes things |
+| [`keep_audience_question`](/reference/writing) | Keep an audience question | Writing | Changes things |
+| [`review_audience_question`](/reference/writing) | Review an audience question | Writing | Changes things |
+| [`admit_audience_question`](/reference/writing) | Add to private drafts | Writing | Changes things |
+| [`save_audience_answer_draft`](/reference/writing) | Save a private answer draft | Writing | Changes things |

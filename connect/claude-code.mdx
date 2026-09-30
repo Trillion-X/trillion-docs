@@ -1,0 +1,57 @@
+---
+title: "Claude Code"
+description: "Add Trillion to Claude Code in your terminal with one command."
+---
+
+For Claude Code in your terminal. Claude Code keeps its own list on each computer, separate from your claude.ai account: do this once on each computer you use, and it covers every Claude account you use there, including several accounts a local proxy such as CLIProxyAPI switches between.
+
+<Steps>
+  <Step title="Open Terminal">
+    On a Mac press Command and Space, type `Terminal` and press Return. On Windows open PowerShell.
+  </Step>
+  <Step title="Paste this line and press Return">
+    It adds Trillion for every folder on this computer, then opens your browser to sign in.
+
+    ```bash
+    claude mcp add --transport http --scope user trillion https://app.gettrillion.ai/mcp && claude mcp login trillion
+    ```
+
+    **If not:** "command not found: claude" means Claude Code is not installed on this computer. Install it from [claude.com/claude-code](https://claude.com/claude-code), then paste the line again.
+  </Step>
+  <Step title="Tap your passkey in the browser">
+    A Trillion page opens in your browser: tap your passkey and allow Claude Code.
+
+    **When it worked:** Terminal says the sign-in worked.
+
+    **If not:** if the browser did not open, start Claude Code by typing `claude`, then type `/mcp`, choose **trillion** and choose **Authenticate**.
+  </Step>
+  <Step title="Check it">
+    Paste this and press Return.
+
+    ```bash
+    claude mcp list
+    ```
+
+    **When it worked:** a line that starts with `trillion` and says Connected.
+  </Step>
+  <Step title="Let Trillion run without asking">
+    Open the file `~/.claude/settings.json` and add `"mcp__trillion"` to the list under `permissions`, `allow`, as below. Claude Code then uses every Trillion tool without asking you each time.
+
+    ```json ~/.claude/settings.json
+    {
+      "permissions": {
+        "allow": ["mcp__trillion"]
+      }
+    }
+    ```
+
+    **Leave as it is:** everything else already in the file. Add the line to the `allow` list that is there, or add the `permissions` part if there is none.
+  </Step>
+  <Step title="Ask for something">
+    Start Claude Code by typing `claude`, then ask in plain words, for example:
+
+    ```text
+    Use Trillion to help me decide which bug to fix first.
+    ```
+  </Step>
+</Steps>

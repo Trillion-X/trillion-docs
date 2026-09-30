@@ -1,0 +1,121 @@
+---
+title: "Quickstart"
+description: "Connect your AI to Trillion and make your first decision in a few minutes."
+---
+
+Trillion equips the AI you already use. Once it is connected, your AI can walk a decision through the right questions, find a tool that does a job, keep your files and goals, and hand work to your other AIs. You ask in plain words; your AI does the rest.
+
+<Steps>
+  <Step title="Add Trillion to your AI">
+    Every AI app connects to the same address:
+
+    ```text
+    https://app.gettrillion.ai/mcp
+    ```
+
+    Pick your app for the exact clicks:
+
+    <Tabs>
+      <Tab title="Claude">
+        In claude.ai or the Claude desktop app: **Customize**, **Connectors**, **+**, **Add custom connector**. Name it `Trillion`, paste the address, leave the sign-in choices as they are and click **Add**, then **Connect**. [Full steps](/connect/claude-desktop)
+      </Tab>
+      <Tab title="ChatGPT">
+        At chatgpt.com: **Settings**, **Security and login**, switch on **Developer mode**. Then open [chatgpt.com/plugins](https://chatgpt.com/plugins), click **+**, name it `Trillion`, paste the address, keep OAuth, tick the box and click **Create**. [Full steps](/connect/chatgpt)
+      </Tab>
+      <Tab title="Claude Code">
+        ```bash
+        claude mcp add --transport http --scope user trillion https://app.gettrillion.ai/mcp && claude mcp login trillion
+        ```
+        [Full steps](/connect/claude-code)
+      </Tab>
+      <Tab title="Codex">
+        ```bash
+        codex mcp add trillion --url https://app.gettrillion.ai/mcp
+        ```
+        [Full steps](/connect/codex)
+      </Tab>
+      <Tab title="Cursor">
+        Click [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=trillion&config=eyJ1cmwiOiJodHRwczovL2FwcC5nZXR0cmlsbGlvbi5haS9tY3AifQ%3D%3D) and confirm, then click **Connect** next to trillion in Cursor Settings, MCP. [Full steps](/connect/cursor)
+      </Tab>
+      <Tab title="Other">
+        Find where your app adds an MCP server or connector, paste the address, and choose OAuth if it asks how to sign in. [Gemini CLI](/connect/gemini-cli), [Muse](/connect/muse), [any other app](/connect/other-apps)
+      </Tab>
+    </Tabs>
+
+    Would rather not click? Paste the [setup message](/connect/overview#easiest-let-your-ai-set-it-up) into your AI and it sets Trillion up itself, or walks you through it one step at a time.
+  </Step>
+  <Step title="Sign in with your passkey">
+    Your app opens a Trillion page. Tap your passkey (Touch ID, Face ID or your device code) and allow the app. There is no password, API key or client id to type.
+
+    New to Trillion? Choose **Create your Trillion account** under **New here?** on that page. Your device makes the passkey and keeps it in your Passwords app under the name Trillion.
+  </Step>
+  <Step title="Let Trillion run without asking">
+    Your AI works best when it can use Trillion's tools without stopping to ask you each time.
+
+    - **Claude:** in **Customize**, **Connectors**, click Trillion and choose **Always allow** for each group of tools.
+    - **Claude Code:** add `"mcp__trillion"` to `permissions.allow` in `~/.claude/settings.json`.
+    - **Codex:** add `default_tools_approval_mode = "approve"` under `[mcp_servers.trillion]` in `~/.codex/config.toml`.
+    - **ChatGPT:** when it asks before a Trillion tool, choose to remember your answer for that chat.
+  </Step>
+  <Step title="Make your first decision">
+    Ask your AI in plain words. Start your message with "Use Trillion" so it reaches for Trillion:
+
+    ```text
+    Use Trillion to help me decide whether to fix the checkout bug or ship the new pricing page first.
+    ```
+
+    Here is what happens:
+
+    1. Your AI opens the decision with your goal, the facts it already knows and at least two options.
+    2. It walks Trillion's questions in order, answering what it can from what it knows about you and asking you only what only you can answer.
+    3. When no question remains, it records the choice with its reason, the next action and how you will know it worked.
+
+    You can ask it to export the whole decision as a readable document.
+  </Step>
+  <Step title="Close the loop">
+    When you know how it turned out, tell your AI. The next decision starts from what really happened.
+
+    ```text
+    Tell Trillion that last week's pricing decision worked: 4 people bought.
+    ```
+  </Step>
+</Steps>
+
+## What to ask next
+
+<CardGroup cols={2}>
+  <Card title="Say what you are working toward" icon="bullseye" href="/reference/setup-and-goals">
+    Trillion keeps your goals and weighs every decision against them.
+
+    "Use Trillion to record that I am working toward 10 paying customers by December."
+  </Card>
+  <Card title="Find a tool that does the job" icon="wrench" href="/reference/tools">
+    Trillion finds a tool in its Workshop that does what you describe and runs it.
+
+    "Use Trillion to find a tool that turns this recording into a transcript, and run it."
+  </Card>
+  <Card title="Keep and find your files" icon="folder-open" href="/reference/files">
+    Your files live in your Trillion. Your AI can list them, find one and read it.
+
+    "Use Trillion to find the contract I uploaded last week and summarise it."
+  </Card>
+  <Card title="Meet the right people" icon="users" href="/reference/people">
+    Find people on the Trillion network who offer what you need, and ask for an introduction.
+
+    "Use Trillion to find people who can help with brand design, and ask for an introduction."
+  </Card>
+  <Card title="Answer comments with a message" icon="comment" href="/reference/automations">
+    When someone comments a word you choose on your post, Trillion sends them the private message you wrote.
+
+    "Use Trillion so that anyone who comments GUIDE on my Instagram posts gets my guide link by message."
+  </Card>
+  <Card title="Book a session with a person" icon="calendar-days" href="/reference/sessions">
+    See the sessions on offer, buy one, and pick a time that suits you.
+
+    "Use Trillion to show me the sessions I can book and the next open times."
+  </Card>
+</CardGroup>
+
+## Free and paid
+
+The free plan includes 5 decisions a month and keeps none of them: each decision is yours to read in the chat, but it is not saved. A paid plan has no monthly limit on decisions, keeps every decision, note and result, brings back your past decisions when a similar one comes up, and adds the Workshop, your files, shared spaces, the network and handing work between your AI apps. Manage your plan in your Trillion under **Plan & billing**.

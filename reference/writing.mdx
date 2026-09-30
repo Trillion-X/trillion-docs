@@ -1,0 +1,180 @@
+---
+title: "Writing"
+description: "Write in your own formats, and keep private answers to the questions your audience asks."
+---
+
+Your content formats say how you write each kind of piece, from a newsletter to a short video. The audience question tools keep questions people ask in public, check them against their sources, and keep a private draft answer. Nothing here is published.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Read my content formats
+
+`content_formats` · Reads only
+
+The content formats this person writes and speaks in: their own saved formats first, then the ones every account starts with (blog post, article, Substack post, newsletter, X thread, Instagram caption, short video, YouTube video, carousel, content series, and writing frameworks such as AIDA), plus example_kinds, where every piece takes its real examples from. Each has id, label, description, input (what it is made from), process (the steps, in order), output (what comes out and where it goes), spec (how to write it from a recording or a thought), slots (its parts in order, each &#123; id, label, hint &#125;), body_template (the parts in [brackets], when it has one), tags and from ("saved" or "starter"). Read it before writing something for them, and write in their format. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Save my content formats
+
+`save_content_formats` · Changes things
+
+Replaces this person's own content formats (read `content_formats` first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each &#123; label, hint &#125;), optionally id, description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what `content_formats` returns.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `formats` | object[] | Yes |  |
+| `formats[].id` | string |  |  |
+| `formats[].label` | string | Yes |  |
+| `formats[].description` | string |  |  |
+| `formats[].content_type` | string |  |  |
+| `formats[].input` | string |  |  |
+| `formats[].process` | string[] |  |  |
+| `formats[].output` | string |  |  |
+| `formats[].spec` | string |  |  |
+| `formats[].slots` | object[] |  |  |
+| `formats[].slots[].id` | string |  |  |
+| `formats[].slots[].label` | string | Yes |  |
+| `formats[].slots[].hint` | string |  |  |
+| `formats[].body_template` | string |  |  |
+| `formats[].tags` | string[] |  |  |
+
+```json Example
+{
+  "formats": [
+    {
+      "label": "Weekly note",
+      "spec": "A hook line, one story from the week, one lesson, one question for readers."
+    }
+  ]
+}
+```
+
+## Read audience questions
+
+`list_audience_questions` · Reads only
+
+Read observed questions, reviews and private draft work for this account. No content is published.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Check a public source
+
+`observe_audience_source` · Changes things
+
+Check an exact quote on a public HTTPS page and keep its source privately. role is question, answer or rights. A question needs offer_ref.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `role` | string | Yes | One of `question`, `answer`, `rights`. |
+| `venture_ref` | string | Yes |  |
+| `offer_ref` | string |  |  |
+| `source_url` | string | Yes |  |
+| `quote` | string | Yes |  |
+
+```json Example
+{
+  "role": "question",
+  "venture_ref": "<venture_ref>",
+  "source_url": "<source_url>",
+  "quote": "<quote>"
+}
+```
+
+## Keep an audience question
+
+`keep_audience_question` · Changes things
+
+Keep a question from an observed source. Venture and offer come from the source. It remains private.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `source_id` | string | Yes |  |
+| `audience` | string |  |  |
+| `locale` | string |  |  |
+
+```json Example
+{
+  "source_id": "<source_id>"
+}
+```
+
+## Review an audience question
+
+`review_audience_question` · Changes things
+
+Accept or reject a question. Acceptance needs checked answer and rights sources, why the answer is grounded, and why the rights cover that answer. Rejection needs a reason and withdraws pending work.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `candidate_id` | string | Yes |  |
+| `verdict` | string | Yes | One of `accepted`, `rejected`. |
+| `reason` | string |  |  |
+| `answer_source_id` | string |  |  |
+| `answer_note` | string |  |  |
+| `rights_source_id` | string |  |  |
+| `rights_note` | string |  |  |
+
+```json Example
+{
+  "candidate_id": "<candidate_id>",
+  "verdict": "accepted"
+}
+```
+
+## Add to private drafts
+
+`admit_audience_question` · Changes things
+
+After acceptance, place an evidence-backed question in private pending draft work. Re-reads the current source, review and evidence; never publishes.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `candidate_id` | string | Yes |  |
+
+```json Example
+{
+  "candidate_id": "<candidate_id>"
+}
+```
+
+## Save a private answer draft
+
+`save_audience_answer_draft` · Changes things
+
+Save a private answer and proposed HTTPS destination for admitted question work. The account copies its current venture, source, grounding and offer; nothing is published. Pass expected_revision from the listed draft, or null for the first save.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `candidate_id` | string | Yes |  |
+| `answer` | string | Yes |  |
+| `destination_url` | string | Yes |  |
+| `expected_revision` | string or null |  |  |
+
+```json Example
+{
+  "candidate_id": "<candidate_id>",
+  "answer": "<answer>",
+  "destination_url": "<destination_url>"
+}
+```

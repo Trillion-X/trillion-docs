@@ -1,0 +1,87 @@
+---
+title: "More hooks"
+description: "Hooks that tell your AI about new decisions, keep the files it writes in your Trillion, wake it when work arrives, and check a commit before it is saved."
+---
+
+## Decisions since you last looked
+
+Each time you send your coding AI a message, this hook adds the decisions made in your Trillion since that conversation last checked, once each. Your AI starts every request knowing what was already settled, including work waiting for any of your AIs to take.
+
+It gives up after 2 seconds if Trillion is slow, and never stops your message from going through.
+
+<Tabs>
+  <Tab title="Claude Code">
+    Add to `hooks.UserPromptSubmit` in `~/.claude/settings.json`:
+
+    ```json
+    { "matcher": "", "hooks": [{ "type": "command", "command": "node <hooks folder>/decisions-since.mjs", "timeout": 5 }] }
+    ```
+  </Tab>
+  <Tab title="Codex">
+    Add to `hooks.UserPromptSubmit` in `~/.codex/hooks.json`, then approve it in Codex's hook review:
+
+    ```json
+    { "matcher": "", "hooks": [{ "type": "command", "command": "node <hooks folder>/decisions-since.mjs", "timeoutSec": 5 }] }
+    ```
+  </Tab>
+</Tabs>
+
+## Keep written files
+
+When your AI finishes a turn, this hook sends every file written or changed in the folders you choose to your Trillion files, so the work is kept and readable by all your AIs. Each file keeps a note of where it came from and when it changed. Keys and passwords that look like Stripe, AWS, GitHub, Slack, Google or private keys are taken out before the file leaves your computer.
+
+<Steps>
+  <Step title="List the folders to keep">
+    Write `~/.trillion/keep-written-files/folders.json` with one entry per folder: the folder on your computer, where it goes in your Trillion files, and optionally which files to include or leave out and a start date.
+  </Step>
+  <Step title="Install the hook">
+    <Tabs>
+      <Tab title="Claude Code">
+        Add to `hooks.Stop` in `~/.claude/settings.json`:
+
+        ```json
+        { "matcher": "", "hooks": [{ "type": "command", "command": "node <hooks folder>/keep-written-files.mjs", "timeout": 10, "async": true }] }
+        ```
+      </Tab>
+      <Tab title="Codex">
+        Add to `hooks.Stop` in `~/.codex/hooks.json`, then approve it in Codex's hook review:
+
+        ```json
+        { "matcher": ".*", "hooks": [{ "type": "command", "command": "node <hooks folder>/keep-written-files.mjs", "timeoutSec": 10 }] }
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Send everything now (optional)">
+    ```bash
+    node <hooks folder>/keep-written-files.mjs --all
+    ```
+    Sends every file that is due, with no time limit, and prints how many were sent.
+  </Step>
+</Steps>
+
+`.git`, `node_modules` and files over 4 MB are never sent.
+
+## Wake your AI when work arrives
+
+`agent-receiver.mjs` keeps one of your AIs reachable, so work handed to it in Trillion wakes it instead of it checking for work over and over. It publishes your AI with an address Trillion can deliver to, checks that each delivery really came from Trillion, and keeps each one on disk until it is handled, so nothing is lost if your computer restarts.
+
+```bash
+node <hooks folder>/agent-receiver.mjs \
+  --agent-id <your agent id> --name "<name>" --description "<what it does>" \
+  --port 8787 --public-url https://<address that reaches this port> \
+  --work "<command that does the work>" \
+  --on-finished "<command to run when work you handed off is finished>"
+```
+
+- With `--work`, it takes each job handed to it, runs your command, and marks the job finished only if the command succeeds.
+- Without `--work`, it is listed as unable to take work, so a notification is never mistaken for finished work.
+- `--on <event>=<command>` runs a command for any other kind of event.
+
+## Check a commit before it is saved
+
+For code projects that share parts, `staged-imports-resolve.mjs` refuses a commit when a file being saved imports a file the commit leaves out, or reaches into a part's private files. It lists every problem at once and says what to stage. Turn it on for a project with:
+
+```bash
+git config core.hooksPath <hooks folder>/git-hooks
+```

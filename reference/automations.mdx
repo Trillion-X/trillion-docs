@@ -1,0 +1,243 @@
+---
+title: "Rules, schedules and connected accounts"
+description: "Make Trillion run a tool or workflow by itself when something happens or at a set time."
+---
+
+Rules and schedules run a tool or start a workflow with no AI in the loop: a rule when something happens (a message is recorded, a comment arrives, something is added to a shared space), a schedule at a time. Connected accounts, such as your Instagram, are where outside events come from.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Set what happens by itself when something happens
+
+`set_rule` · Changes things
+
+Makes this person's Trillion do something by itself whenever something happens: a tool runs, or a workflow starts, with no AI in the loop. when says what sets it off, one of three ways. (1) Something recorded in this Trillion: &#123; "recorded": "message" &#125; (or "pursuit", "decision", or any other kind of record this account keeps), with optional where tests on the record's fields, all of which must hold: &#123; "field": "text", "contains": "invoice" &#125;, or equals, one_of (a list), starts_with, present: true. (2) An event from outside, such as a comment or a direct message: &#123; "source_id": "events:instagram", "event": "comment", "words": ["tennis"] &#125;; words (optional) must appear in the event, whole_word (default true) and field (default text) say how; once_per (optional) names an event field to act once per value of, like "from_id" for once per person. (3) Something added to a shared space this person is in, by any member (made there or shared from their private Trillion): &#123; "space_id": "membership_..." &#125; from `list_spaces`, with optional kind (only items of that kind, like "decision" or "message") and where tests on the item's fields as `read_space` shows it (title, kind, body.text and so on). It runs in this person's own Trillion and sees only what the space shows its members, never anyone's private records. Only a space this person is in now can be named; if they leave it, the rule stops and `list_rules` says so. then names what runs: &#123; "tool_id", "input" &#125; or &#123; "workflow_id", "input" &#125;, where an input value &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; is taken from the record ("id" is the record's own id), &#123; "fill": &#123; "from": "item", "field": "title" &#125; &#125; from the space item (item_id, kind, title, body, space_id), or &#123; "fill": &#123; "from": "event", "field": "comment_id" &#125; &#125; from the event. It runs once for each thing that sets it off, never twice for the same thing, and only for what happens after the rule is set. Example: &#123; "when": &#123; "recorded": "message", "where": [&#123; "field": "text", "contains": "invoice" &#125;] &#125;, "then": &#123; "tool_id": "tool:...", "input": &#123; "note": &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; &#125; &#125;, "label": "file every invoice mentioned" &#125;. Give rule_id to change an existing rule. enabled (default true, and an existing rule keeps its own) turns it on or off: an off rule never fires; give only rule_id and enabled to turn it on or off and keep everything else. An event rule needs `listen_for_events` on its source once.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `rule_id` | string |  | A rule_id from `list_rules` |
+| `when` | object |  | &#123; recorded, where &#125; for a record written in this Trillion, &#123; space_id, kind, where &#125; for something added to a shared space this person is in, or &#123; source_id, event, words, whole_word, field, once_per &#125; for an event from outside |
+| `when.recorded` | string |  | The kind of record, like message, pursuit or decision |
+| `when.space_id` | string |  | A shared space this person is in (from `list_spaces`): the rule runs when something is added there |
+| `when.kind` | string |  | With space_id: only items of this kind, like decision or message |
+| `when.where` | object[] |  |  |
+| `when.where[].field` | string | Yes |  |
+| `when.where[].equals` | any |  |  |
+| `when.where[].one_of` | array |  |  |
+| `when.where[].starts_with` | string |  |  |
+| `when.where[].contains` | string |  |  |
+| `when.where[].present` | boolean |  |  |
+| `when.source_id` | string |  |  |
+| `when.event` | string |  |  |
+| `when.words` | string[] |  |  |
+| `when.whole_word` | boolean |  |  |
+| `when.field` | string |  |  |
+| `when.once_per` | string |  |  |
+| `then` | object |  | What runs: &#123; "tool_id": "tool:...", "input": &#123;...&#125; &#125; (a tool from `find_tool_for_job`) or &#123; "workflow_id": "workflow:...", "input": &#123;...&#125; &#125; (a workflow from `find_workflow`) |
+| `then.tool_id` | string |  |  |
+| `then.workflow_id` | string |  |  |
+| `then.input` | object |  |  |
+| `label` | string |  | What the rule is for, in plain words |
+| `enabled` | boolean |  | On (true) or off (false) |
+
+```json Example
+{
+  "when": {
+    "source_id": "events:instagram",
+    "event": "comment",
+    "words": [
+      "GUIDE"
+    ],
+    "once_per": "from_id"
+  },
+  "then": {
+    "tool_id": "<tool_id>",
+    "input": {
+      "comment": {
+        "fill": {
+          "from": "event",
+          "field": "comment_id"
+        }
+      }
+    }
+  },
+  "label": "Send my guide to anyone who comments GUIDE"
+}
+```
+
+## List my rules
+
+`list_rules` · Reads only
+
+This person's rules (from `set_rule`): each rule_id, when, then, label and whether it is on (enabled); which outside sources are being listened to; the latest runs the rules started (with any problem); a rule about a shared space the person has left shows stopped, saying why; and the latest events that arrived with what each rule did (task ids readable with `read_task`). It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Remove a rule
+
+`remove_rule` · Changes things and can remove them
+
+Removes one of this person's rules by rule_id (from `list_rules`), so nothing runs for it any more. Runs it already started and their results stay. It does not stop listening to an outside source; `listen_for_events` with stop true does.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `rule_id` | string | Yes | A rule_id from `list_rules` |
+
+```json Example
+{
+  "rule_id": "<rule_id>"
+}
+```
+
+## Set something to run at a time
+
+`set_schedule` · Changes things
+
+Makes this person's Trillion run a tool or start a workflow at a time, by itself, with nobody calling. Give every for a repeating time: &#123; "unit": "day" or "week", "at": "09:00" (24-hour local time), "time_zone": "America/New_York", "on": ["monday", "tuesday", "wednesday", "thursday", "friday"] for a week, "interval": 2 for every other day or week &#125;; clock changes are handled (a time that does not exist that night runs at the first minute that does). Or give once_at for one time: "2026-10-01T09:00:00-04:00". then names what runs: &#123; "tool_id", "input" &#125; or &#123; "workflow_id", "input" &#125;. starts_on (optional, "2026-10-01") is the first day it may run; a repeating schedule set after today's time starts with its next time. Example, every weekday at nine in New York: &#123; "every": &#123; "unit": "week", "on": ["monday", "tuesday", "wednesday", "thursday", "friday"], "at": "09:00", "time_zone": "America/New_York" &#125;, "then": &#123; "workflow_id": "workflow:...", "input": &#123;&#125; &#125;, "label": "morning review" &#125;. Returns the next time it runs. Give schedule_id to change an existing schedule. enabled (default true, and an existing schedule keeps its own) turns it on or off: an off schedule never runs, and turned back on it counts from now, never catching up the times it was off for; give only schedule_id and enabled to turn it on or off and keep everything else.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `schedule_id` | string |  | A schedule_id from `list_schedules` |
+| `every` | object |  |  |
+| `every.unit` | string |  | One of `day`, `week`. |
+| `every.at` | string |  | Local time, like 09:00 |
+| `every.time_zone` | string |  | Like America/New_York |
+| `every.on` | string[] |  | Days, for a week: monday ... sunday |
+| `every.interval` | integer |  |  |
+| `once_at` | string |  | One time, with its zone |
+| `starts_on` | string |  | First day it may run, like 2026-10-01 |
+| `then` | object |  | What runs: &#123; "tool_id": "tool:...", "input": &#123;...&#125; &#125; (a tool from `find_tool_for_job`) or &#123; "workflow_id": "workflow:...", "input": &#123;...&#125; &#125; (a workflow from `find_workflow`) |
+| `then.tool_id` | string |  |  |
+| `then.workflow_id` | string |  |  |
+| `then.input` | object |  |  |
+| `label` | string |  | What the schedule is for, in plain words |
+| `enabled` | boolean |  | On (true) or off (false) |
+
+```json Example
+{
+  "every": {
+    "unit": "week",
+    "on": [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday"
+    ],
+    "at": "09:00",
+    "time_zone": "America/New_York"
+  },
+  "then": {
+    "workflow_id": "<workflow_id>",
+    "input": {}
+  },
+  "label": "Morning review"
+}
+```
+
+## List my schedules
+
+`list_schedules` · Reads only
+
+This person's schedules (from `set_schedule`): each schedule_id, when it repeats or the one time, what runs, whether it is on (enabled), when it runs next (none while off), and its last run (with the task_id or run_id to read with `read_task` or `read_workflow_run`). It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Run a rule or schedule now
+
+`run_now` · Changes things
+
+Runs a rule's or a schedule's then once, now, on the same road `run_tool` and `start_workflow` take (so the plan checks hold), whether the rule or schedule is on or off. Give rule_id (from `list_rules`) or schedule_id (from `list_schedules`). A then input value filled from a record or event is left out, since nothing set it off; input (optional) is laid over the then's own input to supply it. Each call runs once more. Returns the task_id (`read_task`) or run_id (`read_workflow_run`); the run shows as the rule's latest run or the schedule's last_run.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `rule_id` | string |  | A rule_id from `list_rules` |
+| `schedule_id` | string |  | A schedule_id from `list_schedules` |
+| `input` | object |  | Values laid over the then's own input |
+
+```json Example
+{}
+```
+
+## Remove a schedule
+
+`remove_schedule` · Changes things and can remove them
+
+Removes one of this person's schedules by schedule_id (from `list_schedules`), so it never runs again. Runs it already started and their results stay.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `schedule_id` | string | Yes | A schedule_id from `list_schedules` |
+
+```json Example
+{
+  "schedule_id": "<schedule_id>"
+}
+```
+
+## List my connected accounts
+
+`list_connections` · Reads only
+
+Lists the accounts this person has connected to Trillion, one row each: connection_id, service, vendor, account_label, status, can_send and when it was connected. The sealed values themselves are never returned. Check here before creating or asking about an account, and connect a new one with `connect_service`, or with `run_tool` on tool:connect-service-&#60;vendor&#62; for a service that takes typed values.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Connect one of my accounts
+
+`connect_service` · Changes things
+
+Makes a one-time link (15 minutes) that connects one of this person's accounts, such as their Instagram, by signing in on that service's own page. Give the link to the person; the access it grants is sealed in their account, and comments and messages start arriving for their rules. service is the service's name, for example "instagram"; an unknown name lists the ones that can be connected.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `service` | string | Yes |  |
+
+```json Example
+{
+  "service": "instagram"
+}
+```
+
+## Start receiving comments and messages
+
+`listen_for_events` · Changes things
+
+Starts receiving events from a source for this person's own connected account (for example their Instagram comments and messages): reads which account the connection belongs to, and asks the service to send its events here. Connect the service first. stop: true stops listening.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `source_id` | string | Yes |  |
+| `stop` | boolean |  |  |
+
+```json Example
+{
+  "source_id": "events:instagram"
+}
+```

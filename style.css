@@ -1,0 +1,99 @@
+/* style.css
+ *
+ * Purpose: dress Mintlify's page in Trillion's look. Every colour, radius and face is a --trillion- variable that
+ * theme.css resolves from the app's own looks (light: warm paper, ink and thread red; dark: pitch black and white),
+ * so this file names roles, never colours.
+ *
+ * Invariants:
+ *   1. No colour value is written here.
+ *   2. Titles use the app's display face (Recoleta) at medium weight; body text uses the app's reading face.
+ *   3. Motion respects prefers-reduced-motion.
+ */
+
+body {
+  font-family: var(--trillion-font-primary);
+  color: var(--trillion-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+#content-area :is(h1, h2, h3),
+#header h1,
+header h1 {
+  font-family: var(--trillion-font-display);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Reading text keeps the look's quieter ink for secondary lines. */
+#content-area p,
+#content-area li {
+  color: var(--trillion-text-strong);
+}
+
+/* Links inside a page: ink, with the thread as the underline. */
+#content-area a[href]:not(:has(img)):not(.card):not(#sidebar a):not(#table-of-contents a) {
+  color: var(--trillion-text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--trillion-accent-primary);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+#content-area a[href]:not(:has(img)):hover {
+  text-decoration-thickness: 2.5px;
+}
+
+:is(a, button, [role="button"], input):focus-visible {
+  outline: 2px solid var(--trillion-border-focus);
+  outline-offset: 2px;
+}
+
+/* Cards and code: the look's radius ladder and raised surface. */
+#content-area .card {
+  border-radius: var(--trillion-radius-card);
+  border-color: var(--trillion-border-primary);
+  background-color: var(--trillion-bg-surface);
+  box-shadow: var(--trillion-surface-shadow);
+}
+
+#content-area :is(pre, [class*="code-block"], [class*="codeblock"]) {
+  border-radius: var(--trillion-radius-control);
+}
+
+#content-area :not(pre) > code {
+  border-radius: var(--trillion-radius-chip);
+  background-color: var(--trillion-glass-bg-input);
+  color: var(--trillion-text-primary);
+}
+
+/* The navbar's "Open Trillion" button is the app's primary button: thread red, pill shaped. */
+#topbar-cta-button a,
+#topbar-cta-button :is([class*="bg-primary"], [class*="rounded"]) {
+  border-radius: var(--trillion-radius-pill);
+}
+
+#topbar-cta-button [class*="bg-primary"] {
+  background-color: var(--trillion-button-primary-bg);
+  color: var(--trillion-button-primary-text);
+}
+
+#topbar-cta-button a:hover [class*="bg-primary"] {
+  background-color: var(--trillion-button-primary-bg-hover);
+}
+
+::selection {
+  background-color: var(--trillion-diff-removed-bg);
+}
+
+* {
+  scrollbar-color: var(--trillion-scrollbar-thumb) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

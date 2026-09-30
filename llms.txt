@@ -1,0 +1,60 @@
+# Trillion Docs
+
+> Trillion helps your AI find the needle mover, then gives it the tools, people and files to get it done.
+
+## Guides: Get started
+
+- [Welcome to Trillion](https://docs.gettrillion.ai/): Trillion helps your AI find the needle mover, then gives it the tools, people and files to get it done.
+- [Quickstart](https://docs.gettrillion.ai/quickstart): Connect your AI to Trillion and make your first decision in a few minutes.
+
+## Guides: Connect your AI
+
+- [Connect your AI](https://docs.gettrillion.ai/connect/overview): Add Trillion to the AI app you already use. One address, one passkey, every app.
+- [Claude Code](https://docs.gettrillion.ai/connect/claude-code): Add Trillion to Claude Code in your terminal with one command.
+- [Codex](https://docs.gettrillion.ai/connect/codex): Add Trillion to Codex in your terminal, the Codex app and the editor extension.
+- [ChatGPT](https://docs.gettrillion.ai/connect/chatgpt): Add Trillion to ChatGPT in your web browser with Developer mode.
+- [Claude](https://docs.gettrillion.ai/connect/claude-desktop): Add Trillion to claude.ai and the Claude desktop app as a custom connector.
+- [Cursor](https://docs.gettrillion.ai/connect/cursor): Add Trillion to the Cursor editor with one click, or by hand in mcp.json.
+- [Gemini CLI](https://docs.gettrillion.ai/connect/gemini-cli): Add Trillion to Gemini in your terminal as a remote MCP server.
+- [Muse and other chat AIs](https://docs.gettrillion.ai/connect/muse): Connect Muse (Meta's AI), or any AI with no settings screen for this, by sending it a message.
+- [Any other AI app](https://docs.gettrillion.ai/connect/other-apps): Connect any app that can add an MCP server or a connector, and what to do if it cannot sign in.
+
+## Guides: Use Trillion
+
+- [Decisions](https://docs.gettrillion.ai/use/decisions): How your AI works a decision through Trillion's method: open it, answer each question, then decide, and where the result shows up afterwards.
+- [Shared spaces](https://docs.gettrillion.ai/use/spaces): Work with other people in a group or project that stays apart from your private Trillion: share into it, bring chats in, hand work to AIs there, withdraw, and leave.
+- [Files](https://docs.gettrillion.ai/use/files): Keep files in your Trillion so every AI you use can read them: upload from the browser, let your AI save and show files, and open them in Finder.
+- [Messages and handoffs](https://docs.gettrillion.ai/use/messages-and-handoffs): Every AI you use keeps what you said and what it replied in one place, and hands work to your other AIs and to people.
+- [Pursuits and progress](https://docs.gettrillion.ai/use/pursuits-and-progress): Tell Trillion what you are working toward, mark the one pursuit that moves the rest, and see how your decisions are turning out.
+
+## Guides: Apps
+
+- [Chrome extension](https://docs.gettrillion.ai/apps/chrome-extension): Send to Trillion sends any page, post, picture or selection from your browser to your AIs, with what you want done with it.
+- [iPhone app](https://docs.gettrillion.ai/apps/iphone): The Trillion app for iPhone: your needle mover on Home, voice memos with live words, and Add to Trillion in every Share sheet.
+
+## Guides: For builders
+
+- [Hooks for coding AIs](https://docs.gettrillion.ai/harness/overview): Small programs that run beside Claude Code, Codex and other coding AIs on your own computer, so they decide with Trillion, keep every message and file there, and hear about new decisions.
+- [Decide before building](https://docs.gettrillion.ai/harness/decide-before-building): A hook that stops your coding AI from editing files or saving work until it has made a Trillion decision in the same turn.
+- [Record every message](https://docs.gettrillion.ai/harness/record-every-message): A hook that keeps what you say to your coding AI, and what it replies, in your Trillion, from Claude Code, Codex, Gemini CLI and Hermes.
+- [More hooks](https://docs.gettrillion.ai/harness/other-hooks): Hooks that tell your AI about new decisions, keep the files it writes in your Trillion, wake it when work arrives, and check a commit before it is saved.
+
+## Tool reference
+
+- [Tools reference](https://docs.gettrillion.ai/reference/overview): Every tool Trillion gives your AI, grouped by the job you want done. 155 tools in all.
+- [Setup and goals](https://docs.gettrillion.ai/reference/setup-and-goals): Start Trillion with a new person and keep what they are working toward.
+- [Decisions](https://docs.gettrillion.ai/reference/decisions): Walk a decision through its questions, record the choice, and learn from how it turned out.
+- [Messages and activity](https://docs.gettrillion.ai/reference/messages): Keep conversations word for word so every AI you use can read them, and see what your AIs did.
+- [Workshop tools](https://docs.gettrillion.ai/reference/tools): Find a tool that does the job, run it, build your own and offer it to others.
+- [Workflows](https://docs.gettrillion.ai/reference/workflows): Get a job done in several checked steps, and keep your own step-by-step methods.
+- [Rules, schedules and connected accounts](https://docs.gettrillion.ai/reference/automations): Make Trillion run a tool or workflow by itself when something happens or at a set time.
+- [Files and media](https://docs.gettrillion.ai/reference/files): Save, find, read and show your files, and find moments in your recordings.
+- [Hand off work](https://docs.gettrillion.ai/reference/hand-off): Let the AIs you use find each other and hand work on, on your account or inside a shared space.
+- [Shared spaces](https://docs.gettrillion.ai/reference/spaces): Work with other people in a group, project or event: invite them, share into it, and decide who may do what.
+- [Sharing](https://docs.gettrillion.ai/reference/sharing): Choose who sees each thing you keep, where the things you send to Trillion go, and read what others shared with you.
+- [People and introductions](https://docs.gettrillion.ai/reference/people): Find people on the Trillion network who offer what you need, and ask to meet them.
+- [Communities](https://docs.gettrillion.ai/reference/communities): Join a community, post, go to events, take courses and meet other members.
+- [Book a session](https://docs.gettrillion.ai/reference/sessions): See the sessions you can book with a person, pay, pick a time, and move or cancel it.
+- [Writing](https://docs.gettrillion.ai/reference/writing): Write in your own formats, and keep private answers to the questions your audience asks.
+
+Open Trillion: https://app.gettrillion.ai

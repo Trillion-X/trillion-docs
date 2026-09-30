@@ -1,0 +1,609 @@
+{
+  "_what": "Which reference page each live Trillion MCP tool is documented on, in the order a person meets them, plus a short opening for each page and hand-written example arguments where a made-up value reads better than a placeholder. Every tool in the live tools/list must appear exactly once; make-reference.mjs refuses otherwise.",
+  "groups": [
+    {
+      "id": "setup-and-goals",
+      "title": "Setup and goals",
+      "icon": "flag",
+      "description": "Start Trillion with a new person and keep what they are working toward.",
+      "intro": "These tools get a person started and keep what they are working toward. Every decision is weighed against these goals, so your AI reads them before it advises.",
+      "tools": [
+        "start_setup",
+        "list_pursuits",
+        "record_pursuits"
+      ]
+    },
+    {
+      "id": "decisions",
+      "title": "Decisions",
+      "icon": "compass",
+      "description": "Walk a decision through its questions, record the choice, and learn from how it turned out.",
+      "intro": "A decision starts with a goal, the facts so far and at least two options. Your AI then answers one question at a time until none remain, records the choice with its reason, next action and how you will know it worked, and later reports how it went. On the free plan a decision is not kept after it is made; a paid plan keeps every decision, note and result.",
+      "tools": [
+        "list_methods",
+        "start_decision",
+        "next_question",
+        "answer_question",
+        "revise_evidence",
+        "add_note",
+        "decide",
+        "report_result",
+        "list_decisions",
+        "export_decision",
+        "related_decisions",
+        "read_shared_decision",
+        "what_helped",
+        "score_candidates"
+      ]
+    },
+    {
+      "id": "messages",
+      "title": "Messages and activity",
+      "icon": "comments",
+      "description": "Keep conversations word for word so every AI you use can read them, and see what your AIs did.",
+      "intro": "Everything you say to one AI can be read by every other AI you connect. These tools keep conversations, bring in earlier chats from an export, and show what each AI did and why.",
+      "tools": [
+        "record_messages",
+        "read_messages",
+        "bring_in_chat",
+        "bring_in_chat_export",
+        "read_activity",
+        "trace_item"
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Workshop tools",
+      "icon": "wrench",
+      "description": "Find a tool that does the job, run it, build your own and offer it to others.",
+      "intro": "The Workshop holds tools that do one job each: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job. When no tool fits, your AI can build one and keep it. The Workshop comes with a paid plan.",
+      "tools": [
+        "find_tool_for_job",
+        "run_tool",
+        "read_task",
+        "describe_tool",
+        "save_tool",
+        "delete_tool",
+        "publish_tool",
+        "unpublish_tool"
+      ]
+    },
+    {
+      "id": "workflows",
+      "title": "Workflows",
+      "icon": "list-check",
+      "description": "Get a job done in several checked steps, and keep your own step-by-step methods.",
+      "intro": "A workflow is a job done in several steps, where each step's result is checked before the next one starts. Your AI does most steps itself; a step that names a Workshop tool is run by Trillion. You can keep your own workflows, for example from a checklist you already follow.",
+      "tools": [
+        "find_workflow",
+        "describe_workflow",
+        "start_workflow",
+        "submit_workflow_step",
+        "read_workflow_run",
+        "save_workflow",
+        "publish_workflow",
+        "unpublish_workflow"
+      ]
+    },
+    {
+      "id": "automations",
+      "title": "Rules, schedules and connected accounts",
+      "icon": "bolt",
+      "description": "Make Trillion run a tool or workflow by itself when something happens or at a set time.",
+      "intro": "Rules and schedules run a tool or start a workflow with no AI in the loop: a rule when something happens (a message is recorded, a comment arrives, something is added to a shared space), a schedule at a time. Connected accounts, such as your Instagram, are where outside events come from.",
+      "tools": [
+        "set_rule",
+        "list_rules",
+        "remove_rule",
+        "set_schedule",
+        "list_schedules",
+        "run_now",
+        "remove_schedule",
+        "list_connections",
+        "connect_service",
+        "listen_for_events"
+      ]
+    },
+    {
+      "id": "files",
+      "title": "Files and media",
+      "icon": "folder-open",
+      "description": "Save, find, read and show your files, and find moments in your recordings.",
+      "intro": "Your files live in your Trillion, where any AI you connect can find, read and show them. Big files are sent in pieces or straight from a computer. What an AI works out about a file, like a transcript or a summary, is kept so no AI has to work it out again. Files come with a paid plan.",
+      "tools": [
+        "list_files",
+        "find_file",
+        "read_file",
+        "show_file",
+        "write_file",
+        "start_file_upload",
+        "put_file_piece",
+        "finish_file_upload",
+        "cancel_file_upload",
+        "files_summary",
+        "read_file_results",
+        "list_file_results",
+        "record_file_results",
+        "list_media",
+        "search_media",
+        "next_media_edit"
+      ]
+    },
+    {
+      "id": "hand-off",
+      "title": "Hand off work",
+      "icon": "right-left",
+      "description": "Let the AIs you use find each other and hand work on, on your account or inside a shared space.",
+      "intro": "Each AI you connect can say what it does, find the others, and hand them a job. The job waits until an agent takes it, and the agent that handed it off reads the result. The same works inside a shared space, where every member sees the handoff. Handing work between your AI apps comes with a paid plan.",
+      "tools": [
+        "publish_agent",
+        "set_agent_capacity",
+        "agent_presence",
+        "find_agents",
+        "hand_off",
+        "take_work",
+        "finish_work",
+        "read_handoff",
+        "address_open_work",
+        "send_agent_event",
+        "read_agent_events",
+        "saved_instructions",
+        "make_agent_key",
+        "publish_space_agent",
+        "withdraw_space_agent",
+        "find_space_agents",
+        "hand_off_in_space",
+        "take_space_work",
+        "finish_space_work",
+        "read_space_handoff"
+      ]
+    },
+    {
+      "id": "spaces",
+      "title": "Shared spaces",
+      "icon": "users",
+      "description": "Work with other people in a group, project or event: invite them, share into it, and decide who may do what.",
+      "intro": "A shared space is a group, project, event, community or one-to-one you work in with other people. It holds only what members put there; nobody, and no agent, can read another member's private Trillion through it. Spaces come with a paid plan.",
+      "tools": [
+        "list_spaces",
+        "open_space",
+        "create_membership",
+        "read_space",
+        "add_to_space",
+        "share_to_space",
+        "withdraw_from_space",
+        "read_shared_file",
+        "mark_space_seen",
+        "describe_space",
+        "read_space_picture",
+        "name_in_space",
+        "make_space_invite",
+        "list_space_invites",
+        "revoke_space_invite",
+        "join_space",
+        "leave_membership",
+        "read_space_rules",
+        "set_space_rules",
+        "set_member_type",
+        "add_member_type",
+        "remove_member_type",
+        "hide_in_space"
+      ]
+    },
+    {
+      "id": "sharing",
+      "title": "Sharing",
+      "icon": "share-nodes",
+      "description": "Choose who sees each thing you keep, where the things you send to Trillion go, and read what others shared with you.",
+      "intro": "Every record you keep, a goal, a decision, a message, a file or a tool, can be shared with the Trillion network, a shared space or particular people, or kept to yourself. These tools read and change those choices, and set where the pages and files you send to Trillion go.",
+      "tools": [
+        "sharing_of",
+        "set_sharing",
+        "shared_with_me",
+        "read_shared",
+        "share_destinations",
+        "save_share_destinations"
+      ]
+    },
+    {
+      "id": "people",
+      "title": "People and introductions",
+      "icon": "handshake",
+      "description": "Find people on the Trillion network who offer what you need, and ask to meet them.",
+      "intro": "The Trillion network finds people by what they offer and what they are looking for. Contact details are shared only when both people agree to meet. Trillion's network comes with a paid plan.",
+      "tools": [
+        "network_profile",
+        "find_people",
+        "request_introduction",
+        "network",
+        "answer_introduction",
+        "label_person"
+      ]
+    },
+    {
+      "id": "communities",
+      "title": "Communities",
+      "icon": "people-group",
+      "description": "Join a community, post, go to events, take courses and meet other members.",
+      "intro": "A community is a shared space with its own rules for who may join, a feed of posts, events, courses, levels and rewards. A community never shares anyone's contact. Its owner can change how it works and let members be paired to meet each other.",
+      "tools": [
+        "list_communities",
+        "community",
+        "join_community",
+        "whats_new",
+        "post_to_community",
+        "vote_post",
+        "remove_post",
+        "rsvp_event",
+        "create_community_event",
+        "complete_lesson",
+        "claim_reward",
+        "community_notifications",
+        "my_matches",
+        "set_matching",
+        "score_match_candidates",
+        "suggest_match_topics",
+        "pass_match",
+        "change_community",
+        "set_member_role",
+        "send_community_digests",
+        "run_matching_round",
+        "hand_over_community"
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Book a session",
+      "icon": "calendar-days",
+      "description": "See the sessions you can book with a person, pay, pick a time, and move or cancel it.",
+      "intro": "Some sessions are with a person, for example working a decision through together. These tools show what is on offer, keep the time you pick while you pay, book it on the host's calendar, and move or cancel it.",
+      "tools": [
+        "session_offers",
+        "open_session_times",
+        "buy_session",
+        "book_session_time",
+        "change_session"
+      ]
+    },
+    {
+      "id": "writing",
+      "title": "Writing",
+      "icon": "pen",
+      "description": "Write in your own formats, and keep private answers to the questions your audience asks.",
+      "intro": "Your content formats say how you write each kind of piece, from a newsletter to a short video. The audience question tools keep questions people ask in public, check them against their sources, and keep a private draft answer. Nothing here is published.",
+      "tools": [
+        "content_formats",
+        "save_content_formats",
+        "list_audience_questions",
+        "observe_audience_source",
+        "keep_audience_question",
+        "review_audience_question",
+        "admit_audience_question",
+        "save_audience_answer_draft"
+      ]
+    }
+  ],
+  "say": {
+    "address_open_work": "Names the agent for waiting work that is linked to a source and arrived before the agent that owns it was known. Needs the exact source_id kept on that handoff, and keeps the handoff's original id."
+  },
+  "examples": {
+    "record_pursuits": {
+      "pursuits": [
+        {
+          "title": "Ten paying customers",
+          "now": "3 paying customers, all from friends",
+          "after": "10 paying customers by December",
+          "why_it_matters": "It proves strangers will pay",
+          "needle_mover": true
+        }
+      ]
+    },
+    "record_messages": {
+      "messages": [
+        {
+          "conversation_id": "chat-2026-09-29-pricing",
+          "speaker": "person",
+          "text": "Should I raise my price to $40?"
+        },
+        {
+          "conversation_id": "chat-2026-09-29-pricing",
+          "speaker": "ai",
+          "text": "Let's walk it through with Trillion."
+        }
+      ]
+    },
+    "read_messages": {
+      "not_app": "ChatGPT",
+      "limit": 20
+    },
+    "start_decision": {
+      "source_id": "launch-timing-2026-09-29",
+      "goal": "Launch the new pricing page this week or next",
+      "evidence": [
+        {
+          "ref": "signups",
+          "claim": "Signups dropped 20% since the old page went up"
+        },
+        {
+          "ref": "bug",
+          "claim": "Checkout fails for about 1 in 50 buyers"
+        }
+      ],
+      "options": [
+        {
+          "id": "this-week",
+          "label": "Launch this week"
+        },
+        {
+          "id": "next-week",
+          "label": "Fix checkout first, launch next week"
+        }
+      ]
+    },
+    "answer_question": {
+      "case_id": "<case_id>",
+      "step_id": "<step id from the question>",
+      "answer": {
+        "<field from answer_schema>": "Fixing checkout first protects the buyers we already have.",
+        "evidence_refs": [
+          "bug"
+        ]
+      }
+    },
+    "revise_evidence": {
+      "case_id": "<case_id>",
+      "add": [
+        {
+          "ref": "support",
+          "claim": "Two customers wrote in about the checkout bug today"
+        }
+      ],
+      "retract": [
+        {
+          "ref": "signups",
+          "because": "The drop was a tracking error"
+        }
+      ]
+    },
+    "add_note": {
+      "case_id": "<case_id>",
+      "text": "Sarah says the payment provider fixes the bug on Friday."
+    },
+    "decide": {
+      "case_id": "<case_id>",
+      "option_id": "next-week",
+      "reason": "Checkout failures cost more than a week's delay.",
+      "evidence_refs": [
+        "bug"
+      ],
+      "next_action": "Fix the checkout bug today",
+      "success_measure": "No failed checkouts for 7 days, then launch"
+    },
+    "report_result": {
+      "case_id": "<case_id>",
+      "result": "met",
+      "summary": "Launched a week later; 4 people bought in the first two days.",
+      "answered_by": "person"
+    },
+    "export_decision": {
+      "case_id": "<case_id>",
+      "format": "markdown"
+    },
+    "score_candidates": {
+      "state": "A customer writes: my card was charged twice.",
+      "instructions": "Which team should answer?",
+      "criteria": {
+        "billing": "Payments, charges and refunds",
+        "product": "How a feature works",
+        "account": "Signing in and account access"
+      }
+    },
+    "find_tool_for_job": {
+      "job": "Turn this recording into a transcript"
+    },
+    "run_tool": {
+      "tool_id": "<tool_id from find_tool_for_job>",
+      "input": {
+        "recording": "1f:<64 hex>"
+      },
+      "request_key": "transcribe-interview-2026-09-29",
+      "job": "Transcript of Tuesday's interview"
+    },
+    "describe_tool": {
+      "tool_id": "tool:extract-sound"
+    },
+    "find_workflow": {
+      "job": "Research a question and turn it into a plan"
+    },
+    "describe_workflow": {
+      "workflow_id": "workflow:l078-research-to-plan"
+    },
+    "start_workflow": {
+      "workflow_id": "workflow:l078-research-to-plan",
+      "input": {},
+      "request_key": "pricing-research-2026-09-29"
+    },
+    "set_rule": {
+      "when": {
+        "source_id": "events:instagram",
+        "event": "comment",
+        "words": [
+          "GUIDE"
+        ],
+        "once_per": "from_id"
+      },
+      "then": {
+        "tool_id": "<tool_id>",
+        "input": {
+          "comment": {
+            "fill": {
+              "from": "event",
+              "field": "comment_id"
+            }
+          }
+        }
+      },
+      "label": "Send my guide to anyone who comments GUIDE"
+    },
+    "set_schedule": {
+      "every": {
+        "unit": "week",
+        "on": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "at": "09:00",
+        "time_zone": "America/New_York"
+      },
+      "then": {
+        "workflow_id": "<workflow_id>",
+        "input": {}
+      },
+      "label": "Morning review"
+    },
+    "connect_service": {
+      "service": "instagram"
+    },
+    "listen_for_events": {
+      "source_id": "events:instagram"
+    },
+    "list_files": {
+      "folder": "/"
+    },
+    "find_file": {
+      "name_or_identity": "/contracts/lease.pdf"
+    },
+    "read_file": {
+      "name_or_identity": "/notes/ideas.md"
+    },
+    "show_file": {
+      "name_or_identity": "/edits/cover-cut.mp4"
+    },
+    "write_file": {
+      "name": "/notes/ideas.md",
+      "text": "Three ideas for the launch email."
+    },
+    "start_file_upload": {
+      "name": "/recordings/interview.mp4",
+      "byte_length": 734003200,
+      "media_type": "video/mp4"
+    },
+    "record_file_results": {
+      "results": [
+        {
+          "identity": "1f:<64 hex>",
+          "kind": "summary",
+          "value": "Interview with a customer about onboarding."
+        }
+      ]
+    },
+    "search_media": {
+      "question": "where I talk about pricing"
+    },
+    "network_profile": {
+      "findable": true,
+      "offering": "Brand design for small software companies",
+      "seeking": "A part-time bookkeeper",
+      "contact": "you@example.com"
+    },
+    "find_people": {
+      "need": "Someone who can help with brand design"
+    },
+    "request_introduction": {
+      "to": "<relay id from find_people>",
+      "why": "I am redoing my brand and liked your work for small software companies."
+    },
+    "publish_agent": {
+      "name": "Research helper",
+      "description": "Reads sources and writes short, cited summaries.",
+      "skills": [
+        "research",
+        "summaries"
+      ],
+      "takes_work": true,
+      "capacity": {
+        "max_concurrent": 2
+      }
+    },
+    "hand_off": {
+      "job": "Summarise the three competitor pricing pages into one table",
+      "request_key": "competitor-pricing-2026-09-29",
+      "to_agent": "<agent_id from find_agents>"
+    },
+    "take_work": {
+      "agent_id": "<your agent_id>"
+    },
+    "finish_work": {
+      "handoff_id": "<handoff_id>",
+      "agent_id": "<your agent_id>",
+      "result": "Table attached as /research/pricing.md",
+      "summary": "3 competitors compared"
+    },
+    "make_agent_key": {
+      "reach": {
+        "private": false,
+        "spaces": [
+          "<space_id>"
+        ]
+      }
+    },
+    "create_membership": {
+      "label": "project",
+      "title": "Autumn launch"
+    },
+    "add_to_space": {
+      "space_id": "<space_id>",
+      "items": [
+        {
+          "kind": "note",
+          "title": "Launch date",
+          "body": "We agreed on October 14."
+        }
+      ]
+    },
+    "share_to_space": {
+      "space_id": "<space_id>",
+      "record_id": "<case_id>"
+    },
+    "make_space_invite": {
+      "space_id": "<space_id>",
+      "days": 7
+    },
+    "set_sharing": {
+      "record": "<case_id>",
+      "network": false,
+      "spaces": [
+        "<space_id>"
+      ]
+    },
+    "post_to_community": {
+      "community_id": "<community_id>",
+      "body": "Has anyone priced a course above $500? What happened?"
+    },
+    "create_community_event": {
+      "community_id": "<community_id>",
+      "title": "Monthly founders call",
+      "starts_at": "2026-10-15T17:00:00Z",
+      "repeats": {
+        "every": "month",
+        "count": 6
+      }
+    },
+    "book_session_time": {
+      "start": "<start from open_session_times>",
+      "name": "Alex Rivera",
+      "time_zone": "Europe/London"
+    },
+    "save_content_formats": {
+      "formats": [
+        {
+          "label": "Weekly note",
+          "spec": "A hook line, one story from the week, one lesson, one question for readers."
+        }
+      ]
+    }
+  }
+}

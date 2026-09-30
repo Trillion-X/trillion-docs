@@ -1,0 +1,58 @@
+---
+title: "Claude"
+description: "Add Trillion to claude.ai and the Claude desktop app as a custom connector."
+---
+
+For claude.ai and the Claude desktop app, on any plan (the Free plan allows one custom connector). Each claude.ai account keeps its own list of connectors, so a second Claude account adds Trillion once too and signs in with the same passkey, reaching the same Trillion. Claude Code keeps its own list on each computer instead; see [Claude Code](/connect/claude-code).
+
+<Steps>
+  <Step title="Open your Connectors">
+    Sign in to claude.ai, or open the Claude desktop app. In the left sidebar click **Customize**, then **Connectors**.
+
+    [Open Claude connectors](https://claude.ai/settings/connectors)
+
+    **If not:** on a Team or Enterprise plan only the owner can add connectors. Ask them to add Trillion in **Organization settings**, **Connectors**, **Add**, **Custom**, **Web**, with the address in step 3. Then you open **Customize**, **Connectors** and click **Connect** next to Trillion, and skip to step 5.
+  </Step>
+  <Step title="Click + and then Add custom connector">
+    The **+** is at the top of the Connectors list. A window called **Add custom connector** opens.
+  </Step>
+  <Step title="Type the name and paste the address">
+    In the name box type `Trillion`. Copy the address below and paste it in the URL box. Then click the button at the bottom right to go on.
+
+    ```text
+    https://app.gettrillion.ai/mcp
+    ```
+
+    **If not:** if Claude says the address is not valid, check that it starts with `https://` and ends with `/mcp`, with no space before or after.
+  </Step>
+  <Step title="Click Add">
+    The next part of the window shows Claude's sign-in choices. Claude has already picked the right ones for Trillion, so do not change anything. Scroll down and click **Add**.
+
+    **Leave as it is:** Authentication: Sign in now (Detected). OAuth client: Use Claude's published identity (Detected). Request headers: none. Advanced, Transport: Streamable HTTP.
+
+    **When it worked:** Trillion is in your Connectors list.
+  </Step>
+  <Step title="Click Connect and tap your passkey">
+    Next to Trillion click **Connect**. A Trillion page opens: tap your passkey (Touch ID or Face ID) and allow Claude. The page closes by itself.
+
+    **When it worked:** Trillion shows as connected.
+
+    **If not:** if you pressed Cancel on the passkey, or the page closed too early, click **Connect** again. If you have no Trillion account yet, choose **Create your Trillion account** under **New here?** on that page.
+  </Step>
+  <Step title="Let Trillion run without asking">
+    Still in **Customize**, **Connectors**, click **Trillion**. Under **Tool permissions**, choose **Always allow** for each group of tools. Claude then uses Trillion without stopping to ask you each time.
+
+    **When it worked:** Always allow is next to every group of Trillion's tools.
+
+    **If not:** if Claude still asks before a Trillion tool, click **Always allow** on that prompt; it stays that way for that tool.
+  </Step>
+  <Step title="Turn it on in a chat">
+    Start a new chat. Click the **+** at the bottom left of the message box, choose **Connectors** and switch Trillion on. Then ask for what you want, for example:
+
+    ```text
+    Use Trillion to help me decide what to focus on this week.
+    ```
+
+    **If not:** if Claude answers without using Trillion, write "Use Trillion" at the start of your message.
+  </Step>
+</Steps>

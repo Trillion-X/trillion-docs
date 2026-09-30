@@ -1,0 +1,152 @@
+---
+title: "Messages and activity"
+description: "Keep conversations word for word so every AI you use can read them, and see what your AIs did."
+---
+
+Everything you say to one AI can be read by every other AI you connect. These tools keep conversations, bring in earlier chats from an export, and show what each AI did and why.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Record messages
+
+`record_messages` · Changes things
+
+Keeps messages between this person and you in their Trillion account, word for word, so every other AI they use can read them (`read_messages`). Call it on every turn, before you send your reply, with both sides: the person's message (speaker "person") and the reply you are about to send (speaker "ai"), then send exactly that reply. Each message: conversation_id (the same id for every turn of this chat; make one up at the start if the app gives you none), app (your app, like "ChatGPT", "Claude", "Muse"; it defaults to the app you connected as), speaker, text (exactly as written, never summarized), at (leave it out for this turn and Trillion stamps the time; give it only for older messages you are sending from an earlier conversation, as their real ISO time), model (optional) and about (optional: what it concerns, as [&#123;kind, id&#125;], like &#123;"kind": "pursuit", "id": "pursuit:content"&#125;, &#123;"kind": "decision", "id": "&#60;case_id&#62;"&#125;, &#123;"kind": "tool", "id": "tool:extract-sound"&#125;, &#123;"kind": "file", "id": "1f:..."&#125;). Up to 100 messages a call, so an earlier conversation can be sent in batches. A retry with the same original at changes nothing; keep the original time when retrying. Without at, the time is when this call records it. Returns how many were new and each message's id. It does not send the messages to anyone.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `messages` | object[] | Yes |  |
+| `messages[].conversation_id` | string | Yes |  |
+| `messages[].app` | string |  |  |
+| `messages[].speaker` | string | Yes | "person" for the person, "ai" for you, or the name of anyone else in the conversation |
+| `messages[].text` | string | Yes |  |
+| `messages[].at` | string |  |  |
+| `messages[].model` | string |  |  |
+| `messages[].about` | object[] |  |  |
+| `messages[].about[].kind` | string | Yes |  |
+| `messages[].about[].id` | string | Yes |  |
+
+```json Example
+{
+  "messages": [
+    {
+      "conversation_id": "chat-2026-09-29-pricing",
+      "speaker": "person",
+      "text": "Should I raise my price to $40?"
+    },
+    {
+      "conversation_id": "chat-2026-09-29-pricing",
+      "speaker": "ai",
+      "text": "Let's walk it through with Trillion."
+    }
+  ]
+}
+```
+
+## Read messages from all AIs
+
+`read_messages` · Reads only
+
+Reads messages this person exchanged with any of their AIs, newest first: each with id, conversation_id, app, speaker, text, at and about. Filter by conversation_id, by app, by not_app (everything except one app, like your own, to see what they said elsewhere), or by about_id (messages about one pursuit, decision, tool or file). Returns a page and next_before; pass next_before as before for the page before it. Read it at the start of a conversation to pick up what the person has been working on with their other AIs. It never changes anything.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `conversation_id` | string |  |  |
+| `app` | string |  |  |
+| `not_app` | string |  |  |
+| `about_id` | string |  |  |
+| `before` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "not_app": "ChatGPT",
+  "limit": 20
+}
+```
+
+## Bring in one chat
+
+`bring_in_chat` · Changes things
+
+Brings one earlier chat into Trillion from its exported archive, word for word, with the files its messages carried: into the person's private Trillion (leave space_id out) or into one shared space they name (space_id). Files are found among the person's own files and never copied: attachments maps each attachment id in the chat (like file-AbC123) to the name or identity of that file in their files, and attachments_folder names a folder whose files start with those ids, as in an export. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; put them in the person's files and bring the chat in again to add them. Bringing the same chat in again adds nothing twice. For a whole account export use `bring_in_chat_export`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `conversation` | object | Yes | One conversation exactly as the chat app exported it (for ChatGPT: the conversation object with title, mapping and current_node). |
+| `space_id` | string |  | A space_id from `list_spaces` |
+| `app` | string |  | The app it came from; ChatGPT when left out |
+| `attachments` | object |  | Attachment id to the name (like /chats/file-AbC123-photo.png) or identity of that file in the person's files |
+| `attachments_folder` | string |  | A folder in the person's files holding the chat's files, named with their ids first |
+
+```json Example
+{
+  "conversation": {}
+}
+```
+
+## Bring in a chat export
+
+`bring_in_chat_export` · Changes things
+
+Brings a whole account export of chats (for ChatGPT, conversations.json) into Trillion, from a file already in the person's files (file: its name or identity), with the files the chats carried: into their private Trillion, or into the one shared space they name (space_id). Upload the whole export folder, not just conversations.json: its files are found in the same folder as conversations.json and the folders under it, or in attachments_folder if the person put them elsewhere, and are never copied. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; add them to the person's files and bring the export in again to add them. A page of conversations per call; call again with offset set to next_offset until it is null. Nothing is brought in twice. Needs the private reach, since the file is private.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `file` | string | Yes |  |
+| `space_id` | string |  | A space_id from `list_spaces` |
+| `offset` | integer |  |  |
+| `limit` | integer |  |  |
+| `app` | string |  |  |
+| `attachments_folder` | string |  | The folder in the person's files holding the export's other files, when it is not the folder conversations.json is in |
+
+```json Example
+{
+  "file": "<file>"
+}
+```
+
+## Read what my AIs did
+
+`read_activity` · Reads only
+
+What the AIs connected to this account did, newest first: each row says which AI app did it, what it did (handed off work, ran a tool, saved a file, published a tool...), the item it made or touched, whether it worked and, if not, why. Use it to see what another AI already did before repeating it. app narrows to one AI app by the name shown in its rows; for narrows to what was done for one thing (a decision's case_id, or an id a message was about); before (a row's seq) reads older rows; limit caps how many (default 50). Each row lists the ids it used and what it was for; `trace_item` follows them. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `app` | string |  |  |
+| `for` | string |  |  |
+| `before` | integer |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Trace how something came about
+
+`trace_item` · Reads only
+
+Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of `read_activity` shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a `read_activity` row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `item` | string | Yes |  |
+
+```json Example
+{
+  "item": "<item>"
+}
+```

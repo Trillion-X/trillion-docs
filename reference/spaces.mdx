@@ -1,0 +1,482 @@
+---
+title: "Shared spaces"
+description: "Work with other people in a group, project or event: invite them, share into it, and decide who may do what."
+---
+
+A shared space is a group, project, event, community or one-to-one you work in with other people. It holds only what members put there; nobody, and no agent, can read another member's private Trillion through it. Spaces come with a paid plan.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## List my shared spaces
+
+`list_spaces` · Reads only
+
+The shared spaces this person is in (groups and projects with other people), each with its description and picture, the names its members show there, how many items of each kind it holds, unread (items other members added since this person last marked it seen) and last_activity_at. A space holds only what members put there; nobody, and no agent, can read another member's private Trillion through it.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Open a shared space
+
+`open_space` · Reads only
+
+One shared space: its description and picture, its members by the name each shows there (never a contact), how many items of each kind it holds, unread and last_activity_at, and the agents members' AIs put to work there.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Start a shared space
+
+`create_membership` · Changes things
+
+Starts a shared space with this person as its first member and owner: a group, project, event, community or one-to-one (label). Every one is a shared space (`list_spaces`, `share_to_space`, `add_to_space`, `hand_off_in_space`); events take starts_at and ends_at; size_limit caps members. Invite people into a group or project with `request_introduction` and its membership_id. A community is joined by its own rules instead (anyone may join with `join_community` when its join rules let them, and it never shares anyone's contact); it starts with the community label's starting configuration, and config replaces any of its keys (title comes from title). Its posts are the space's messages.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `label` | string | Yes | One of `one-to-one`, `group`, `project`, `event`, `community`. |
+| `title` | string | Yes |  |
+| `config` | object |  | The community, as data. title and about in the owner's words; join lists who may join ([&#123; "free": true &#125;] or [&#123; "access": "access:decision-history", "says": "Members of the $100 a month plan" &#125;]); spaces turns on feed, events, members and levels and says who sees each ("members" or "everyone"; "everyone" is the free view, open to anyone signed in or not); events_by is "owner" or "members"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported) with op count, weighted_count, sum or distinct, for example &#123; "id": "points", "op": "weighted_count", "inputs": [&#123; "match": &#123; "kind": "post" &#125; &#125;], "params": &#123; "weights": [3] &#125; &#125;; levels are &#123; "measure": "points", "bands": [&#123; "name": "New", "min": 0, "max": 10 &#125;, &#123; "name": "Regular", "min": 10 &#125;] &#125;; rewards are [&#123; "id", "title", "says", "needs": &#123; "measure", "at_least" &#125;, "per_person" &#125;]; owner_name is the name members see for the owner; roles are &#123; "host": &#123; "may": ["put_on_events", "remove_posts", "set_roles", "send_digests"] &#125; &#125;; feed is &#123; "order": "ranked", "votes_per_member": 10, "signals": [&#123; "key", "label", "weight", "field": "votes" \| "replies" \| "age_hours", "saturates_at", "falls" &#125;] &#125;; courses are [&#123; "id", "title", "about", "lessons": [&#123; "id", "title", "body" &#125;] &#125;] (a lesson done is the fact kind lesson_completed); streak is &#123; "cadence": &#123; "period": "week", "times": 1 &#125;, "of": &#123; "match": &#123; "kind": "event_attended" &#125; &#125;, "label" &#125;; digest is &#123; "every_days": 7, "cadence", "nudge_at": 0..1, "subject" &#125; with mail &#123; "send_binding", "from": &#123; "email", "name" &#125;, "reply_to" &#125;; the spaces include courses. |
+| `config.title` | string |  |  |
+| `config.about` | string |  |  |
+| `config.join` | object[] |  |  |
+| `config.spaces` | object |  |  |
+| `config.events_by` | string |  | One of `owner`, `members`. |
+| `config.measures` | object[] |  |  |
+| `config.levels` | object |  |  |
+| `config.rewards` | object[] |  |  |
+| `config.owner_name` | string |  |  |
+| `config.roles` | object |  |  |
+| `config.feed` | object |  |  |
+| `config.courses` | object[] |  |  |
+| `config.streak` | object |  |  |
+| `config.digest` | object |  |  |
+| `config.mail` | object |  |  |
+| `config.matching` | object |  | Pairs members automatically: &#123; every_days, cadence_label, answer_hours, group_size, shortlist_size, default_on, evidence: &#123; questions: [interaction-program intake question ids] &#125;, initiative: &#123; required_level, pre_authorized_levels &#125; &#125;. Each member's own AI scores who they should meet; Trillion introduces the best-scored pairs in a one-to-one space. |
+| `starts_at` | string |  |  |
+| `ends_at` | string |  |  |
+| `size_limit` | integer |  |  |
+
+```json Example
+{
+  "label": "project",
+  "title": "Autumn launch"
+}
+```
+
+## Read a shared space
+
+`read_space` · Reads only
+
+Items in a shared space, newest first: each with kind, title, body, what it is about, and its provenance (made in the space, shared from a member's private Trillion, or brought in from a chat archive; by which member; when). Filter by kind; pass next_before as before for older items.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `kind` | string |  |  |
+| `before` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Add to a shared space
+
+`add_to_space` · Changes things
+
+Adds items made in the space itself, seen by every current member: a message, a shared pursuit, a decision the group made, a note, or any other kind, in your words (kind is any short word). about links other items of the same space by item_id. Say what you will add and get the person's approval first when it speaks for them.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `items` | object[] | Yes |  |
+| `items[].kind` | string | Yes |  |
+| `items[].title` | string |  |  |
+| `items[].body` | any | Yes |  |
+| `items[].about` | string[] |  |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "items": [
+    {
+      "kind": "note",
+      "title": "Launch date",
+      "body": "We agreed on October 14."
+    }
+  ]
+}
+```
+
+## Share one record into a space
+
+`share_to_space` · Changes things
+
+Shares one record from this person's private Trillion into a space they are in, and nothing else: record_id is one pursuit id, decision case_id or message id, file is one file's name or identity, or tool is one of their own saved tools' id (its descriptor and file texts are copied, so another member's AI can keep its own copy with `save_tool`). Only the fields meant for others are copied (a decision leaves behind the pursuits it was weighed against); a file's bytes stay with the person and members read them through the space. Sharing the same record again updates the copy. Only share what the person asked to share.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `record_id` | string |  |  |
+| `file` | string |  |  |
+| `tool` | string |  |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "record_id": "<case_id>"
+}
+```
+
+## Withdraw from a space
+
+`withdraw_from_space` · Changes things and can remove them
+
+Withdraws an item this person put in a space: its words are erased for everyone, and a marker that they withdrew it stays.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `item_id` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "item_id": "<item_id>"
+}
+```
+
+## Read a shared file
+
+`read_shared_file` · Reads only
+
+Where to read the bytes of a file shared into a space (item_id of a file item): a short-lived address. It stops working if the member who shared it withdraws it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `item_id` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "item_id": "<item_id>"
+}
+```
+
+## Mark a space seen
+
+`mark_space_seen` · Changes things
+
+Marks everything in a space as seen by this person, after they (or you, for them) have read it: its unread count starts again from now.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Describe a space and set its picture
+
+`describe_space` · Changes things
+
+Sets what a space is about and its picture, seen by every member: description is a few plain sentences, picture is one of this person's own picture files (its name or identity), shared into the space so members see it. null clears either. Needs the private reach to take a picture from their files.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `description` | string or null |  |  |
+| `picture` | string or null |  | A picture file's name (like /logos/brand.png) or identity in this person's files |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Read a space's picture
+
+`read_space_picture` · Reads only
+
+Where to read the bytes of a space's picture: a short-lived address, for members only.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Set my name in a space
+
+`name_in_space` · Changes things
+
+Sets the name this person shows to the other members of one space.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `name` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "name": "<name>"
+}
+```
+
+## Make an invite link to a space
+
+`make_space_invite` · Changes things
+
+Makes a one-time invite link to a space, for someone who has no Trillion network listing: whoever opens it signed in to Trillion sees the space's name and joins. It works once, lasts days (7 unless you say, at most 30), and stops working if revoked or if this person leaves. Give the link only to the person it is for.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `days` | number |  |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "days": 7
+}
+```
+
+## List my invite links to a space
+
+`list_space_invites` · Reads only
+
+The invite links this person made for a space, each open, used, revoked or expired.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Revoke an invite link
+
+`revoke_space_invite` · Changes things and can remove them
+
+Revokes an invite link this person made (invite_id from `make_space_invite` or `list_space_invites`), so it no longer lets anyone in.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `invite_id` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "invite_id": "<invite_id>"
+}
+```
+
+## Join a space with an invite link
+
+`join_space` · Changes things
+
+Joins a shared space with an invite link someone gave this person (the whole link, or its code). Only when the person asked to join.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `invite` | string | Yes | The invite link, or the code in it |
+
+```json Example
+{
+  "invite": "<invite>"
+}
+```
+
+## Leave a group, event or introduction
+
+`leave_membership` · Changes things and can remove them
+
+Leaves a one-to-one, group, project or event. From then on no member can read this person's contact through it, and this person cannot read theirs or its shared space. What they shared into the space while a member stays there; nothing else of theirs is copied.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `membership_id` | string | Yes |  |
+
+```json Example
+{
+  "membership_id": "<membership_id>"
+}
+```
+
+## Read who may do what in a space
+
+`read_space_rules` · Reads only
+
+Who may do what in one shared space: its rules, each with id, effect (allow or deny), says (what it means), who, actions and when (further conditions, a rule tree over facts), what each covers, the facts, kinds of who and actions a rule can name, the members a rule can name (member_id, name, member_type), and may_change (whether this person may replace them). Every space starts with rules that let its members read, write, share, invite and hand work, let whoever put something there take it back, and let whoever started it change the rules. Changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+
+```json Example
+{
+  "space_id": "<space_id>"
+}
+```
+
+## Change who may do what in a space
+
+`set_space_rules` · Changes things and can remove them
+
+Replaces who may do what in one shared space, for a person its rules let change them (at first, whoever started it). Send the whole list, `read_space_rules` first and change it: each rule is &#123; id, effect: "allow" or "deny", says: what it means in plain words, refuses?: the words a deny says to the person it stops, who?: &#123; kind: "anyone" &#125; or &#123; kind: "any_member" &#125; or &#123; kind: "anyone_with_link" &#125; or &#123; kind: "member_type", member_type &#125; or &#123; kind: "person", person: a member_id from `read_space_rules` &#125;, actions?: [action ids] (every action when left out), when?: &#123; kind: "group", combinator: "and" or "or", rules: [conditions or groups] &#125; &#125;, a condition being &#123; kind: "rule", field: one of the facts, operator: "is_any_of" or "is_none_of", params: &#123; values: [...] &#125; &#125; (is_member, is_owner, holds_link, made_it, maker_is_member and is_community are true or false; action, member_type and person are ids). A rule holds when its who, actions and when all hold. A deny that holds wins; otherwise an allow that holds lets the person act; when none holds they are refused. Who may change the rules is the action change_rules in the same list, and a list that would stop this person changing them again is refused. rules null puts back the rules every space starts with. Every member sees the new rules; say what will change and get the person's approval first.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `rules` | object[] or null | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "rules": "<rules>"
+}
+```
+
+## Give a member a type in a space
+
+`set_member_type` · Changes things
+
+Gives a member of one shared space another member type (member_id and the type ids from `read_space_rules` members and member_types), for a person the space's rules let give people their type (at first, its owner). A member's type is what the space's rules name in who: &#123; kind: "member_type" &#125;. A change that would leave nobody able to change who may do what is refused.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `member_id` | string | Yes |  |
+| `member_type` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "member_id": "<member_id>",
+  "member_type": "<member_type>"
+}
+```
+
+## Add a member type to a space
+
+`add_member_type` · Changes things
+
+Adds a member type of the space's own to one shared space, by its name (for example "Editor"), for a person its rules let change who may do what. It is offered with the space's starting types wherever a type is chosen, and rules can name it by the id `read_space_rules` returns.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `label` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "label": "<label>"
+}
+```
+
+## Remove a member type from a space
+
+`remove_member_type` · Changes things and can remove them
+
+Removes a member type a shared space added itself, while nobody holds it and no rule names it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `member_type` | string | Yes |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "member_type": "<member_type>"
+}
+```
+
+## Hide or show a thing in a space
+
+`hide_in_space` · Changes things
+
+Hides one thing in a shared space from everyone who may not hide or show it (they see only that it is hidden and by whom), or shows it again with hidden false. Its words stay. Allowed when the space's rules let this person hide or show that thing (each thing read with `read_space` says so in may.hide_item).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `item_id` | string | Yes |  |
+| `hidden` | boolean |  |  |
+
+```json Example
+{
+  "space_id": "<space_id>",
+  "item_id": "<item_id>"
+}
+```

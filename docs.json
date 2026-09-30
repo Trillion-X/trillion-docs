@@ -1,0 +1,177 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Trillion",
+  "description": "Trillion helps your AI find the needle mover, then gives it the tools, people and files to get it done.",
+  "colors": {
+    "primary": "#ff1d1d",
+    "light": "#ff1d1d",
+    "dark": "#e01212"
+  },
+  "background": {
+    "color": {
+      "light": "#f4f0e8",
+      "dark": "#000000"
+    }
+  },
+  "appearance": {
+    "default": "light",
+    "strict": false
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://docs.gettrillion.ai"
+  },
+  "favicon": "/favicon.svg",
+  "fonts": {
+    "heading": {
+      "family": "Recoleta",
+      "weight": 500,
+      "source": "/fonts/Recoleta-Medium.woff2",
+      "format": "woff2"
+    },
+    "body": {
+      "family": "SF Pro Text",
+      "weight": 400,
+      "source": "/fonts/SF-Pro-Text-Regular.woff2",
+      "format": "woff2"
+    }
+  },
+  "search": {
+    "prompt": "Search Trillion docs..."
+  },
+  "metadata": {
+    "timestamp": true
+  },
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "canonical": "https://docs.gettrillion.ai",
+      "description": "Connect the AI you already use. Trillion helps it find the needle mover and get it done.",
+      "keywords": "Trillion, needle mover, AI tools, Claude Code, Codex, ChatGPT, Claude Desktop, Cursor, MCP, decisions, spaces, files",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+      "application-name": "Trillion",
+      "apple-mobile-web-app-title": "Trillion",
+      "format-detection": "telephone=no",
+      "og:site_name": "Trillion Docs",
+      "og:type": "website",
+      "og:url": "https://docs.gettrillion.ai",
+      "og:title": "Trillion Docs",
+      "og:description": "Connect the AI you already use. Trillion helps it find the needle mover and get it done.",
+      "og:image": "https://gettrillion.ai/share/home-needle-thread.png",
+      "og:image:alt": "Trillion and its needle and thread mark",
+      "twitter:card": "summary_large_image",
+      "twitter:title": "Trillion Docs",
+      "twitter:description": "Connect the AI you already use. Trillion helps it find the needle mover and get it done.",
+      "twitter:image": "https://gettrillion.ai/share/home-needle-thread.png",
+      "twitter:image:alt": "Trillion and its needle and thread mark"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "gettrillion.ai",
+        "href": "https://gettrillion.ai"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Open Trillion",
+      "href": "https://app.gettrillion.ai"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "index",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Connect your AI",
+            "pages": [
+              "connect/overview",
+              "connect/claude-code",
+              "connect/codex",
+              "connect/chatgpt",
+              "connect/claude-desktop",
+              "connect/cursor",
+              "connect/gemini-cli",
+              "connect/muse",
+              "connect/other-apps"
+            ]
+          },
+          {
+            "group": "Use Trillion",
+            "pages": [
+              "use/decisions",
+              "use/spaces",
+              "use/files",
+              "use/messages-and-handoffs",
+              "use/pursuits-and-progress"
+            ]
+          },
+          {
+            "group": "Apps",
+            "pages": [
+              "apps/chrome-extension",
+              "apps/iphone"
+            ]
+          },
+          {
+            "group": "For builders",
+            "pages": [
+              "harness/overview",
+              "harness/decide-before-building",
+              "harness/record-every-message",
+              "harness/other-hooks"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Tool reference",
+        "groups": [
+          {
+            "group": "Tool reference",
+            "pages": [
+              "reference/overview",
+              "reference/setup-and-goals",
+              "reference/decisions",
+              "reference/messages",
+              "reference/tools",
+              "reference/workflows",
+              "reference/automations",
+              "reference/files",
+              "reference/hand-off",
+              "reference/spaces",
+              "reference/sharing",
+              "reference/people",
+              "reference/communities",
+              "reference/sessions",
+              "reference/writing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "cursor",
+      "vscode"
+    ]
+  }
+}

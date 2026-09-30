@@ -1,0 +1,27 @@
+---
+title: "Gemini CLI"
+description: "Add Trillion to Gemini in your terminal as a remote MCP server."
+---
+
+For Gemini in your terminal. Gemini's web app does not currently document a way to add a custom MCP server.
+
+<Steps>
+  <Step title="Add Trillion">
+    In Terminal, add Trillion as a remote MCP server. Gemini opens a browser when it needs you to sign in.
+
+    ```bash
+    gemini mcp add --transport http trillion https://app.gettrillion.ai/mcp
+    ```
+  </Step>
+  <Step title="Sign in and check the connection">
+    Tap your Trillion passkey in the browser. Then check that Gemini lists Trillion.
+
+    ```bash
+    gemini mcp list
+    ```
+
+    **When it worked:** Trillion appears in the list of connected MCP servers.
+
+    **If not:** in a Gemini CLI session, type `/mcp list` to inspect the connection, or `/mcp auth trillion` to sign in again.
+  </Step>
+</Steps>

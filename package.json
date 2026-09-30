@@ -1,0 +1,15 @@
+{
+  "name": "trillion-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:generate": "node scripts/generate-docs.mjs",
+    "docs:check": "node scripts/generate-docs.mjs --check && node scripts/validate-public-boundary.mjs && node scripts/validate-docs.mjs && mint validate",
+    "dev": "npx mint dev",
+    "docs:reference": "node scripts/make-reference.mjs ."
+  },
+  "devDependencies": {
+    "mint": "4.2.950",
+    "node": "24.21.0"
+  }
+}

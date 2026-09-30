@@ -1,0 +1,121 @@
+---
+title: "Sharing"
+description: "Choose who sees each thing you keep, where the things you send to Trillion go, and read what others shared with you."
+---
+
+Every record you keep, a goal, a decision, a message, a file or a tool, can be shared with the Trillion network, a shared space or particular people, or kept to yourself. These tools read and change those choices, and set where the pages and files you send to Trillion go.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## See who a record is shared with
+
+`sharing_of` · Reads only
+
+Who one of this person's records is shared with, as the sharing sheet shows it: the copy others would see (preview, only the fields that leave), its fields with which are left out, every place it can go (the Trillion network, each space they are in, each person they share a space with) with picked true for where it goes now, the chain switch (the record together with the records linked to it, like a pursuit and its decisions) and inherited_from when a chain choice on another record decides it. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools |
+
+```json Example
+{
+  "record": "<record>"
+}
+```
+
+## Choose who a record is shared with
+
+`set_sharing` · Changes things
+
+Chooses who one of this person's records is shared with, only when they asked. network: true into the network (anonymous learning, and stories when those are on), false never, null as their account chooses (on by default). spaces: the space ids a copy is in; people: the people (the `to.person` of a place from `sharing_of`) who may read it. Not shared at all is network false with no spaces or people. chain: true to cover the records linked to it too. leave_out: field ids no copy carries. Parts left out stay as they are. Copies made elsewhere are changed to match at once. Returns what `sharing_of` returns.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools |
+| `network` | boolean or null |  |  |
+| `spaces` | string[] |  |  |
+| `people` | string[] |  |  |
+| `chain` | boolean |  |  |
+| `leave_out` | string[] |  |  |
+
+```json Example
+{
+  "record": "<case_id>",
+  "network": false,
+  "spaces": [
+    "<space_id>"
+  ]
+}
+```
+
+## See what people shared with me
+
+`shared_with_me` · Reads only
+
+What other people shared with this person one by one, newest first: each with offer_id, who shared it (the name they show in a space you share), its kind and title. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Read something shared with me
+
+`read_shared` · Reads only
+
+Reads one thing another person shared with this person (offer_id from `shared_with_me`): the copy they share, with where it came from. Refused once they stop sharing it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `offer_id` | string | Yes |  |
+
+```json Example
+{
+  "offer_id": "<offer_id>"
+}
+```
+
+## Read where my shares go
+
+`share_destinations` · Reads only
+
+Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id "private", and each shared space they have not hidden, each &#123; id, label, to, on_by_default &#125;), actions (their saved instructions, each &#123; id, label, words &#125;), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Change where my shares go
+
+`save_share_destinations` · Changes things
+
+Changes where this person's shares can go and what their AI does with them; read `share_destinations` first. destinations: each &#123; id, shown, on_by_default &#125; in the order to offer them (one left out keeps its place after these; their own Trillion can never be hidden). actions: the whole list of saved instructions, each &#123; label, words &#125; and optionally id, replacing it (the same list `saved_instructions` reads). default_action_by_site: the whole list of &#123; host_suffix, action_id &#125;. Give any of the three; returns what `share_destinations` returns.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `destinations` | object[] |  |  |
+| `destinations[].id` | string | Yes |  |
+| `destinations[].shown` | boolean |  |  |
+| `destinations[].on_by_default` | boolean |  |  |
+| `actions` | object[] |  |  |
+| `actions[].id` | string |  |  |
+| `actions[].label` | string |  |  |
+| `actions[].words` | string | Yes |  |
+| `default_action_by_site` | object[] |  |  |
+| `default_action_by_site[].host_suffix` | string | Yes |  |
+| `default_action_by_site[].action_id` | string | Yes |  |
+
+```json Example
+{}
+```

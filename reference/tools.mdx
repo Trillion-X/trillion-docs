@@ -1,0 +1,231 @@
+---
+title: "Workshop tools"
+description: "Find a tool that does the job, run it, build your own and offer it to others."
+---
+
+The Workshop holds tools that do one job each: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job. When no tool fits, your AI can build one and keep it. The Workshop comes with a paid plan.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Find a tool for a job
+
+`find_tool_for_job` · Reads only
+
+Finds tools that do a job, described in plain words: the Workshop's tools, which are reached only through this and `run_tool`. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the `run_tool` call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with `report_result`, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and `save_tool` keeps one you build. It runs nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `job` | string | Yes | What needs doing, in plain words |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "job": "Turn this recording into a transcript"
+}
+```
+
+## Run a tool
+
+`run_tool` · Changes things
+
+Runs one Workshop tool (a tool_id from `find_tool_for_job`) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); `read_task` reads it later. An input value &#123;"from_task": "&#60;task id&#62;", "output_selector": "$.field"&#125; uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from `find_file`, `list_files` or `write_file`. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with `report_result`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tool_id` | string | Yes |  |
+| `input` | object | Yes |  |
+| `request_key` | string | Yes |  |
+| `wait_seconds` | number |  |  |
+| `run_at` | string |  |  |
+| `repeat_every_hours` | number |  |  |
+| `job` | string |  |  |
+
+```json Example
+{
+  "tool_id": "<tool_id from find_tool_for_job>",
+  "input": {
+    "recording": "1f:<64 hex>"
+  },
+  "request_key": "transcribe-interview-2026-09-29",
+  "job": "Transcript of Tuesday's interview"
+}
+```
+
+## Read a tool run
+
+`read_task` · Reads only
+
+Reads a tool run by task_id: its state (working, scheduled, completed, failed or for_you_to_run), its checked output, where it ran, any error and any reports, plus the next call to make. Works from any AI app signed in to the same account. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `task_id` | string | Yes | Task id returned by `run_tool` |
+
+```json Example
+{
+  "task_id": "<task_id>"
+}
+```
+
+## Read a tool's descriptor
+
+`describe_tool` · Reads only
+
+Reads one tool's whole descriptor: its job, input and output schemas, invoke (how it runs), placements, licence_class and verify checks, plus the text of its files when it is a shared tool or one of this account's. Use it to learn how working tools are written before `save_tool`, or to change one of this account's tools. It does not run the tool; `run_tool` does.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tool_id` | string | Yes | A tool id from `find_tool_for_job`, like tool:extract-sound |
+
+```json Example
+{
+  "tool_id": "tool:extract-sound"
+}
+```
+
+## Save a tool
+
+`save_tool` · Changes things
+
+Keeps a tool you built to finish a job, so any AI signed in to this account can find it (`find_tool_for_job`) and run it (`run_tool`). Send descriptor, and the tool's code as files (&#123;"main.py": "&#60;the file text&#62;"&#125;, placed in /work) or as bytes_base64 (a gzipped tar unpacked at /). Descriptor fields: id, unique, like "tool:count-words"; job, what it does in plain words, which `find_tool_for_job` matches; label, a short name (optional); input_schema, a JSON Schema with "type": "object"; output_schema, a JSON Schema every result is checked against; invoke, how it runs, one of: &#123;"kind": "container", "argv": ["python3", "main.py", &#123;"from": "text"&#125;], "stdout": "json"&#125; runs your files in a sealed Linux container (Python 3.12, Node 24, ffmpeg, no network) where &#123;"from": "&#60;input field&#62;"&#125; becomes that input and "stdout": "json" returns the last printed line as JSON at $.result; a file input is an input_schema property with "format": "namespace-file", given as a file's identity (1f: then 64 hex), and inside the container it is that file's local path, like /inputs/&#60;hex&#62;/clip.mp4, so the tool never downloads it; a file the tool makes is named in invoke.outputs, like [&#123;"name": "video", "path": "/work/out.mp4", "keep_in": "files", "media_type": "video/mp4"&#125;], and comes back under files.video in the result and in the person's files; &#123;"kind": "model", "model": "@cf/meta/llama-3.1-8b-instruct", "input": &#123;"messages": [&#123;"role": "system", "content": "&#60;your prompt&#62;"&#125;, &#123;"role": "user", "content": &#123;"fill": &#123;"from": "input", "field": "text"&#125;&#125;&#125;]&#125;&#125; asks a hosted model and returns &#123;response&#125;; &#123;"kind": "http", "url": "https://...", "method": "POST", "body": &#123;"q": "&#123;text&#125;"&#125;&#125; calls a web address that answers JSON, where "&#123;text&#125;" becomes input.text; result_selector, the part of the raw result that is the output, like "$.result" (optional); placements, where it runs: ["placement:deployed-container"] for container, ["placement:rented-model-runtime"] for model, ["placement:public-web-address"] for http; licence_class, "licence:maker-own" for your own code or web address, "licence:permissive" for a model tool; verify, the checks that say the job was done, which must include a sample-run &#123;"kind": "sample-run", "input": &#123;&#60;a real input&#62;&#125;, "output_selector": "$.&#60;field&#62;", "contains": "&#60;text the right answer contains&#62;"&#125; (other kinds: output-contains, output-contains-input, output-number-within, output-numbers-close). Never put a key or password in it; name a connection's value with secret_name. Saving runs the sample once where the tool will run and returns sample_check (passed, and what it returned); a refused save lists every problem at once and returns this working example in next_call. Saving the same id again replaces the tool. It stays visible only to this account until `publish_tool`. `delete_tool` removes it. The example below is a complete working one.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `descriptor` | object | Yes | The tool: id, job, input_schema, output_schema, invoke, result_selector, placements, licence_class, verify |
+| `files` | object |  | The tool's code as file name to file text, placed in /work |
+| `bytes_base64` | string |  | Instead of files: the tool's files as a base64 gzipped tar, unpacked at / |
+| `check` | boolean |  | Run the sample-run check right after saving (default true) |
+
+```json Example
+{
+  "descriptor": {
+    "id": "tool:count-words",
+    "label": "Count the words in a text",
+    "job": "Count the words in a piece of text and find the longest word",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The text to count"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "words",
+        "longest"
+      ],
+      "properties": {
+        "words": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "longest": {
+          "type": "string"
+        }
+      }
+    },
+    "invoke": {
+      "kind": "container",
+      "argv": [
+        "python3",
+        "main.py",
+        {
+          "from": "text"
+        }
+      ],
+      "stdout": "json"
+    },
+    "result_selector": "$.result",
+    "placements": [
+      "placement:deployed-container"
+    ],
+    "licence_class": "licence:maker-own",
+    "verify": [
+      {
+        "kind": "sample-run",
+        "input": {
+          "text": "ask not what your country can do for you"
+        },
+        "output_selector": "$.longest",
+        "contains": "country"
+      }
+    ]
+  },
+  "files": {
+    "main.py": "import json, sys\nwords = sys.argv[1].split()\nprint(json.dumps({\"words\": len(words), \"longest\": max(words, key=len) if words else \"\"}))\n"
+  }
+}
+```
+
+## Delete a saved tool
+
+`delete_tool` · Changes things and can remove them
+
+Deletes one of this account's saved tools, so no AI finds or runs it and its id can be saved again. A published tool is withdrawn first with `unpublish_tool`. It never deletes a shared tool or another account's.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tool_id` | string | Yes |  |
+
+```json Example
+{
+  "tool_id": "<tool_id>"
+}
+```
+
+## Publish a tool
+
+`publish_tool` · Changes things
+
+Offers one of this account's saved tools to every account's AI, where `find_tool_for_job` finds it and `run_tool` runs it. First it runs the tool's own sample-run check (verify, kind sample-run) where it will run for others: the sample input is run once and the output at output_selector must contain the expected text, or nothing is published. A tool whose licence lets it run only on each caller's own computer cannot be published. price_ref (optional) names a published price; callers then need the offer that price belongs to. The tool carries names of connections, never their values: each caller connects their own. Returns where it runs; `unpublish_tool` withdraws it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tool_id` | string | Yes |  |
+| `price_ref` | string |  |  |
+
+```json Example
+{
+  "tool_id": "<tool_id>"
+}
+```
+
+## Withdraw a published tool
+
+`unpublish_tool` · Changes things and can remove them
+
+Withdraws a tool this account published, so other accounts no longer find or run it. It stays saved for this account (`delete_tool` removes it). It never touches a tool another account published.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tool_id` | string | Yes |  |
+
+```json Example
+{
+  "tool_id": "<tool_id>"
+}
+```

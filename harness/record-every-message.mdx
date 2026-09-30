@@ -1,0 +1,64 @@
+---
+title: "Record every message"
+description: "A hook that keeps what you say to your coding AI, and what it replies, in your Trillion, from Claude Code, Codex, Gemini CLI and Hermes."
+---
+
+Everything you tell your coding AI is context Trillion can use: goals, decisions, people to reach out to, ideas. This hook copies each conversation into your Trillion as it happens, so any of your AIs can read it later with `read_messages`, and your own words can start work in Trillion.
+
+## What it records
+
+- **Your messages**, with their original time and conversation. Each one arrives in Trillion as something you said, so it can start work.
+- **Your AI's replies**, with the model that wrote them.
+- **Nothing that nobody said.** Text the AI app injects (system reminders, tool output, notes from other sessions, interruptions) is left out.
+
+It remembers how far it has read each conversation, and only moves on after Trillion has accepted the message, so nothing is sent twice and nothing is skipped when your connection drops.
+
+## Which AI apps
+
+| App | How it is recorded |
+|---|---|
+| Claude Code | When each turn ends |
+| Codex | When each turn ends |
+| Gemini CLI | Swept from its saved sessions |
+| Hermes | Swept from its saved sessions |
+
+A new app is one entry in `record-every-message.json` saying where it keeps its conversations and which lines are yours and which are its replies.
+
+## Install
+
+<Tabs>
+  <Tab title="Claude Code">
+    In `~/.claude/settings.json`, add one hook to `hooks.Stop` and one to `hooks.UserPromptSubmit`:
+
+    ```json
+    "Stop": [{ "matcher": "", "hooks": [{ "type": "command", "command": "node <hooks folder>/record-every-message.mjs", "timeout": 10, "async": true }] }],
+    "UserPromptSubmit": [{ "matcher": "", "hooks": [{ "type": "command", "command": "node <hooks folder>/record-every-message.mjs --harness claude-code", "timeout": 10, "async": true }] }]
+    ```
+  </Tab>
+  <Tab title="Codex">
+    In `~/.codex/hooks.json`, add the same two hooks, with `--harness codex` on the second:
+
+    ```json
+    "Stop": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "node <hooks folder>/record-every-message.mjs", "timeoutSec": 10 }] }],
+    "UserPromptSubmit": [{ "matcher": ".*", "hooks": [{ "type": "command", "command": "node <hooks folder>/record-every-message.mjs --harness codex", "timeoutSec": 10 }] }]
+    ```
+
+    Then approve both in Codex's hook review; Codex skips a hook until you trust it.
+  </Tab>
+</Tabs>
+
+<Tip>
+  Once this hook is on, your AI no longer needs to call `record_messages` for that conversation. The [decisions-since hook](/harness/other-hooks#decisions-since-you-last-looked) tells it so at the start of each message.
+</Tip>
+
+## Record an older conversation
+
+To send one conversation you had before installing the hook:
+
+```bash
+node <hooks folder>/record-every-message.mjs --transcript <path to the conversation file>
+```
+
+## How it behaves
+
+It runs for at most 4 seconds per turn, never shows output, and always finishes without an error. Anything it could not send is sent at the next turn.

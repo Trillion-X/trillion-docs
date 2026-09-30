@@ -1,0 +1,46 @@
+---
+title: "Any other AI app"
+description: "Connect any app that can add an MCP server or a connector, and what to do if it cannot sign in."
+---
+
+Any app that can add an MCP server or a connector can use Trillion.
+
+<Steps>
+  <Step title="Find where your app adds an MCP server">
+    Look for **Connectors**, **Integrations**, **Plugins**, **Tools** or **MCP** in its settings.
+  </Step>
+  <Step title="Paste this address">
+    Most apps ask only for this address. If the app asks how to sign in, choose **OAuth**. When a Trillion page opens, tap your passkey. If the app asks for a client id, leave it empty so it registers itself; there is nothing to type.
+
+    ```text
+    https://app.gettrillion.ai/mcp
+    ```
+
+    **When it worked:** your app lists Trillion's tools.
+  </Step>
+  <Step title="Only if the app cannot sign in and asks for an API key">
+    Some older apps and scripts cannot sign in. Only for those: make a personal key in **Account & security** in your Trillion, copy it once, and paste it where the app asks for a key. An app that can sign in never needs one.
+
+    ```text
+    Authorization: Bearer <your personal key>
+    ```
+
+    Anyone holding a personal key can use your account until you turn it off on your account page, so keep it safe.
+  </Step>
+</Steps>
+
+## Details for app builders
+
+If you are building the app that connects, these are the values it needs. They are also published at `https://app.gettrillion.ai/.well-known/oauth-authorization-server`.
+
+| What | Value |
+| --- | --- |
+| MCP server | `https://app.gettrillion.ai/mcp` |
+| Sign-in page (authorization) | `https://app.gettrillion.ai/authorize` |
+| Token | `https://app.gettrillion.ai/oauth/token` |
+| Register a client | `https://app.gettrillion.ai/oauth/register` (no secret needed) |
+| Scope | `decisions` |
+| Sign-in flow | Authorization code with PKCE (`S256`), and refresh tokens |
+| Client authentication at the token address | `none`, `client_secret_basic` or `client_secret_post` |
+
+An agent that should reach only part of a person's Trillion can be given a key with a chosen reach: one shared space, every space, or only their private Trillion. The person's AI makes it with [`make_agent_key`](/reference/hand-off).

@@ -1,0 +1,102 @@
+---
+title: "Book a session"
+description: "See the sessions you can book with a person, pay, pick a time, and move or cancel it."
+---
+
+Some sessions are with a person, for example working a decision through together. These tools show what is on offer, keep the time you pick while you pay, book it on the host's calendar, and move or cancel it.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Sessions I can book with a person
+
+`session_offers` · Changes things
+
+Sessions with a person this account can buy or already bought (for example working a decision through in person): each with its price, hours, place, whether it is bought, sessions left to book, and upcoming booked times with their change link. not_interested (optional, bookable ids) stops Trillion from mentioning those sessions again.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `not_interested` | string[] |  |  |
+
+```json Example
+{}
+```
+
+## Open times for a session
+
+`open_session_times` · Reads only
+
+Open times for a session, soonest first: each with start (pass it to `book_session_time`) and when (in the host's timezone). Anyone can look; booking needs the session bought.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `bookable_id` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Pick a time and get the checkout for a session
+
+`buy_session` · Changes things
+
+Buying a session (bookable_id from `session_offers`; the first one when left out). With start (from `open_session_times`, the time the person picked), that time is kept for them while they pay and the checkout link is returned; paying books it and sends the invitation. Without start, returns the page where the person picks a time and pays. Nothing is charged until they confirm on the checkout page.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `bookable_id` | string |  |  |
+| `start` | string |  |  |
+
+```json Example
+{}
+```
+
+## Book a session time
+
+`book_session_time` · Changes things
+
+Books one open time for a bought session: start from `open_session_times`, and optionally case_id, the decision it is about, and the person's name and time_zone (an IANA zone such as Europe/London) for the invitation. Puts it on the host's calendar with the person invited and emails both. Returns the booking with its change link.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `start` | string | Yes |  |
+| `bookable_id` | string |  |  |
+| `case_id` | string |  | Case id returned by `start_decision` |
+| `name` | string |  |  |
+| `time_zone` | string |  |  |
+
+```json Example
+{
+  "start": "<start from open_session_times>",
+  "name": "Alex Rivera",
+  "time_zone": "Europe/London"
+}
+```
+
+## Move or cancel a session
+
+`change_session` · Changes things and can remove them
+
+Moves a booked session to another open time (start) or cancels it (cancel: true), by the change link the booking returned. Both people are told, and the calendar follows.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `change_link` | string | Yes |  |
+| `start` | string |  |  |
+| `cancel` | boolean |  |  |
+
+```json Example
+{
+  "change_link": "<change_link>"
+}
+```

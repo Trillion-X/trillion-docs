@@ -1,0 +1,52 @@
+---
+title: "Muse and other chat AIs"
+description: "Connect Muse (Meta's AI), or any AI with no settings screen for this, by sending it a message."
+---
+
+For Muse (Meta's AI) and any AI that has no settings screen for this: you connect it by sending it a message. It runs on its own computer in the cloud, so it only ever uses Trillion's web address. Do this once for each account you use it with.
+
+<Steps>
+  <Step title="Paste this message into Muse">
+    Open a chat with Muse, paste the message below and send it.
+
+    ```text
+    Connect Trillion to yourself with your own "Add a custom connector" sheet, using OAuth. Do not give me a link to open in a browser, do not use a 127.0.0.1 address, and do not ask me for a key. Use exactly these values: name custom.trillion; domain app.gettrillion.ai; authorization_url https://app.gettrillion.ai/authorize; token_url https://app.gettrillion.ai/oauth/token; client_id muse; redirect_uri https://agent.meta.ai/api/hatch/oauth/callback; token_endpoint_auth_method none; scope decisions. Trillion's MCP server is https://app.gettrillion.ai/mcp. Then send me the Add a custom connector link.
+    ```
+
+    **If not:** if Muse replies with a link to open in Safari, a 127.0.0.1 address, or asks for a key or a client id, paste the message again and add: `Use the Add a custom connector sheet with client_id muse.`
+  </Step>
+  <Step title="Tap Add a custom connector">
+    Muse answers with a blue link called **Add a custom connector**. Tap it. A Meta sheet slides up and names Trillion and app.gettrillion.ai. Tap **Connect**.
+
+    **Leave as it is:** every box on the sheet. If it shows a Client ID box, it already says `muse`: do not change it.
+
+    **If not:** if the Client ID box is empty, close the sheet and tell Muse: `Put client_id muse in the connector and send the link again.` Never type a client id, secret or key yourself.
+  </Step>
+  <Step title="Tap your passkey">
+    A Trillion page opens inside the sheet: tap your passkey (Face ID or Touch ID) and allow Muse. Stay in the sheet: do not open any link from it in Safari.
+
+    **When it worked:** you are back in the chat and Muse says Trillion is connected.
+
+    **If not:** if the sheet closed and Muse is not sure it worked, ask it to list your Trillion tools (next step). If it cannot, tap the **Add a custom connector** link again. If you have no Trillion account yet, choose **Create your Trillion account** under **New here?** on that page.
+  </Step>
+  <Step title="Check it">
+    Send Muse this message.
+
+    ```text
+    List your Trillion tools.
+    ```
+
+    **When it worked:** Muse lists Trillion's tools, such as decisions, files and people.
+  </Step>
+  <Step title="Ask for something">
+    Ask in plain words, for example:
+
+    ```text
+    Use Trillion to help me decide what to focus on this week.
+    ```
+  </Step>
+</Steps>
+
+## Another AI that connects in a chat
+
+The same values work for any AI that connects itself when you ask it in a chat. The only difference is the client id: `muse` belongs to Meta's own return address. Any other AI registers itself at `https://app.gettrillion.ai/oauth/register`, with no secret, so there is nothing for you to type.

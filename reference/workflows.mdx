@@ -1,0 +1,160 @@
+---
+title: "Workflows"
+description: "Get a job done in several checked steps, and keep your own step-by-step methods."
+---
+
+A workflow is a job done in several steps, where each step's result is checked before the next one starts. Your AI does most steps itself; a step that names a Workshop tool is run by Trillion. You can keep your own workflows, for example from a checklist you already follow.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Find a workflow for a job
+
+`find_workflow` · Reads only
+
+Finds workflows that get a job done in several checked steps, described in plain words: Trillion's own, this account's saved ones and ones other accounts published. Returns each workflow_id, its job, its steps and next_call, the `start_workflow` call that runs it. It runs nothing. Use it when a job has a known method (research, a review, a plan) rather than a single tool call; `find_tool_for_job` finds single tools.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `job` | string |  | What needs doing, in plain words |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "job": "Research a question and turn it into a plan"
+}
+```
+
+## Read a workflow
+
+`describe_workflow` · Reads only
+
+Reads one workflow whole: its job, input_schema, and every step with what to do (do), the shape of what the step hands back (submit, a JSON Schema) and the checks it must pass, plus the identity of this exact version. Use it before starting, or as the example to copy before `save_workflow`. Changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow_id` | string | Yes | A workflow_id from `find_workflow`, like workflow:l078-research-to-plan |
+
+```json Example
+{
+  "workflow_id": "workflow:l078-research-to-plan"
+}
+```
+
+## Start a workflow
+
+`start_workflow` · Changes things
+
+Starts one run of a workflow with its input (matching its input_schema) and returns the first step: what to do, the shape to hand back and the checks. You do each step's work yourself, with your own tools, except a step that names a tool, which Trillion runs where that tool lives; a step is done only when its output is admitted. request_key is any unique text; the same workflow and request_key return the run already started. The run keeps the exact version of the workflow it started with.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow_id` | string | Yes | A workflow_id from `find_workflow`, like workflow:l078-research-to-plan |
+| `input` | object |  | The run's input, matching the workflow's input_schema |
+| `request_key` | string | Yes | Any unique text, so the same start sent twice starts one run |
+
+```json Example
+{
+  "workflow_id": "workflow:l078-research-to-plan",
+  "input": {},
+  "request_key": "pricing-research-2026-09-29"
+}
+```
+
+## Submit a workflow step
+
+`submit_workflow_step` · Changes things
+
+Hands back the output of the step the run is on (step_id). It is admitted only when it fits the step's submit schema and passes every check; a refusal lists every problem at once, and nothing is kept until it passes. For a step that runs a tool (step.runs_tool), Trillion runs it and admits its output itself; while it is working, `read_workflow_run` later; when it failed or its output did not pass, run_again: true runs it again, or send output yourself. An admitted output is kept as evidence and the reply names the next step, or, after the last step, the whole result with every step's output. Steps go in order; sending the same admitted output again changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `run_id` | string | Yes | A run_id from `start_workflow` |
+| `step_id` | string | Yes |  |
+| `output` | object |  | What the step asks for, in the shape of its submit schema |
+| `run_again` | boolean |  | For a step that runs a tool: run the tool again |
+
+```json Example
+{
+  "run_id": "<run_id>",
+  "step_id": "<step_id>"
+}
+```
+
+## Read a workflow run
+
+`read_workflow_run` · Changes things
+
+Reads one run (run_id) from any AI signed in to this account, and any tool run it is waiting on, so a tool that answered since is admitted now: the step it is on, the steps admitted, when, and what each handed back (a very large output shows its opening and read_whole_output), or the whole result when finished. With step_id too, reads that step's whole output. Leave run_id out to list this account's runs with the step each is on. It changes nothing except admitting a tool's finished output.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `run_id` | string |  | A run_id from `start_workflow` |
+| `step_id` | string |  | An admitted step: read its whole output |
+
+```json Example
+{}
+```
+
+## Save a workflow
+
+`save_workflow` · Changes things
+
+Keeps a workflow this account wrote, for example from a skill file, a checklist or a process the person already follows, so any AI signed in to this account can find it and run it. Send workflow: id ("workflow:your-name"), job (plain words; `find_workflow` matches it), label, input_schema (JSON Schema, "type": "object"), and steps, each with id, title, do (what to do), submit (a JSON Schema with "type": "object" for what the step hands back) and checks. Each check has says (what it asks for, in plain words), kind, and paths: a path is a list of keys starting with "this" (this step's output), "input" or "steps" then an earlier step's id, where "*" means every item of a list; of and in may also be a list of paths. Kinds: subset-of (every value at path is one of the values at of), covers (the values at path include every value at of, or every value in values), mentioned-in (every value at path appears inside some text at in), excludes-words (no text at path contains any of words), distinct-at-least (path holds at least count different values), exists (every value at path names a workflow or tool this account can find: catalog "workflow" or "tool"). A step done by a Workshop tool instead of the AI has `run_tool`: &#123; tool_id, input &#125;, where an input value &#123; "from": path &#125; takes the first value there and &#123; "all_from": path &#125; every value there; Trillion runs it where the tool lives when the run reaches the step, and checks its output like any other. Instead of steps, a workflow may give definition: &#123; steps, edges &#125;, the step graph Trillion's workflow engine runs, for branches, steps that run at the same time and loops: a step &#123; id, kind: "ask", config: &#123; name, input &#125; &#125; is answered by the AI (name "ai", input &#123; do, submit &#125;), a Workshop tool (name its tool id) or one of this account's agents (name "agent:&#60;agent_id&#62;"); an input value &#123; "$kind": "binding", "values": path &#125; takes the first value at a path ("take": "all" every value); a step &#123; id, kind: "check", config: &#123; subject: &#60;step id&#62;, rules: [checks as above] &#125; &#125; checks another step's output; edges are &#123; from, to, kind: "always" &#125;. The reply names similar_workflows that already do a job this close: improve that one instead of keeping two. `describe_workflow` on workflow:l078-research-to-plan shows a complete one. A refused save lists every problem at once. Saving the same id again replaces it; runs already started keep their version. It stays visible only to this account until `publish_workflow`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow` | object | Yes | The workflow: id, job, label, input_schema, and steps or definition |
+
+```json Example
+{
+  "workflow": {}
+}
+```
+
+## Publish a workflow
+
+`publish_workflow` · Changes things
+
+Makes a workflow this account saved findable and runnable by every Trillion account's AI. Their runs happen in their own accounts; nothing of this account's runs is shared. `unpublish_workflow` withdraws it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow_id` | string | Yes | A workflow_id from `find_workflow`, like workflow:l078-research-to-plan |
+
+```json Example
+{
+  "workflow_id": "<workflow_id>"
+}
+```
+
+## Withdraw a published workflow
+
+`unpublish_workflow` · Changes things and can remove them
+
+Withdraws a workflow this account published, so only this account finds it again. Runs other accounts already started keep their copy.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow_id` | string | Yes | A workflow_id from `find_workflow`, like workflow:l078-research-to-plan |
+
+```json Example
+{
+  "workflow_id": "<workflow_id>"
+}
+```

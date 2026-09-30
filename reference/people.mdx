@@ -1,0 +1,123 @@
+---
+title: "People and introductions"
+description: "Find people on the Trillion network who offer what you need, and ask to meet them."
+---
+
+The Trillion network finds people by what they offer and what they are looking for. Contact details are shared only when both people agree to meet. Trillion's network comes with a paid plan.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Set how people can find me
+
+`network_profile` · Changes things
+
+Sets whether this person can be found in the network, what they offer and what they are looking for, and the contact they share only with people they agree to meet. findable false removes them from searches. Returns what is saved.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `findable` | boolean | Yes |  |
+| `offering` | string |  |  |
+| `seeking` | string |  |  |
+| `contact` | string |  | Email, phone or handle; released only to someone both sides agreed to meet, and only while both stay connected |
+
+```json Example
+{
+  "findable": true,
+  "offering": "Brand design for small software companies",
+  "seeking": "A part-time bookkeeper",
+  "contact": "you@example.com"
+}
+```
+
+## Find people
+
+`find_people` · Reads only
+
+Finds people in the network by meaning: what they offer and seek, how close the match is, and what asking to meet them costs from today's credits (people who share a group or introduction with this person cost less). Returns relay ids, never contact details.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `need` | string | Yes |  |
+
+```json Example
+{
+  "need": "Someone who can help with brand design"
+}
+```
+
+## Ask to meet someone
+
+`request_introduction` · Changes things
+
+Asks to meet a person found with `find_people`, or invites them into a group, project or event this person belongs to (membership_id); a group or project is a shared space its members work in together (`list_spaces`). The reply is always "sent": a person who ignores or declines it looks the same as one who does not exist. Contact details are shared only if they accept.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `to` | string | Yes | A relay id from `find_people` |
+| `why` | string | Yes |  |
+| `membership_id` | string |  |  |
+
+```json Example
+{
+  "to": "<relay id from find_people>",
+  "why": "I am redoing my brand and liked your work for small software companies."
+}
+```
+
+## My network
+
+`network` · Reads only
+
+This person's network: requests waiting for their answer, what they asked, and every one-to-one, group or event they belong to with each other member's contact, read live and only while both still belong.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Answer a request to meet
+
+`answer_introduction` · Changes things
+
+Accepts or declines a request waiting for this person (from the network tool). Accepting connects both people and shares each one's contact with the other; accepting an invitation into a group or project also joins its shared space, which holds only what members put there, never anyone's private Trillion. Declining is never told to the asker.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `request_id` | string | Yes |  |
+| `accept` | boolean | Yes |  |
+
+```json Example
+{
+  "request_id": "<request_id>",
+  "accept": true
+}
+```
+
+## Label a person
+
+`label_person` · Changes things
+
+Gives a person in the network a label: unwanted-requests, unsafe or vouched. Enough people, or anyone this person is connected to, labelling someone unwanted-requests or unsafe hides them from this person's searches.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `relay` | string | Yes |  |
+| `label` | string | Yes |  |
+
+```json Example
+{
+  "relay": "<relay>",
+  "label": "<label>"
+}
+```

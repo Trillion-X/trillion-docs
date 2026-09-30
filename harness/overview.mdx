@@ -1,0 +1,47 @@
+---
+title: "Hooks for coding AIs"
+description: "Small programs that run beside Claude Code, Codex and other coding AIs on your own computer, so they decide with Trillion, keep every message and file there, and hear about new decisions."
+---
+
+Trillion's hooks run on your computer, next to the coding AI you already use. Your AI app calls them at set moments (before it changes a file, when you send a message, when it finishes a turn), and each hook does one job with your Trillion account. Nothing here runs on Trillion's servers.
+
+<CardGroup cols={2}>
+  <Card title="Decide before building" icon="scale-balanced" href="/harness/decide-before-building">
+    Stops your AI from editing files or saving work until it has made a Trillion decision in the same turn.
+  </Card>
+  <Card title="Record every message" icon="messages" href="/harness/record-every-message">
+    Keeps what you said and what your AI replied in your Trillion, from Claude Code, Codex, Gemini CLI and Hermes.
+  </Card>
+  <Card title="Decisions since you last looked" icon="bell" href="/harness/other-hooks#decisions-since-you-last-looked">
+    Tells your AI, at the start of each message, which decisions were made in your Trillion since it last checked.
+  </Card>
+  <Card title="Keep written files" icon="folder-open" href="/harness/other-hooks#keep-written-files">
+    Sends files your AI writes in folders you choose to your Trillion files, with secrets taken out.
+  </Card>
+</CardGroup>
+
+## What every hook needs
+
+<Steps>
+  <Step title="A personal key in your Keychain">
+    The hooks sign in to Trillion with a personal key kept in the macOS Keychain under the name `trillion-agent-work-key`. Make one in **Account & security** in your Trillion, then save it:
+
+    ```bash
+    security add-generic-password -s trillion-agent-work-key -a "$USER" -w
+    ```
+
+    The command asks for the key, so it never appears in your shell history.
+  </Step>
+  <Step title="Node.js">
+    Each hook is one Node.js file. Any current Node.js release works.
+  </Step>
+  <Step title="The hook files">
+    Each hook is a `.mjs` file with a `.json` settings file beside it. Keep the pair together in one folder; the paths below write it as `<hooks folder>`. To get the files, email [hello@gettrillion.ai](mailto:hello@gettrillion.ai).
+  </Step>
+</Steps>
+
+## How hooks behave
+
+- **They never slow your turn for long.** Each hook has a short time limit (2 to 10 seconds) and ends quietly when it runs out.
+- **They never block your AI by failing.** Recording and sending hooks always finish without an error, and try again next time. Only the decide-before-building hook refuses on purpose, and it says why.
+- **Settings are plain data.** Adding a new AI app, a new folder or a new kind of transcript is a line in the hook's `.json` file, never a change to the code.

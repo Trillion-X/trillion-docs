@@ -1,0 +1,5521 @@
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "tools": [
+   {
+    "name": "list_audience_questions",
+    "description": "Read observed questions, reviews and private draft work for this account. No content is published.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Read audience questions",
+    "annotations": {
+     "title": "Read audience questions",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "observe_audience_source",
+    "description": "Check an exact quote on a public HTTPS page and keep its source privately. role is question, answer or rights. A question needs offer_ref.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "role",
+      "venture_ref",
+      "source_url",
+      "quote"
+     ],
+     "properties": {
+      "role": {
+       "type": "string",
+       "enum": [
+        "question",
+        "answer",
+        "rights"
+       ]
+      },
+      "venture_ref": {
+       "type": "string"
+      },
+      "offer_ref": {
+       "type": "string"
+      },
+      "source_url": {
+       "type": "string"
+      },
+      "quote": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Check a public source",
+    "annotations": {
+     "title": "Check a public source",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "keep_audience_question",
+    "description": "Keep a question from an observed source. Venture and offer come from the source. It remains private.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "source_id"
+     ],
+     "properties": {
+      "source_id": {
+       "type": "string"
+      },
+      "audience": {
+       "type": "string"
+      },
+      "locale": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Keep an audience question",
+    "annotations": {
+     "title": "Keep an audience question",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "review_audience_question",
+    "description": "Accept or reject a question. Acceptance needs checked answer and rights sources, why the answer is grounded, and why the rights cover that answer. Rejection needs a reason and withdraws pending work.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "candidate_id",
+      "verdict"
+     ],
+     "properties": {
+      "candidate_id": {
+       "type": "string"
+      },
+      "verdict": {
+       "type": "string",
+       "enum": [
+        "accepted",
+        "rejected"
+       ]
+      },
+      "reason": {
+       "type": "string"
+      },
+      "answer_source_id": {
+       "type": "string"
+      },
+      "answer_note": {
+       "type": "string"
+      },
+      "rights_source_id": {
+       "type": "string"
+      },
+      "rights_note": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Review an audience question",
+    "annotations": {
+     "title": "Review an audience question",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "admit_audience_question",
+    "description": "After acceptance, place an evidence-backed question in private pending draft work. Re-reads the current source, review and evidence; never publishes.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "candidate_id"
+     ],
+     "properties": {
+      "candidate_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Add to private drafts",
+    "annotations": {
+     "title": "Add to private drafts",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_audience_answer_draft",
+    "description": "Save a private answer and proposed HTTPS destination for admitted question work. The account copies its current venture, source, grounding and offer; nothing is published. Pass expected_revision from the listed draft, or null for the first save.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "candidate_id",
+      "answer",
+      "destination_url"
+     ],
+     "properties": {
+      "candidate_id": {
+       "type": "string"
+      },
+      "answer": {
+       "type": "string"
+      },
+      "destination_url": {
+       "type": "string"
+      },
+      "expected_revision": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "title": "Save a private answer draft",
+    "annotations": {
+     "title": "Save a private answer draft",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "list_methods",
+    "description": "Lists the decision methods start_decision can use: the universal one (id \"universal\", for any decision) and methods for particular subjects such as cooking, relationships, changing software and tennis. Returns each method's id, name and what it is for; pass the id as start_decision's method, or leave method out for the universal one. Needs nothing and changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "List decision methods",
+    "annotations": {
+     "title": "List decision methods",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "start_setup",
+    "description": "Starts Trillion setup with this person. Call it first whenever they say \"set me up with Trillion\", \"get me started\", \"onboard me\" or \"show me what Trillion can do\", and on a new account with no pursuits. It means this Trillion connection, never an app on their computer. Returns the setup steps, the mission to say in your own words, the line to add to your own instructions, and what Trillion already knows about them (their pursuits and connected accounts), so you skip what is known and start at the first missing step. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Start Trillion setup",
+    "annotations": {
+     "title": "Start Trillion setup",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_pursuits",
+    "description": "Reads what this person is pursuing: each pursuit with its id, title, where it is now (now), where they want it to get (after) and why it matters. Decisions are weighed against these, so read them before advising. Returns a page of pursuits with total and next_offset; call again with offset set to next_offset until it is null. It changes nothing; record_pursuits changes them.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "offset": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 25
+      }
+     }
+    },
+    "title": "List what I am pursuing",
+    "annotations": {
+     "title": "List what I am pursuing",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "record_pursuits",
+    "description": "Records what this person is pursuing, so every one of their AIs and every decision is weighed against it. Each pursuit needs title, now (where it stands today, concretely) and after (where they want it to get), and may have id, why_it_matters, drive_evidence, status, last_seen, evidence [{where, date, quote_or_fact}] and needle_mover (true on the one pursuit that, done, moves the others most: the person's biggest needle mover, shown first on their Home; set it false on any other that had it). A pursuit with the id list_pursuits gave it is updated; one without an id is added (or updated, when its title matches). Pursuits you leave out stay as they are, unless replace_all is true: then the list you send is the whole list and every pursuit left out is marked ended (never erased). Fill it from what you already know about the person (your memory of them, their files and past conversations) before asking them, and be specific: generic pursuits make generic decisions. Returns the pursuits now current.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "pursuits"
+     ],
+     "properties": {
+      "pursuits": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "title",
+         "now",
+         "after"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "title": {
+          "type": "string"
+         },
+         "now": {
+          "type": "string"
+         },
+         "after": {
+          "type": "string"
+         },
+         "why_it_matters": {
+          "type": "string"
+         },
+         "drive_evidence": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string"
+         },
+         "last_seen": {
+          "type": "string"
+         },
+         "needle_mover": {
+          "type": "boolean"
+         },
+         "evidence": {
+          "type": "array",
+          "items": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      },
+      "replace_all": {
+       "type": "boolean",
+       "description": "true when this is the whole list: every current pursuit left out is ended"
+      }
+     }
+    },
+    "title": "Record what I am pursuing",
+    "annotations": {
+     "title": "Record what I am pursuing",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "record_messages",
+    "description": "Keeps messages between this person and you in their Trillion account, word for word, so every other AI they use can read them (read_messages). Call it on every turn, before you send your reply, with both sides: the person's message (speaker \"person\") and the reply you are about to send (speaker \"ai\"), then send exactly that reply. Each message: conversation_id (the same id for every turn of this chat; make one up at the start if the app gives you none), app (your app, like \"ChatGPT\", \"Claude\", \"Muse\"; it defaults to the app you connected as), speaker, text (exactly as written, never summarized), at (leave it out for this turn and Trillion stamps the time; give it only for older messages you are sending from an earlier conversation, as their real ISO time), model (optional) and about (optional: what it concerns, as [{kind, id}], like {\"kind\": \"pursuit\", \"id\": \"pursuit:content\"}, {\"kind\": \"decision\", \"id\": \"<case_id>\"}, {\"kind\": \"tool\", \"id\": \"tool:extract-sound\"}, {\"kind\": \"file\", \"id\": \"1f:...\"}). Up to 100 messages a call, so an earlier conversation can be sent in batches. A retry with the same original at changes nothing; keep the original time when retrying. Without at, the time is when this call records it. Returns how many were new and each message's id. It does not send the messages to anyone.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "messages"
+     ],
+     "properties": {
+      "messages": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 100,
+       "items": {
+        "type": "object",
+        "required": [
+         "conversation_id",
+         "speaker",
+         "text"
+        ],
+        "properties": {
+         "conversation_id": {
+          "type": "string"
+         },
+         "app": {
+          "type": "string"
+         },
+         "speaker": {
+          "type": "string",
+          "description": "\"person\" for the person, \"ai\" for you, or the name of anyone else in the conversation"
+         },
+         "text": {
+          "type": "string"
+         },
+         "at": {
+          "type": "string",
+          "format": "date-time"
+         },
+         "model": {
+          "type": "string"
+         },
+         "about": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "required": [
+            "kind",
+            "id"
+           ],
+           "properties": {
+            "kind": {
+             "type": "string"
+            },
+            "id": {
+             "type": "string"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Record messages",
+    "annotations": {
+     "title": "Record messages",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_messages",
+    "description": "Reads messages this person exchanged with any of their AIs, newest first: each with id, conversation_id, app, speaker, text, at and about. Filter by conversation_id, by app, by not_app (everything except one app, like your own, to see what they said elsewhere), or by about_id (messages about one pursuit, decision, tool or file). Returns a page and next_before; pass next_before as before for the page before it. Read it at the start of a conversation to pick up what the person has been working on with their other AIs. It never changes anything.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "conversation_id": {
+       "type": "string"
+      },
+      "app": {
+       "type": "string"
+      },
+      "not_app": {
+       "type": "string"
+      },
+      "about_id": {
+       "type": "string"
+      },
+      "before": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      }
+     }
+    },
+    "title": "Read messages from all AIs",
+    "annotations": {
+     "title": "Read messages from all AIs",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_decisions",
+    "description": "Lists this account's saved decisions, newest first: each with its id (the case_id other decision tools take), goal, status and the chosen option. Use it to find a decision to continue, export or report on. limit caps how many (default 20). It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      }
+     }
+    },
+    "title": "List my decisions",
+    "annotations": {
+     "title": "List my decisions",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_activity",
+    "description": "What the AIs connected to this account did, newest first: each row says which AI app did it, what it did (handed off work, ran a tool, saved a file, published a tool...), the item it made or touched, whether it worked and, if not, why. Use it to see what another AI already did before repeating it. app narrows to one AI app by the name shown in its rows; for narrows to what was done for one thing (a decision's case_id, or an id a message was about); before (a row's seq) reads older rows; limit caps how many (default 50). Each row lists the ids it used and what it was for; trace_item follows them. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "app": {
+       "type": "string"
+      },
+      "for": {
+       "type": "string"
+      },
+      "before": {
+       "type": "integer"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 200
+      }
+     }
+    },
+    "title": "Read what my AIs did",
+    "annotations": {
+     "title": "Read what my AIs did",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "trace_item",
+    "description": "Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of read_activity shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a read_activity row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "item"
+     ],
+     "properties": {
+      "item": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Trace how something came about",
+    "annotations": {
+     "title": "Trace how something came about",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "start_decision",
+    "description": "Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each {ref, claim}, where ref is a short name the answers cite), and at least two options ({id, label}). method (optional) is an id from list_methods. Then answer_question until no question remains, and decide. It decides nothing by itself.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "source_id",
+      "goal",
+      "evidence",
+      "options"
+     ],
+     "properties": {
+      "source_id": {
+       "type": "string"
+      },
+      "goal": {
+       "type": "string"
+      },
+      "method": {
+       "type": "string"
+      },
+      "evidence": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "ref",
+         "claim"
+        ],
+        "properties": {
+         "ref": {
+          "type": "string"
+         },
+         "claim": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "options": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "id",
+         "label"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Start a decision",
+    "annotations": {
+     "title": "Start a decision",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "next_question",
+    "description": "Reads a decision's current question by case_id: the question with its answer_schema, which checks were selected or left out, and whether it is ready to decide (then call decide). Use it to pick up a decision where it was left. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      }
+     }
+    },
+    "title": "Get the next question",
+    "annotations": {
+     "title": "Get the next question",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "answer_question",
+    "description": "Saves the answer to the current question. The answer follows the answer_schema in the question: each listed field, evidence_refs naming the case evidence, and an optional scratchpad note. For fields listed in ask_others, answered_by records where the answer came from: \"person\", or the memory, file or conversation you found it in. When the question lists a checklist, checklist gives, for each check id, how the answer handles that check or why it does not bear on this decision. usage (optional) reports what answering this step cost you: model, model_calls, input_tokens, output_tokens, or anything else countable.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id",
+      "step_id",
+      "answer"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "step_id": {
+       "type": "string"
+      },
+      "answer": {
+       "type": "object"
+      },
+      "usage": {
+       "type": "object",
+       "description": "What this cost you: numbers such as model_calls, input_tokens, output_tokens, seconds, and short labels such as model",
+       "additionalProperties": {
+        "type": [
+         "number",
+         "string"
+        ]
+       }
+      }
+     }
+    },
+    "title": "Answer a question",
+    "annotations": {
+     "title": "Answer a question",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "revise_evidence",
+    "description": "Changes the evidence of an open decision: add new facts ({ref, claim}), correct a claim that was wrong ({ref, claim}), or retract a fact that turned out false ({ref, because} or the ref). A retracted fact can no longer be cited; every change is logged. On a free plan use the case_id from the latest reply.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "add": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "ref",
+         "claim"
+        ],
+        "properties": {
+         "ref": {
+          "type": "string"
+         },
+         "claim": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "correct": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "ref",
+         "claim"
+        ],
+        "properties": {
+         "ref": {
+          "type": "string"
+         },
+         "claim": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "retract": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "ref"
+        ],
+        "properties": {
+         "ref": {
+          "type": "string"
+         },
+         "because": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Revise the evidence",
+    "annotations": {
+     "title": "Revise the evidence",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "add_note",
+    "description": "Adds a note to one decision (case_id), optionally tied to one question (step_id): a thought, a fact found along the way, anything worth keeping with that decision. Returns the note and how many notes the decision now has. It is only for decisions: for what the person is pursuing use record_pursuits, for what was said use record_messages, for what was learned about a file use record_file_results.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id",
+      "text"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "text": {
+       "type": "string"
+      },
+      "step_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Add a note",
+    "annotations": {
+     "title": "Add a note",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "related_decisions",
+    "description": "Finds decisions like this one (case_id): the person's own earlier ones (yours) and, where available, how other people decided in similar situations (others, anonymized, never naming anyone). Each shared decision offers questions to consider, linked to the anonymous source through read_shared_decision. Reading earlier decisions is part of the paid plan; on another plan it says so and returns none. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      }
+     }
+    },
+    "title": "Find similar decisions",
+    "annotations": {
+     "title": "Find similar decisions",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_shared_decision",
+    "description": "Reads the anonymous shared decision behind a suggested question. Use the shared_decision_id in the question's source. If its owner stops sharing it, the source is no longer available.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "shared_decision_id"
+     ],
+     "properties": {
+      "shared_decision_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read the shared decision behind a question",
+    "annotations": {
+     "title": "Read the shared decision behind a question",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "decide",
+    "description": "Records the choice once every question is answered: option_id, reason, evidence_refs, next_action, success_measure, move when the move chosen is narrower than the option (the export then shows the move), and every field the last reply lists in decision_fields, each by its name. Sending the same decision again changes nothing and says already_decided. Returns the next action and what the whole run cost. usage (optional) reports what deciding cost you, the same way as for answers.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id",
+      "option_id",
+      "reason",
+      "evidence_refs",
+      "next_action",
+      "success_measure"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "option_id": {
+       "type": "string"
+      },
+      "move": {
+       "type": "string",
+       "description": "The move actually chosen, in words, when it is narrower than the option"
+      },
+      "reason": {
+       "type": "string"
+      },
+      "evidence_refs": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "next_action": {
+       "type": "string"
+      },
+      "success_measure": {
+       "type": "string"
+      },
+      "usage": {
+       "type": "object",
+       "description": "What this cost you: numbers such as model_calls, input_tokens, output_tokens, seconds, and short labels such as model",
+       "additionalProperties": {
+        "type": [
+         "number",
+         "string"
+        ]
+       }
+      }
+     }
+    },
+    "title": "Record the decision",
+    "annotations": {
+     "title": "Record the decision",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "report_result",
+    "description": "Records what actually happened after a decision (case_id) or a tool run (task_id), as the person tells it: result (met, failed or unknown), summary in their words, and answered_by (\"person\" when the person said it, or who saw it). Ask the person before reporting: a tool's contract passing only means its output had the right shape, and tools are ranked on these reports. Stored as the person's report, apart from checked results. Returns the decision or task with its reports.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "result",
+      "summary",
+      "answered_by"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "task_id": {
+       "type": "string",
+       "description": "Task id returned by run_tool"
+      },
+      "result": {
+       "type": "string",
+       "enum": [
+        "met",
+        "failed",
+        "unknown"
+       ]
+      },
+      "summary": {
+       "type": "string"
+      },
+      "answered_by": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Report how it went",
+    "annotations": {
+     "title": "Report how it went",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "find_tool_for_job",
+    "description": "Finds tools that do a job, described in plain words: the Workshop's tools, which are reached only through this and run_tool. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the run_tool call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with report_result, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and save_tool keeps one you build. It runs nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "job"
+     ],
+     "properties": {
+      "job": {
+       "type": "string",
+       "description": "What needs doing, in plain words"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 20
+      }
+     }
+    },
+    "title": "Find a tool for a job",
+    "annotations": {
+     "title": "Find a tool for a job",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "run_tool",
+    "description": "Runs one Workshop tool (a tool_id from find_tool_for_job) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); read_task reads it later. An input value {\"from_task\": \"<task id>\", \"output_selector\": \"$.field\"} uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from find_file, list_files or write_file. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with report_result.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "tool_id",
+      "input",
+      "request_key"
+     ],
+     "properties": {
+      "tool_id": {
+       "type": "string"
+      },
+      "input": {
+       "type": "object"
+      },
+      "request_key": {
+       "type": "string"
+      },
+      "wait_seconds": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 50
+      },
+      "run_at": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "repeat_every_hours": {
+       "type": "number",
+       "minimum": 1
+      },
+      "job": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Run a tool",
+    "annotations": {
+     "title": "Run a tool",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_task",
+    "description": "Reads a tool run by task_id: its state (working, scheduled, completed, failed or for_you_to_run), its checked output, where it ran, any error and any reports, plus the next call to make. Works from any AI app signed in to the same account. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "task_id"
+     ],
+     "properties": {
+      "task_id": {
+       "type": "string",
+       "description": "Task id returned by run_tool"
+      }
+     }
+    },
+    "title": "Read a tool run",
+    "annotations": {
+     "title": "Read a tool run",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_tool",
+    "description": "Keeps a tool you built to finish a job, so any AI signed in to this account can find it (find_tool_for_job) and run it (run_tool). Send descriptor, and the tool's code as files ({\"main.py\": \"<the file text>\"}, placed in /work) or as bytes_base64 (a gzipped tar unpacked at /). Descriptor fields: id, unique, like \"tool:count-words\"; job, what it does in plain words, which find_tool_for_job matches; label, a short name (optional); input_schema, a JSON Schema with \"type\": \"object\"; output_schema, a JSON Schema every result is checked against; invoke, how it runs, one of: {\"kind\": \"container\", \"argv\": [\"python3\", \"main.py\", {\"from\": \"text\"}], \"stdout\": \"json\"} runs your files in a sealed Linux container (Python 3.12, Node 24, ffmpeg, no network) where {\"from\": \"<input field>\"} becomes that input and \"stdout\": \"json\" returns the last printed line as JSON at $.result; a file input is an input_schema property with \"format\": \"namespace-file\", given as a file's identity (1f: then 64 hex), and inside the container it is that file's local path, like /inputs/<hex>/clip.mp4, so the tool never downloads it; a file the tool makes is named in invoke.outputs, like [{\"name\": \"video\", \"path\": \"/work/out.mp4\", \"keep_in\": \"files\", \"media_type\": \"video/mp4\"}], and comes back under files.video in the result and in the person's files; {\"kind\": \"model\", \"model\": \"@cf/meta/llama-3.1-8b-instruct\", \"input\": {\"messages\": [{\"role\": \"system\", \"content\": \"<your prompt>\"}, {\"role\": \"user\", \"content\": {\"fill\": {\"from\": \"input\", \"field\": \"text\"}}}]}} asks a hosted model and returns {response}; {\"kind\": \"http\", \"url\": \"https://...\", \"method\": \"POST\", \"body\": {\"q\": \"{text}\"}} calls a web address that answers JSON, where \"{text}\" becomes input.text; result_selector, the part of the raw result that is the output, like \"$.result\" (optional); placements, where it runs: [\"placement:deployed-container\"] for container, [\"placement:rented-model-runtime\"] for model, [\"placement:public-web-address\"] for http; licence_class, \"licence:maker-own\" for your own code or web address, \"licence:permissive\" for a model tool; verify, the checks that say the job was done, which must include a sample-run {\"kind\": \"sample-run\", \"input\": {<a real input>}, \"output_selector\": \"$.<field>\", \"contains\": \"<text the right answer contains>\"} (other kinds: output-contains, output-contains-input, output-number-within, output-numbers-close). Never put a key or password in it; name a connection's value with secret_name. Saving runs the sample once where the tool will run and returns sample_check (passed, and what it returned); a refused save lists every problem at once and returns this working example in next_call. Saving the same id again replaces the tool. It stays visible only to this account until publish_tool. delete_tool removes it. Complete working example of this call's arguments: {\"descriptor\":{\"id\":\"tool:count-words\",\"label\":\"Count the words in a text\",\"job\":\"Count the words in a piece of text and find the longest word\",\"input_schema\":{\"type\":\"object\",\"required\":[\"text\"],\"additionalProperties\":false,\"properties\":{\"text\":{\"type\":\"string\",\"minLength\":1,\"description\":\"The text to count\"}}},\"output_schema\":{\"type\":\"object\",\"required\":[\"words\",\"longest\"],\"properties\":{\"words\":{\"type\":\"integer\",\"minimum\":0},\"longest\":{\"type\":\"string\"}}},\"invoke\":{\"kind\":\"container\",\"argv\":[\"python3\",\"main.py\",{\"from\":\"text\"}],\"stdout\":\"json\"},\"result_selector\":\"$.result\",\"placements\":[\"placement:deployed-container\"],\"licence_class\":\"licence:maker-own\",\"verify\":[{\"kind\":\"sample-run\",\"input\":{\"text\":\"ask not what your country can do for you\"},\"output_selector\":\"$.longest\",\"contains\":\"country\"}]},\"files\":{\"main.py\":\"import json, sys\\nwords = sys.argv[1].split()\\nprint(json.dumps({\\\"words\\\": len(words), \\\"longest\\\": max(words, key=len) if words else \\\"\\\"}))\\n\"}}",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "descriptor"
+     ],
+     "properties": {
+      "descriptor": {
+       "type": "object",
+       "description": "The tool: id, job, input_schema, output_schema, invoke, result_selector, placements, licence_class, verify"
+      },
+      "files": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "string"
+       },
+       "description": "The tool's code as file name to file text, placed in /work"
+      },
+      "bytes_base64": {
+       "type": "string",
+       "description": "Instead of files: the tool's files as a base64 gzipped tar, unpacked at /"
+      },
+      "check": {
+       "type": "boolean",
+       "description": "Run the sample-run check right after saving (default true)"
+      }
+     }
+    },
+    "title": "Save a tool",
+    "annotations": {
+     "title": "Save a tool",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "describe_tool",
+    "description": "Reads one tool's whole descriptor: its job, input and output schemas, invoke (how it runs), placements, licence_class and verify checks, plus the text of its files when it is a shared tool or one of this account's. Use it to learn how working tools are written before save_tool, or to change one of this account's tools. It does not run the tool; run_tool does.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "tool_id"
+     ],
+     "properties": {
+      "tool_id": {
+       "type": "string",
+       "description": "A tool id from find_tool_for_job, like tool:extract-sound"
+      }
+     }
+    },
+    "title": "Read a tool's descriptor",
+    "annotations": {
+     "title": "Read a tool's descriptor",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "delete_tool",
+    "description": "Deletes one of this account's saved tools, so no AI finds or runs it and its id can be saved again. A published tool is withdrawn first with unpublish_tool. It never deletes a shared tool or another account's.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "tool_id"
+     ],
+     "properties": {
+      "tool_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Delete a saved tool",
+    "annotations": {
+     "title": "Delete a saved tool",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "publish_tool",
+    "description": "Offers one of this account's saved tools to every account's AI, where find_tool_for_job finds it and run_tool runs it. First it runs the tool's own sample-run check (verify, kind sample-run) where it will run for others: the sample input is run once and the output at output_selector must contain the expected text, or nothing is published. A tool whose licence lets it run only on each caller's own computer cannot be published. price_ref (optional) names a published price; callers then need the offer that price belongs to. The tool carries names of connections, never their values: each caller connects their own. Returns where it runs; unpublish_tool withdraws it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "tool_id"
+     ],
+     "properties": {
+      "tool_id": {
+       "type": "string"
+      },
+      "price_ref": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Publish a tool",
+    "annotations": {
+     "title": "Publish a tool",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "unpublish_tool",
+    "description": "Withdraws a tool this account published, so other accounts no longer find or run it. It stays saved for this account (delete_tool removes it). It never touches a tool another account published.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "tool_id"
+     ],
+     "properties": {
+      "tool_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Withdraw a published tool",
+    "annotations": {
+     "title": "Withdraw a published tool",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_connections",
+    "description": "Lists the accounts this person has connected to Trillion, one row each: connection_id, service, vendor, account_label, status, can_send and when it was connected. The sealed values themselves are never returned. Check here before creating or asking about an account, and connect a new one with connect_service, or with run_tool on tool:connect-service-<vendor> for a service that takes typed values.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "List my connected accounts",
+    "annotations": {
+     "title": "List my connected accounts",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "connect_service",
+    "description": "Makes a one-time link (15 minutes) that connects one of this person's accounts, such as their Instagram, by signing in on that service's own page. Give the link to the person; the access it grants is sealed in their account, and comments and messages start arriving for their rules. service is the service's name, for example \"instagram\"; an unknown name lists the ones that can be connected.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "service"
+     ],
+     "properties": {
+      "service": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Connect one of my accounts",
+    "annotations": {
+     "title": "Connect one of my accounts",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "listen_for_events",
+    "description": "Starts receiving events from a source for this person's own connected account (for example their Instagram comments and messages): reads which account the connection belongs to, and asks the service to send its events here. Connect the service first. stop: true stops listening.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "source_id"
+     ],
+     "properties": {
+      "source_id": {
+       "type": "string"
+      },
+      "stop": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Start receiving comments and messages",
+    "annotations": {
+     "title": "Start receiving comments and messages",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "find_file",
+    "description": "Finds one of this person's files in their namespace by its path name (starting with /) or its content identity (1f: or 12: then 64 hex). Returns the size, type, where it is kept, every name it has, and a url that reads it (ranges supported) until url_expires_at, plus its locator rows for any resolver.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "name_or_identity"
+     ],
+     "properties": {
+      "name_or_identity": {
+       "type": "string"
+      },
+      "seconds": {
+       "type": "integer",
+       "minimum": 60,
+       "maximum": 604800,
+       "description": "How long the url keeps working (default 6 hours)"
+      }
+     }
+    },
+    "title": "Find one of my files",
+    "annotations": {
+     "title": "Find one of my files",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_files",
+    "description": "Lists one folder of this person's namespace: the folders inside it (folders), and each file named in it with its content identity and whether its bytes are stored (stored: true), or are still arriving (stored: false with uploading: its upload id, bytes_held and byte_length). A file that is one of several versions of the same file in that folder (the same name with a copy number, a version number, an export time or a backup mark) carries version { family, latest, latest_name, versions }: work from the one with latest: true, and the older ones stay there to go back to. A file whose same bytes are also kept under other names carries also_named (how many), so the same work is not done twice. Start at folder \"/\" and open a folder by passing its name as folder; pass next_after as after for the next page of files.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "folder": {
+       "type": "string"
+      },
+      "after": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 1000
+      }
+     }
+    },
+    "title": "List a folder of my files",
+    "annotations": {
+     "title": "List a folder of my files",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_file",
+    "description": "Reads what one of this person's files contains, by its path name (starting with /) or content identity: up to 256 KiB from offset, as text when those bytes are UTF-8 text and as base64 otherwise. Read longer files a range at a time. A picture (PNG, JPEG, GIF or WebP) up to 3 MiB comes back whole as an image you can look at, with a link to it; a bigger picture comes back as a link. Reading a file does not show it to the person: use show_file for that.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "name_or_identity"
+     ],
+     "properties": {
+      "name_or_identity": {
+       "type": "string"
+      },
+      "offset": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "length": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 262144
+      }
+     }
+    },
+    "title": "Read one of my files",
+    "annotations": {
+     "title": "Read one of my files",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "files_summary",
+    "description": "Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with start_file_upload under the same name) or stopped (cancel_file_upload). Needs nothing and changes nothing; list_files and find_file show the files themselves.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Summarize my stored files",
+    "annotations": {
+     "title": "Summarize my stored files",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_file_results",
+    "description": "Reads what has already been worked out about one of this person's files, by its content identity (1f: or 12: then 64 hex): its transcript, summary, measured facts, the folders it is filed in, and anything else a tool recorded. kind (optional) reads one of them. A read by any identity of the file finds results recorded under its others.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "identity"
+     ],
+     "properties": {
+      "identity": {
+       "type": "string"
+      },
+      "kind": {
+       "type": "string",
+       "description": "For example transcript, summary, facts or folders"
+      }
+     }
+    },
+    "title": "Read what is known about a file",
+    "annotations": {
+     "title": "Read what is known about a file",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_file_results",
+    "description": "Lists one kind of result across every file in this person's namespace, a page at a time in identity order (pass next_after as after), so a filter or search can run over titles, summaries or facts without the files themselves. With no kind, returns how many results of each kind are kept.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "kind": {
+       "type": "string"
+      },
+      "after": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 1000
+      }
+     }
+    },
+    "title": "List what is known about my files",
+    "annotations": {
+     "title": "List what is known about my files",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "record_file_results",
+    "description": "Records what was worked out about files, so no AI has to work it out again: results is a list (at most 500) of { identity, kind, value, produced_by }. identity is the file's content identity; kind names what the value is (transcript, summary, facts, folders or a new kind); value is any JSON. Recording the same value again changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "results"
+     ],
+     "properties": {
+      "results": {
+       "type": "array",
+       "maxItems": 500,
+       "items": {
+        "type": "object",
+        "required": [
+         "identity",
+         "kind",
+         "value"
+        ],
+        "properties": {
+         "identity": {
+          "type": "string"
+         },
+         "kind": {
+          "type": "string"
+         },
+         "value": {},
+         "produced_by": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Record what was worked out about files",
+    "annotations": {
+     "title": "Record what was worked out about files",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "write_file",
+    "description": "Saves a file in this person's namespace under name (a path starting with /, such as /edits/cover-cut.json), from exactly one of: text (UTF-8: a transcript, a note, an edit as JSON); content_base64 (a small file's bytes, at most 16 MiB); from_url (an https address that serves the file itself, which Trillion reads, any size); or file (a file from this chat, as the app hands it over: {download_url, file_id}). Never type a large file out as base64: give its address, or start_file_upload and send its bytes from your computer to send_bytes_to. With only file, name defaults to /<its file name>. media_type (optional) is its type, such as audio/mpeg or application/json; text without one is saved as text/plain. Returns the file's content identity (1f: then 64 hex), which run_tool accepts wherever a tool takes a file, and its name. Bytes this person already has are only given the name (already_kept: true). A name already in use then points at the new file; the earlier file stays readable by its identity.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "content_base64": {
+       "type": "string",
+       "description": "The bytes, base64"
+      },
+      "text": {
+       "type": "string",
+       "description": "The bytes as UTF-8 text, instead of content_base64"
+      },
+      "from_url": {
+       "type": "string",
+       "description": "An https address that serves the file itself; Trillion reads the bytes from it"
+      },
+      "file": {
+       "type": "object",
+       "description": "A file from this chat: {download_url, file_id}, as the app hands it over",
+       "properties": {
+        "download_url": {
+         "type": "string"
+        },
+        "file_id": {
+         "type": "string"
+        },
+        "mime_type": {
+         "type": "string"
+        },
+        "file_name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "download_url",
+        "file_id"
+       ],
+       "additionalProperties": false
+      },
+      "media_type": {
+       "type": "string"
+      }
+     }
+    },
+    "_meta": {
+     "openai/fileParams": [
+      "file"
+     ]
+    },
+    "title": "Save a file",
+    "annotations": {
+     "title": "Save a file",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "start_file_upload",
+    "description": "Starts saving a file that is on a computer you can run commands on, or too big for one write_file call: name (a path starting with /), byte_length (its exact size in bytes) and media_type. Returns upload (its id), send_bytes_to and send_with: from that computer run curl -sS -T <file> \"<send_bytes_to>\" and the file is finished when its last byte arrives (a file over 90 MB goes in parts, each with &offset=<its first byte>). Without a computer, send it with put_file_piece, piece 0 first (at most max_piece_bytes each), then finish_file_upload. Starting the same name again stops the earlier unfinished upload of that name. From its first piece the file can be found, read and played by its name while the rest arrives. If you know the file's BLAKE3 identity, give it as identity: a file this person already has is then only named (state: present) and nothing needs sending.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "name",
+      "byte_length"
+     ],
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "byte_length": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "media_type": {
+       "type": "string"
+      },
+      "identity": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Start saving a big file",
+    "annotations": {
+     "title": "Start saving a big file",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "put_file_piece",
+    "description": "Sends one piece of an upload from start_file_upload: piece is its number from 0, offset is where it starts in the file (the total size of the pieces before it), and its bytes as content_base64 (or text), at most max_piece_bytes. Pieces go in order; sending the same piece again changes nothing. Returns how many bytes the pieces now cover.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "upload",
+      "piece",
+      "offset"
+     ],
+     "properties": {
+      "upload": {
+       "type": "string"
+      },
+      "piece": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "offset": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "content_base64": {
+       "type": "string",
+       "description": "The bytes, base64"
+      },
+      "text": {
+       "type": "string",
+       "description": "The bytes as UTF-8 text, instead of content_base64"
+      }
+     }
+    },
+    "title": "Send a piece of a file",
+    "annotations": {
+     "title": "Send a piece of a file",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "finish_file_upload",
+    "description": "Completes an upload once its pieces cover the whole file, and returns the file with its content identity (1f: then 64 hex) and its names. identity (optional) is the file's BLAKE3 identity if you worked it out; left out, it is worked out from the stored bytes.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "upload"
+     ],
+     "properties": {
+      "upload": {
+       "type": "string"
+      },
+      "identity": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Finish saving a file",
+    "annotations": {
+     "title": "Finish saving a file",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "cancel_file_upload",
+    "description": "Stops an upload from start_file_upload that will not be finished: its name is removed and the room it held is given back. Files already finished are not touched.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "upload"
+     ],
+     "properties": {
+      "upload": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Stop saving a file",
+    "annotations": {
+     "title": "Stop saving a file",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "show_file",
+    "description": "Shows one of this person's files to them in this chat, by its path name (starting with /) or content identity: a picture, video or sound appears in the conversation where the app draws tool results, from an address that works for an hour. A picture up to 3 MiB is also handed to you as an image. Use it whenever the person should see a file, such as a picture or video a tool made; describing a file does not show it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "name_or_identity"
+     ],
+     "properties": {
+      "name_or_identity": {
+       "type": "string"
+      }
+     }
+    },
+    "_meta": {
+     "ui": {
+      "resourceUri": "ui://files/show-file.html"
+     },
+     "openai/outputTemplate": "ui://files/show-file.html",
+     "openai/toolInvocation/invoking": "Opening the file",
+     "openai/toolInvocation/invoked": "Showing the file"
+    },
+    "title": "Show a file",
+    "annotations": {
+     "title": "Show a file",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_media",
+    "description": "Lists this person's recordings and media made by their tools, with the file identity, playback address, measured duration, title, transcript word count and whether an edit uses it. Pass revision from the earlier reply to read only when the library changes. An unknown duration is null; never invent clip end times.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "revision": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "List my media",
+    "annotations": {
+     "title": "List my media",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "search_media",
+    "description": "Finds real moments in this person's recordings by words said, meaning or file name. Returns each source identity and start/end in seconds, with the measured words and search lanes. unavailable names a search lane that could not run. Use the returned range in a media-composition tool; never infer a timestamp from a title.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "question"
+     ],
+     "properties": {
+      "question": {
+       "type": "string",
+       "maxLength": 500
+      }
+     }
+    },
+    "title": "Find moments in my media",
+    "annotations": {
+     "title": "Find moments in my media",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "next_media_edit",
+    "description": "Reads the same next-edit suggestion the person sees in Media: which real clips to use, their measured lengths, why, and the chosen destination. It changes nothing and runs no render. Use run_tool with the media-composition tools to make the edit.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Read my next edit suggestion",
+    "annotations": {
+     "title": "Read my next edit suggestion",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "network_profile",
+    "description": "Sets whether this person can be found in the network, what they offer and what they are looking for, and the contact they share only with people they agree to meet. findable false removes them from searches. Returns what is saved.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "findable"
+     ],
+     "properties": {
+      "findable": {
+       "type": "boolean"
+      },
+      "offering": {
+       "type": "string"
+      },
+      "seeking": {
+       "type": "string"
+      },
+      "contact": {
+       "type": "string",
+       "description": "Email, phone or handle; released only to someone both sides agreed to meet, and only while both stay connected"
+      }
+     }
+    },
+    "title": "Set how people can find me",
+    "annotations": {
+     "title": "Set how people can find me",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "find_people",
+    "description": "Finds people in the network by meaning: what they offer and seek, how close the match is, and what asking to meet them costs from today's credits (people who share a group or introduction with this person cost less). Returns relay ids, never contact details.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "need"
+     ],
+     "properties": {
+      "need": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Find people",
+    "annotations": {
+     "title": "Find people",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "request_introduction",
+    "description": "Asks to meet a person found with find_people, or invites them into a group, project or event this person belongs to (membership_id); a group or project is a shared space its members work in together (list_spaces). The reply is always \"sent\": a person who ignores or declines it looks the same as one who does not exist. Contact details are shared only if they accept.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "to",
+      "why"
+     ],
+     "properties": {
+      "to": {
+       "type": "string",
+       "description": "A relay id from find_people"
+      },
+      "why": {
+       "type": "string"
+      },
+      "membership_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Ask to meet someone",
+    "annotations": {
+     "title": "Ask to meet someone",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "network",
+    "description": "This person's network: requests waiting for their answer, what they asked, and every one-to-one, group or event they belong to with each other member's contact, read live and only while both still belong.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "My network",
+    "annotations": {
+     "title": "My network",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "answer_introduction",
+    "description": "Accepts or declines a request waiting for this person (from the network tool). Accepting connects both people and shares each one's contact with the other; accepting an invitation into a group or project also joins its shared space, which holds only what members put there, never anyone's private Trillion. Declining is never told to the asker.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "request_id",
+      "accept"
+     ],
+     "properties": {
+      "request_id": {
+       "type": "string"
+      },
+      "accept": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Answer a request to meet",
+    "annotations": {
+     "title": "Answer a request to meet",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "create_membership",
+    "description": "Starts a shared space with this person as its first member and owner: a group, project, event, community or one-to-one (label). Every one is a shared space (list_spaces, share_to_space, add_to_space, hand_off_in_space); events take starts_at and ends_at; size_limit caps members. Invite people into a group or project with request_introduction and its membership_id. A community is joined by its own rules instead (anyone may join with join_community when its join rules let them, and it never shares anyone's contact); it starts with the community label's starting configuration, and config replaces any of its keys (title comes from title). Its posts are the space's messages.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "label",
+      "title"
+     ],
+     "properties": {
+      "label": {
+       "type": "string",
+       "enum": [
+        "one-to-one",
+        "group",
+        "project",
+        "event",
+        "community"
+       ]
+      },
+      "title": {
+       "type": "string"
+      },
+      "config": {
+       "type": "object",
+       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }] or [{ \"access\": \"access:decision-history\", \"says\": \"Members of the $100 a month plan\" }]); spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"send_binding\", \"from\": { \"email\", \"name\" }, \"reply_to\" }; the spaces include courses.",
+       "properties": {
+        "title": {
+         "type": "string"
+        },
+        "about": {
+         "type": "string"
+        },
+        "join": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "spaces": {
+         "type": "object"
+        },
+        "events_by": {
+         "type": "string",
+         "enum": [
+          "owner",
+          "members"
+         ]
+        },
+        "measures": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "levels": {
+         "type": "object"
+        },
+        "rewards": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "owner_name": {
+         "type": "string"
+        },
+        "roles": {
+         "type": "object"
+        },
+        "feed": {
+         "type": "object"
+        },
+        "courses": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "streak": {
+         "type": "object"
+        },
+        "digest": {
+         "type": "object"
+        },
+        "mail": {
+         "type": "object"
+        },
+        "matching": {
+         "type": "object",
+         "description": "Pairs members automatically: { every_days, cadence_label, answer_hours, group_size, shortlist_size, default_on, evidence: { questions: [interaction-program intake question ids] }, initiative: { required_level, pre_authorized_levels } }. Each member's own AI scores who they should meet; Trillion introduces the best-scored pairs in a one-to-one space."
+        }
+       }
+      },
+      "starts_at": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "ends_at": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "size_limit": {
+       "type": "integer",
+       "minimum": 2
+      }
+     }
+    },
+    "title": "Start a shared space",
+    "annotations": {
+     "title": "Start a shared space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "leave_membership",
+    "description": "Leaves a one-to-one, group, project or event. From then on no member can read this person's contact through it, and this person cannot read theirs or its shared space. What they shared into the space while a member stays there; nothing else of theirs is copied.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "membership_id"
+     ],
+     "properties": {
+      "membership_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Leave a group, event or introduction",
+    "annotations": {
+     "title": "Leave a group, event or introduction",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "label_person",
+    "description": "Gives a person in the network a label: unwanted-requests, unsafe or vouched. Enough people, or anyone this person is connected to, labelling someone unwanted-requests or unsafe hides them from this person's searches.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "relay",
+      "label"
+     ],
+     "properties": {
+      "relay": {
+       "type": "string"
+      },
+      "label": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Label a person",
+    "annotations": {
+     "title": "Label a person",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "what_helped",
+    "description": "What has helped this person decide well, from their own saved decisions: how many hit their goal (with how many have a result yet), time from deciding to a checked result, whether their latest decisions are faster, cheaper or more often right than earlier ones, and which of the method's questions most often changed their answer and how those decisions turned out. Every share comes with its counts; below the minimum it says there is not enough data yet.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "What has helped",
+    "annotations": {
+     "title": "What has helped",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "export_decision",
+    "description": "Returns one whole decision (case_id) as a readable copy, as format \"markdown\" (the default) or \"json\". It changes nothing and does not send it anywhere.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "case_id"
+     ],
+     "properties": {
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "format": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Export a decision",
+    "annotations": {
+     "title": "Export a decision",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "session_offers",
+    "description": "Sessions with a person this account can buy or already bought (for example working a decision through in person): each with its price, hours, place, whether it is bought, sessions left to book, and upcoming booked times with their change link. not_interested (optional, bookable ids) stops Trillion from mentioning those sessions again.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "not_interested": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "title": "Sessions I can book with a person",
+    "annotations": {
+     "title": "Sessions I can book with a person",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "buy_session",
+    "description": "Buying a session (bookable_id from session_offers; the first one when left out). With start (from open_session_times, the time the person picked), that time is kept for them while they pay and the checkout link is returned; paying books it and sends the invitation. Without start, returns the page where the person picks a time and pays. Nothing is charged until they confirm on the checkout page.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "bookable_id": {
+       "type": "string"
+      },
+      "start": {
+       "type": "string",
+       "format": "date-time"
+      }
+     }
+    },
+    "title": "Pick a time and get the checkout for a session",
+    "annotations": {
+     "title": "Pick a time and get the checkout for a session",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "open_session_times",
+    "description": "Open times for a session, soonest first: each with start (pass it to book_session_time) and when (in the host's timezone). Anyone can look; booking needs the session bought.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "bookable_id": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 60
+      }
+     }
+    },
+    "title": "Open times for a session",
+    "annotations": {
+     "title": "Open times for a session",
+     "openWorldHint": true,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "book_session_time",
+    "description": "Books one open time for a bought session: start from open_session_times, and optionally case_id, the decision it is about, and the person's name and time_zone (an IANA zone such as Europe/London) for the invitation. Puts it on the host's calendar with the person invited and emails both. Returns the booking with its change link.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "start"
+     ],
+     "properties": {
+      "start": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "bookable_id": {
+       "type": "string"
+      },
+      "case_id": {
+       "type": "string",
+       "description": "Case id returned by start_decision"
+      },
+      "name": {
+       "type": "string"
+      },
+      "time_zone": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Book a session time",
+    "annotations": {
+     "title": "Book a session time",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "change_session",
+    "description": "Moves a booked session to another open time (start) or cancels it (cancel: true), by the change link the booking returned. Both people are told, and the calendar follows.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "change_link"
+     ],
+     "properties": {
+      "change_link": {
+       "type": "string"
+      },
+      "start": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "cancel": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Move or cancel a session",
+    "annotations": {
+     "title": "Move or cancel a session",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "publish_agent",
+    "description": "Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery { url } is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery null stops events; rotate_delivery_secret true makes a new secret.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "name",
+      "description"
+     ],
+     "properties": {
+      "agent_id": {
+       "type": "string"
+      },
+      "delivery": {
+       "anyOf": [
+        {
+         "type": "object",
+         "required": [
+          "url"
+         ],
+         "properties": {
+          "url": {
+           "type": "string"
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "rotate_delivery_secret": {
+       "type": "boolean"
+      },
+      "name": {
+       "type": "string"
+      },
+      "description": {
+       "type": "string"
+      },
+      "skills": {
+       "type": "array",
+       "items": {
+        "anyOf": [
+         {
+          "type": "string"
+         },
+         {
+          "type": "object",
+          "required": [
+           "name"
+          ],
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           },
+           "description": {
+            "type": "string"
+           }
+          }
+         }
+        ]
+       }
+      },
+      "harness": {
+       "type": "string"
+      },
+      "model": {
+       "type": "string"
+      },
+      "where": {
+       "type": "string"
+      },
+      "source_id": {
+       "type": "string"
+      },
+      "takes_work": {
+       "type": "boolean"
+      },
+      "capacity": {
+       "type": "object",
+       "required": [
+        "max_concurrent"
+       ],
+       "properties": {
+        "max_concurrent": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 20
+        },
+        "ttl_minutes": {
+         "type": "number",
+         "minimum": 1,
+         "maximum": 1440
+        }
+       }
+      }
+     }
+    },
+    "title": "Say what this agent does",
+    "annotations": {
+     "title": "Say what this agent does",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_agent_capacity",
+    "description": "Reports how many jobs a published agent can work on at once. This expires after ttl_minutes (60 by default); report it again when the agent is ready. Set max_concurrent to 0 when unavailable. No background process is started.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "agent_id",
+      "max_concurrent"
+     ],
+     "properties": {
+      "agent_id": {
+       "type": "string"
+      },
+      "max_concurrent": {
+       "type": "integer",
+       "minimum": 0,
+       "maximum": 20
+      },
+      "ttl_minutes": {
+       "type": "number",
+       "minimum": 1,
+       "maximum": 1440
+      }
+     }
+    },
+    "title": "Report this agent’s capacity",
+    "annotations": {
+     "title": "Report this agent’s capacity",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "find_agents",
+    "description": "Lists the agents on this account that match a job, with their stated capacity and whether they are ready now. Unknown or expired capacity is never presented as ready. Work can still be queued for an agent that is not ready.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "job": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 20
+      }
+     }
+    },
+    "title": "Find agents for a job",
+    "annotations": {
+     "title": "Find agents for a job",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "hand_off",
+    "description": "Hands a job to another agent on this account (to_agent from find_agents), or to whichever agent takes it first when to_agent is left out. The job waits until an agent takes it. request_key is any unique text; the same request_key returns the same handoff. Optional: input (an object), from_agent, case_id of the decision behind it, parent_handoff_id when passing on part of a job, hold_minutes an agent may hold it before others can take it, notice (a short line, at most 300 characters, sent in the event to an agent that can be reached; the job itself never is).",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "job",
+      "request_key"
+     ],
+     "properties": {
+      "job": {
+       "type": "string"
+      },
+      "notice": {
+       "type": "string"
+      },
+      "request_key": {
+       "type": "string"
+      },
+      "to_agent": {
+       "type": "string"
+      },
+      "input": {
+       "type": "object"
+      },
+      "from_agent": {
+       "type": "string"
+      },
+      "case_id": {
+       "type": "string"
+      },
+      "parent_handoff_id": {
+       "type": "string"
+      },
+      "hold_minutes": {
+       "type": "number",
+       "minimum": 1
+      }
+     }
+    },
+    "title": "Hand a job to another agent",
+    "annotations": {
+     "title": "Hand a job to another agent",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "address_open_work",
+    "description": "Names the agent for existing open source-linked work that arrived before its owning agent was known. Requires the exact source_id kept on that handoff and preserves its original ID and replay identity.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "handoff_id",
+      "source_id",
+      "to_agent"
+     ],
+     "properties": {
+      "handoff_id": {
+       "type": "string"
+      },
+      "source_id": {
+       "type": "string"
+      },
+      "to_agent": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Name the agent for waiting work",
+    "annotations": {
+     "title": "Name the agent for waiting work",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "take_work",
+    "description": "Call this at the start of every conversation, whatever the person asks (even a pizza recipe), and do the job it returns in the same turn right after answering them. Takes the oldest job waiting for this agent (agent_id as published), or a job handed to any agent, or one handoff_id. only_mine true takes only work handed to this agent by name. Returns the job, or nothing when no work is waiting.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "agent_id"
+     ],
+     "properties": {
+      "agent_id": {
+       "type": "string"
+      },
+      "handoff_id": {
+       "type": "string"
+      },
+      "only_mine": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Take waiting work",
+    "annotations": {
+     "title": "Take waiting work",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "finish_work",
+    "description": "Records the result of a job this agent took: result (text or an object) and an optional summary. The agent that handed it off reads it with read_handoff.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "handoff_id",
+      "agent_id",
+      "result"
+     ],
+     "properties": {
+      "handoff_id": {
+       "type": "string"
+      },
+      "agent_id": {
+       "type": "string"
+      },
+      "result": {},
+      "summary": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Finish taken work",
+    "annotations": {
+     "title": "Finish taken work",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "saved_instructions",
+    "description": "The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example \"I have no clue what to do with this, figure out if it is valuable\". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each { label, words }, optionally id), replaces their list and returns it: read it first, then add, change or remove. When a handoff carries saved_instruction in its input, its job is those words.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "instructions": {
+       "type": "array",
+       "maxItems": 50,
+       "items": {
+        "type": "object",
+        "required": [
+         "words"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "words": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Read or change saved instructions",
+    "annotations": {
+     "title": "Read or change saved instructions",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "agent_presence",
+    "description": "Says a published agent is present and can be reached at its delivery address. Events that could not be delivered to it are sent again. It never returns work: work arrives as an event, or with take_work.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "agent_id"
+     ],
+     "properties": {
+      "agent_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Say this agent is present",
+    "annotations": {
+     "title": "Say this agent is present",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "send_agent_event",
+    "description": "Wakes one agent on this account that published a delivery address, with a signed event of any type, for example tool.run.requested to the agent whose computer has the tool, and tool.run.finished back to the agent that asked. The event carries only ids (subject_id, refs, next_call arguments) and a summary of at most 300 characters: never inputs, results or file bytes, which the woken agent reads from wherever they live. The same idempotency_key sends the event once. The answer shows whether the receiver reported itself present lately; an event it cannot take now is tried again and then kept until it is present again. Refused for an agent with no delivery address.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "type",
+      "to_agent",
+      "idempotency_key",
+      "subject_id"
+     ],
+     "properties": {
+      "type": {
+       "type": "string"
+      },
+      "to_agent": {
+       "type": "string"
+      },
+      "from_agent": {
+       "type": "string"
+      },
+      "idempotency_key": {
+       "type": "string"
+      },
+      "subject_id": {
+       "type": "string"
+      },
+      "summary": {
+       "type": "string",
+       "maxLength": 300
+      },
+      "refs": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "string"
+       }
+      },
+      "next_call": {
+       "type": "object",
+       "required": [
+        "tool"
+       ],
+       "properties": {
+        "tool": {
+         "type": "string"
+        },
+        "arguments": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Wake an agent with an event",
+    "annotations": {
+     "title": "Wake an agent with an event",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_agent_events",
+    "description": "The events sent about one subject_id (a handoff or a run), or one event_id: each with its receiver, whether it was delivered, is waiting to be tried again, or is dead, and how many attempts it took.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "subject_id": {
+       "type": "string"
+      },
+      "event_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read the events sent about something",
+    "annotations": {
+     "title": "Read the events sent about something",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_handoff",
+    "description": "Reads one handoff by handoff_id: its state, who took it, and its result, plus any parts handed on from it and the events sent about it (delivered, waiting to be tried again, or dead). Without handoff_id, lists this account's newest handoffs. Works from any AI app signed in to the same account.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "handoff_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read a handoff",
+    "annotations": {
+     "title": "Read a handoff",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "share_destinations",
+    "description": "Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id \"private\", and each shared space they have not hidden, each { id, label, to, on_by_default }), actions (their saved instructions, each { id, label, words }), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Read where my shares go",
+    "annotations": {
+     "title": "Read where my shares go",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_share_destinations",
+    "description": "Changes where this person's shares can go and what their AI does with them; read share_destinations first. destinations: each { id, shown, on_by_default } in the order to offer them (one left out keeps its place after these; their own Trillion can never be hidden). actions: the whole list of saved instructions, each { label, words } and optionally id, replacing it (the same list saved_instructions reads). default_action_by_site: the whole list of { host_suffix, action_id }. Give any of the three; returns what share_destinations returns.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "destinations": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "id"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "shown": {
+          "type": "boolean"
+         },
+         "on_by_default": {
+          "type": "boolean"
+         }
+        }
+       }
+      },
+      "actions": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "words"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "words": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "default_action_by_site": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "host_suffix",
+         "action_id"
+        ],
+        "properties": {
+         "host_suffix": {
+          "type": "string"
+         },
+         "action_id": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Change where my shares go",
+    "annotations": {
+     "title": "Change where my shares go",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "sharing_of",
+    "description": "Who one of this person's records is shared with, as the sharing sheet shows it: the copy others would see (preview, only the fields that leave), its fields with which are left out, every place it can go (the Trillion network, each space they are in, each person they share a space with) with picked true for where it goes now, the chain switch (the record together with the records linked to it, like a pursuit and its decisions) and inherited_from when a chain choice on another record decides it. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "record"
+     ],
+     "properties": {
+      "record": {
+       "type": "string",
+       "description": "A pursuit id, decision case_id or message id; file:<identity> for a file; tool:<id> for one of their own tools"
+      }
+     }
+    },
+    "title": "See who a record is shared with",
+    "annotations": {
+     "title": "See who a record is shared with",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_sharing",
+    "description": "Chooses who one of this person's records is shared with, only when they asked. network: true into the network (anonymous learning, and stories when those are on), false never, null as their account chooses (on by default). spaces: the space ids a copy is in; people: the people (the `to.person` of a place from sharing_of) who may read it. Not shared at all is network false with no spaces or people. chain: true to cover the records linked to it too. leave_out: field ids no copy carries. Parts left out stay as they are. Copies made elsewhere are changed to match at once. Returns what sharing_of returns.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "record"
+     ],
+     "properties": {
+      "record": {
+       "type": "string",
+       "description": "A pursuit id, decision case_id or message id; file:<identity> for a file; tool:<id> for one of their own tools"
+      },
+      "network": {
+       "type": [
+        "boolean",
+        "null"
+       ]
+      },
+      "spaces": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "people": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "chain": {
+       "type": "boolean"
+      },
+      "leave_out": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "title": "Choose who a record is shared with",
+    "annotations": {
+     "title": "Choose who a record is shared with",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "shared_with_me",
+    "description": "What other people shared with this person one by one, newest first: each with offer_id, who shared it (the name they show in a space you share), its kind and title. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "See what people shared with me",
+    "annotations": {
+     "title": "See what people shared with me",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_shared",
+    "description": "Reads one thing another person shared with this person (offer_id from shared_with_me): the copy they share, with where it came from. Refused once they stop sharing it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "offer_id"
+     ],
+     "properties": {
+      "offer_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read something shared with me",
+    "annotations": {
+     "title": "Read something shared with me",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "content_formats",
+    "description": "The content formats this person writes and speaks in: their own saved formats first, then the ones every account starts with (blog post, article, Substack post, newsletter, X thread, Instagram caption, short video, YouTube video, carousel, content series, and writing frameworks such as AIDA), plus example_kinds, where every piece takes its real examples from. Each has id, label, description, input (what it is made from), process (the steps, in order), output (what comes out and where it goes), spec (how to write it from a recording or a thought), slots (its parts in order, each { id, label, hint }), body_template (the parts in [brackets], when it has one), tags and from (\"saved\" or \"starter\"). Read it before writing something for them, and write in their format. It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Read my content formats",
+    "annotations": {
+     "title": "Read my content formats",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_content_formats",
+    "description": "Replaces this person's own content formats (read content_formats first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each { label, hint }), optionally id, description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what content_formats returns.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "formats"
+     ],
+     "properties": {
+      "formats": {
+       "type": "array",
+       "maxItems": 100,
+       "items": {
+        "type": "object",
+        "required": [
+         "label"
+        ],
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "label": {
+          "type": "string"
+         },
+         "description": {
+          "type": "string"
+         },
+         "content_type": {
+          "type": "string"
+         },
+         "input": {
+          "type": "string"
+         },
+         "process": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+           "type": "string"
+          }
+         },
+         "output": {
+          "type": "string"
+         },
+         "spec": {
+          "type": "string"
+         },
+         "slots": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+           "type": "object",
+           "required": [
+            "label"
+           ],
+           "properties": {
+            "id": {
+             "type": "string"
+            },
+            "label": {
+             "type": "string"
+            },
+            "hint": {
+             "type": "string"
+            }
+           }
+          }
+         },
+         "body_template": {
+          "type": "string"
+         },
+         "tags": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Save my content formats",
+    "annotations": {
+     "title": "Save my content formats",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "score_candidates",
+    "description": "Picks from answers you already have, instead of generating one: give the situation (state), optionally the question (instructions), and criteria as { candidate id: description }, 2 to 200 candidates. Returns each candidate's probability, the choice, a confidence from 0 to 1, and escalate: true when the confidence is below the line, meaning a slower check should decide. Fast and cheap; best for routing and shortlisting, not for judging whether something really happened.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "state",
+      "criteria"
+     ],
+     "properties": {
+      "state": {
+       "type": "string"
+      },
+      "instructions": {
+       "type": "string"
+      },
+      "criteria": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "title": "Score known answers",
+    "annotations": {
+     "title": "Score known answers",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_communities",
+    "description": "Communities this person can see or is in: title, what it is about, how many members, whether they are a member and whether they may join (and what joining comes with).",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "Communities",
+    "annotations": {
+     "title": "Communities",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "community",
+    "description": "One community as this person may see it: what it is, their level, points and the next level, rewards they can claim, events (with who is going, for members), the feed of posts and replies, and members with their levels. Spaces a community keeps for members are left out for anyone else. For the owner it also has claims to hand out and the configuration.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100,
+       "description": "How many posts of the feed"
+      }
+     }
+    },
+    "title": "Open a community",
+    "annotations": {
+     "title": "Open a community",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "join_community",
+    "description": "Joins a community when the person may (a free community, or one their plan includes). name is what other members see; members never see a contact. Leave with leave_membership and the community id.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "name": {
+       "type": "string",
+       "description": "The name other members see"
+      }
+     }
+    },
+    "title": "Join a community",
+    "annotations": {
+     "title": "Join a community",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "post_to_community",
+    "description": "Posts in a community's feed (community_id, body), or replies to a post (reply_to: its post_id). Only members see posts. Returns the post. Say what you will post and get the person's approval of the exact words first.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "body"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "body": {
+       "type": "string"
+      },
+      "reply_to": {
+       "type": "string",
+       "description": "A post_id from the feed"
+      }
+     }
+    },
+    "title": "Post in a community",
+    "annotations": {
+     "title": "Post in a community",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "rsvp_event",
+    "description": "Says whether this person is going to a community event (going true or false). People going to the same event count as connected in the network.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "event_id",
+      "going"
+     ],
+     "properties": {
+      "event_id": {
+       "type": "string",
+       "description": "An event_id from the community tool"
+      },
+      "going": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Answer an event",
+    "annotations": {
+     "title": "Answer an event",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "create_community_event",
+    "description": "Puts an event on in a community: title, starts_at, optional ends_at, about and size_limit; repeats { every: day, week or month, count up to 52 } puts on one event per time. Its owner, and anyone whose role may put_on_events, can do this. Each event has a calendar file at /community/events/<event_id>/calendar.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "title",
+      "starts_at"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "title": {
+       "type": "string"
+      },
+      "about": {
+       "type": "string"
+      },
+      "starts_at": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "ends_at": {
+       "type": "string",
+       "format": "date-time"
+      },
+      "size_limit": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "repeats": {
+       "type": "object",
+       "properties": {
+        "every": {
+         "type": "string",
+         "enum": [
+          "day",
+          "week",
+          "month"
+         ]
+        },
+        "count": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 52
+        }
+       }
+      }
+     }
+    },
+    "title": "Put on an event",
+    "annotations": {
+     "title": "Put on an event",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "claim_reward",
+    "description": "Claims a community reward this person has earned (reward_id from the community tool, where can_claim is true). The owner sees the claim and hands it out.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "reward_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "reward_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Claim a reward",
+    "annotations": {
+     "title": "Claim a reward",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "change_community",
+    "description": "Replaces the configuration of a community this person owns (the whole config, as for create_membership with label \"community\"; what it leaves out comes from the label's starting configuration). Members, posts and events stay.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "config"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "config": {
+       "type": "object",
+       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }] or [{ \"access\": \"access:decision-history\", \"says\": \"Members of the $100 a month plan\" }]); spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"send_binding\", \"from\": { \"email\", \"name\" }, \"reply_to\" }; the spaces include courses.",
+       "properties": {
+        "title": {
+         "type": "string"
+        },
+        "about": {
+         "type": "string"
+        },
+        "join": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "spaces": {
+         "type": "object"
+        },
+        "events_by": {
+         "type": "string",
+         "enum": [
+          "owner",
+          "members"
+         ]
+        },
+        "measures": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "levels": {
+         "type": "object"
+        },
+        "rewards": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "owner_name": {
+         "type": "string"
+        },
+        "roles": {
+         "type": "object"
+        },
+        "feed": {
+         "type": "object"
+        },
+        "courses": {
+         "type": "array",
+         "items": {
+          "type": "object"
+         }
+        },
+        "streak": {
+         "type": "object"
+        },
+        "digest": {
+         "type": "object"
+        },
+        "mail": {
+         "type": "object"
+        },
+        "matching": {
+         "type": "object",
+         "description": "Pairs members automatically: { every_days, cadence_label, answer_hours, group_size, shortlist_size, default_on, evidence: { questions: [interaction-program intake question ids] }, initiative: { required_level, pre_authorized_levels } }. Each member's own AI scores who they should meet; Trillion introduces the best-scored pairs in a one-to-one space."
+        }
+       },
+       "required": [
+        "title"
+       ]
+      }
+     }
+    },
+    "title": "Change a community",
+    "annotations": {
+     "title": "Change a community",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "whats_new",
+    "description": "What is new in a community since this person last looked: posts and replies by others, best first by the community's feed ranking, and events put on since. Looking marks it seen.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      }
+     }
+    },
+    "title": "What is new in a community",
+    "annotations": {
+     "title": "What is new in a community",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "vote_post",
+    "description": "Votes for a post (votes 1), or takes votes back (votes -1). Each member has the community's votes_per_member to spread across posts; a ranked feed puts well-voted posts first.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "post_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "post_id": {
+       "type": "string"
+      },
+      "votes": {
+       "type": "integer"
+      }
+     }
+    },
+    "title": "Vote for a post",
+    "annotations": {
+     "title": "Vote for a post",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "remove_post",
+    "description": "Removes a post and its replies from a community's feed: this person's own post, or anyone's when their role may remove_posts.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "post_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "post_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Remove a post",
+    "annotations": {
+     "title": "Remove a post",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "complete_lesson",
+    "description": "Marks a lesson of a community course done (or not done, with done false). Returns the course with each lesson complete, active (the next one) or locked; lessons done count toward points where the community says so.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "course_id",
+      "lesson_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "course_id": {
+       "type": "string"
+      },
+      "lesson_id": {
+       "type": "string"
+      },
+      "done": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Mark a lesson done",
+    "annotations": {
+     "title": "Mark a lesson done",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_member_role",
+    "description": "Gives a member one of the community's roles (or member to take it away), which decides what they may do: put on events, remove posts, give roles, send digests. member_relay comes from the members list.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "member_relay",
+      "role"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "member_relay": {
+       "type": "string"
+      },
+      "role": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Give a member a role",
+    "annotations": {
+     "title": "Give a member a role",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "community_notifications",
+    "description": "Turns this person's email digest for a community on or off. With it on, they get what is new at most every few days, and only when there is something new; the address is kept in their own account, never shown to the community.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "email_digest"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "email_digest": {
+       "type": "boolean"
+      },
+      "email": {
+       "type": "string",
+       "description": "Where digests go; needed the first time"
+      }
+     }
+    },
+    "title": "Community email digest",
+    "annotations": {
+     "title": "Community email digest",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "send_community_digests",
+    "description": "Sends the community's digests now instead of waiting for the daily run, for its owner or a role that may send_digests. Returns how many members were considered, how many were sent one, and why the rest were not.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      }
+     }
+    },
+    "title": "Send community digests now",
+    "annotations": {
+     "title": "Send community digests now",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "my_matches",
+    "description": "This person's automatic pairing in a community: whether it is on, how often rounds run and when the next one is, their matches (who, why, what their AIs suggest talking about, the one-to-one space they share, and whether they talked), their matching answers with the questions still missing, and any round waiting for scores from this AI (waiting_for_your_scores, with the shortlist and its claims).",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      }
+     }
+    },
+    "title": "My matches in a community",
+    "annotations": {
+     "title": "My matches in a community",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_matching",
+    "description": "Turns automatic pairing on or off for this person in a community (on), and keeps what other members' AIs may read when scoring who should meet: profile.answers (question_id: a short answer, for the questions my_matches lists as missing, from what you know of the person) and profile.categories (two to five short words naming the kinds of pursuit they are on). Never put an email address, phone number or anything they would not tell a fellow member.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "on": {
+       "type": "boolean"
+      },
+      "profile": {
+       "type": "object",
+       "properties": {
+        "answers": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "categories": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Pair me automatically",
+    "annotations": {
+     "title": "Pair me automatically",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "score_match_candidates",
+    "description": "Answers a pairing round's job: for each candidate on this person's shortlist (candidate_ref from the job's input or my_matches), five scores above 0 and at most 1 (complementarity, relevance, timing, ability_to_act, impact), each with a one-sentence reason and the claim_refs it rests on (you: your person's, them: the candidate's). Leave out a candidate you have no grounds for; a score that cites no claim forms no match. When every asked AI has answered, the round pairs people at once.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "round_id",
+      "scores"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "round_id": {
+       "type": "string"
+      },
+      "scores": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "candidate_ref",
+         "factors"
+        ],
+        "properties": {
+         "candidate_ref": {
+          "type": "string"
+         },
+         "factors": {
+          "type": "object",
+          "required": [
+           "complementarity",
+           "relevance",
+           "timing",
+           "ability_to_act",
+           "impact"
+          ],
+          "properties": {
+           "complementarity": {
+            "type": "object",
+            "required": [
+             "score",
+             "reason",
+             "you",
+             "them"
+            ],
+            "properties": {
+             "score": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+             },
+             "reason": {
+              "type": "string",
+              "description": "One sentence"
+             },
+             "you": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of your person this rests on"
+             },
+             "them": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of the candidate this rests on"
+             }
+            }
+           },
+           "relevance": {
+            "type": "object",
+            "required": [
+             "score",
+             "reason",
+             "you",
+             "them"
+            ],
+            "properties": {
+             "score": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+             },
+             "reason": {
+              "type": "string",
+              "description": "One sentence"
+             },
+             "you": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of your person this rests on"
+             },
+             "them": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of the candidate this rests on"
+             }
+            }
+           },
+           "timing": {
+            "type": "object",
+            "required": [
+             "score",
+             "reason",
+             "you",
+             "them"
+            ],
+            "properties": {
+             "score": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+             },
+             "reason": {
+              "type": "string",
+              "description": "One sentence"
+             },
+             "you": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of your person this rests on"
+             },
+             "them": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of the candidate this rests on"
+             }
+            }
+           },
+           "ability_to_act": {
+            "type": "object",
+            "required": [
+             "score",
+             "reason",
+             "you",
+             "them"
+            ],
+            "properties": {
+             "score": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+             },
+             "reason": {
+              "type": "string",
+              "description": "One sentence"
+             },
+             "you": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of your person this rests on"
+             },
+             "them": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of the candidate this rests on"
+             }
+            }
+           },
+           "impact": {
+            "type": "object",
+            "required": [
+             "score",
+             "reason",
+             "you",
+             "them"
+            ],
+            "properties": {
+             "score": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+             },
+             "reason": {
+              "type": "string",
+              "description": "One sentence"
+             },
+             "you": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of your person this rests on"
+             },
+             "them": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              },
+              "description": "claim_refs of the candidate this rests on"
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Score who to meet",
+    "annotations": {
+     "title": "Score who to meet",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "suggest_match_topics",
+    "description": "Suggests what this person and the person Trillion introduced them to could talk about first (topics: one to six specific lines). They show on the match and in the one-to-one space the two share.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "match_id",
+      "topics"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "match_id": {
+       "type": "string"
+      },
+      "topics": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 6,
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "title": "Suggest what to talk about",
+    "annotations": {
+     "title": "Suggest what to talk about",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "pass_match",
+    "description": "Says a match is not for this person: it shows as passed and they leave the one-to-one it opened. They are never paired with that person again in this community.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id",
+      "match_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      },
+      "match_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Pass on a match",
+    "annotations": {
+     "title": "Pass on a match",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "run_matching_round",
+    "description": "Starts a pairing round in a community this person runs, now instead of on its schedule: every member who is paired automatically has their own AI asked to score a short list of others, and Trillion introduces the best-scored pairs when the AIs have answered or the round's time is up. Returns how many AIs were asked.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      }
+     }
+    },
+    "title": "Start a pairing round",
+    "annotations": {
+     "title": "Start a pairing round",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "hand_over_community",
+    "description": "Makes a one-time link, good for 14 days, that hands a community this person runs to whoever opens it signed in to Trillion. The person before stays a member. Give the link to the new owner.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "community_id"
+     ],
+     "properties": {
+      "community_id": {
+       "type": "string",
+       "description": "A community id from list_communities"
+      }
+     }
+    },
+    "title": "Hand a community over",
+    "annotations": {
+     "title": "Hand a community over",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "list_spaces",
+    "description": "The shared spaces this person is in (groups and projects with other people), each with its description and picture, the names its members show there, how many items of each kind it holds, unread (items other members added since this person last marked it seen) and last_activity_at. A space holds only what members put there; nobody, and no agent, can read another member's private Trillion through it.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "List my shared spaces",
+    "annotations": {
+     "title": "List my shared spaces",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "open_space",
+    "description": "One shared space: its description and picture, its members by the name each shows there (never a contact), how many items of each kind it holds, unread and last_activity_at, and the agents members' AIs put to work there.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      }
+     }
+    },
+    "title": "Open a shared space",
+    "annotations": {
+     "title": "Open a shared space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "mark_space_seen",
+    "description": "Marks everything in a space as seen by this person, after they (or you, for them) have read it: its unread count starts again from now.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      }
+     }
+    },
+    "title": "Mark a space seen",
+    "annotations": {
+     "title": "Mark a space seen",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "describe_space",
+    "description": "Sets what a space is about and its picture, seen by every member: description is a few plain sentences, picture is one of this person's own picture files (its name or identity), shared into the space so members see it. null clears either. Needs the private reach to take a picture from their files.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "description": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "picture": {
+       "type": [
+        "string",
+        "null"
+       ],
+       "description": "A picture file's name (like /logos/brand.png) or identity in this person's files"
+      }
+     }
+    },
+    "title": "Describe a space and set its picture",
+    "annotations": {
+     "title": "Describe a space and set its picture",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_space_picture",
+    "description": "Where to read the bytes of a space's picture: a short-lived address, for members only.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      }
+     }
+    },
+    "title": "Read a space's picture",
+    "annotations": {
+     "title": "Read a space's picture",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "make_space_invite",
+    "description": "Makes a one-time invite link to a space, for someone who has no Trillion network listing: whoever opens it signed in to Trillion sees the space's name and joins. It works once, lasts days (7 unless you say, at most 30), and stops working if revoked or if this person leaves. Give the link only to the person it is for.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "days": {
+       "type": "number",
+       "minimum": 1,
+       "maximum": 30
+      }
+     }
+    },
+    "title": "Make an invite link to a space",
+    "annotations": {
+     "title": "Make an invite link to a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "list_space_invites",
+    "description": "The invite links this person made for a space, each open, used, revoked or expired.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      }
+     }
+    },
+    "title": "List my invite links to a space",
+    "annotations": {
+     "title": "List my invite links to a space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "revoke_space_invite",
+    "description": "Revokes an invite link this person made (invite_id from make_space_invite or list_space_invites), so it no longer lets anyone in.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "invite_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "invite_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Revoke an invite link",
+    "annotations": {
+     "title": "Revoke an invite link",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "join_space",
+    "description": "Joins a shared space with an invite link someone gave this person (the whole link, or its code). Only when the person asked to join.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "invite"
+     ],
+     "properties": {
+      "invite": {
+       "type": "string",
+       "description": "The invite link, or the code in it"
+      }
+     }
+    },
+    "title": "Join a space with an invite link",
+    "annotations": {
+     "title": "Join a space with an invite link",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_space",
+    "description": "Items in a shared space, newest first: each with kind, title, body, what it is about, and its provenance (made in the space, shared from a member's private Trillion, or brought in from a chat archive; by which member; when). Filter by kind; pass next_before as before for older items.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "kind": {
+       "type": "string"
+      },
+      "before": {
+       "type": "string"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      }
+     }
+    },
+    "title": "Read a shared space",
+    "annotations": {
+     "title": "Read a shared space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "add_to_space",
+    "description": "Adds items made in the space itself, seen by every current member: a message, a shared pursuit, a decision the group made, a note, or any other kind, in your words (kind is any short word). about links other items of the same space by item_id. Say what you will add and get the person's approval first when it speaks for them.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "items"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "items": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 100,
+       "items": {
+        "type": "object",
+        "required": [
+         "kind",
+         "body"
+        ],
+        "properties": {
+         "kind": {
+          "type": "string"
+         },
+         "title": {
+          "type": "string"
+         },
+         "body": {},
+         "about": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "title": "Add to a shared space",
+    "annotations": {
+     "title": "Add to a shared space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "share_to_space",
+    "description": "Shares one record from this person's private Trillion into a space they are in, and nothing else: record_id is one pursuit id, decision case_id or message id, file is one file's name or identity, or tool is one of their own saved tools' id (its descriptor and file texts are copied, so another member's AI can keep its own copy with save_tool). Only the fields meant for others are copied (a decision leaves behind the pursuits it was weighed against); a file's bytes stay with the person and members read them through the space. Sharing the same record again updates the copy. Only share what the person asked to share.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "record_id": {
+       "type": "string"
+      },
+      "file": {
+       "type": "string"
+      },
+      "tool": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Share one record into a space",
+    "annotations": {
+     "title": "Share one record into a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "withdraw_from_space",
+    "description": "Withdraws an item this person put in a space: its words are erased for everyone, and a marker that they withdrew it stays.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "item_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "item_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Withdraw from a space",
+    "annotations": {
+     "title": "Withdraw from a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "name_in_space",
+    "description": "Sets the name this person shows to the other members of one space.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "name"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "name": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Set my name in a space",
+    "annotations": {
+     "title": "Set my name in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_shared_file",
+    "description": "Where to read the bytes of a file shared into a space (item_id of a file item): a short-lived address. It stops working if the member who shared it withdraws it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "item_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "item_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read a shared file",
+    "annotations": {
+     "title": "Read a shared file",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "bring_in_chat",
+    "description": "Brings one earlier chat into Trillion from its exported archive, word for word, with the files its messages carried: into the person's private Trillion (leave space_id out) or into one shared space they name (space_id). Files are found among the person's own files and never copied: attachments maps each attachment id in the chat (like file-AbC123) to the name or identity of that file in their files, and attachments_folder names a folder whose files start with those ids, as in an export. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; put them in the person's files and bring the chat in again to add them. Bringing the same chat in again adds nothing twice. For a whole account export use bring_in_chat_export.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "conversation"
+     ],
+     "properties": {
+      "conversation": {
+       "type": "object",
+       "description": "One conversation exactly as the chat app exported it (for ChatGPT: the conversation object with title, mapping and current_node)."
+      },
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "app": {
+       "type": "string",
+       "description": "The app it came from; ChatGPT when left out"
+      },
+      "attachments": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "string"
+       },
+       "description": "Attachment id to the name (like /chats/file-AbC123-photo.png) or identity of that file in the person's files"
+      },
+      "attachments_folder": {
+       "type": "string",
+       "description": "A folder in the person's files holding the chat's files, named with their ids first"
+      }
+     }
+    },
+    "title": "Bring in one chat",
+    "annotations": {
+     "title": "Bring in one chat",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "bring_in_chat_export",
+    "description": "Brings a whole account export of chats (for ChatGPT, conversations.json) into Trillion, from a file already in the person's files (file: its name or identity), with the files the chats carried: into their private Trillion, or into the one shared space they name (space_id). Upload the whole export folder, not just conversations.json: its files are found in the same folder as conversations.json and the folders under it, or in attachments_folder if the person put them elsewhere, and are never copied. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; add them to the person's files and bring the export in again to add them. A page of conversations per call; call again with offset set to next_offset until it is null. Nothing is brought in twice. Needs the private reach, since the file is private.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "file"
+     ],
+     "properties": {
+      "file": {
+       "type": "string"
+      },
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "offset": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      },
+      "app": {
+       "type": "string"
+      },
+      "attachments_folder": {
+       "type": "string",
+       "description": "The folder in the person's files holding the export's other files, when it is not the folder conversations.json is in"
+      }
+     }
+    },
+    "title": "Bring in a chat export",
+    "annotations": {
+     "title": "Bring in a chat export",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "publish_space_agent",
+    "description": "Puts this agent to work in one shared space, so members' AIs can hand it work there: name, description, skills, and optional capacity { max_concurrent, ttl_minutes }. It sees only that space, never anyone's private Trillion. agent_id is yours; in the space it is shown with your member name. Optional delivery { url } is an https address this agent answers on: it is then sent a signed event (handoff.created) when work in the space is handed to it and one (handoff.finished) when work it handed off there is finished, carrying only the handoff id, the job's first words and the space id, so it can wait instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. Other members never see the secret or the address. delivery null stops events and drops any still waiting; rotate_delivery_secret true makes a new secret.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "name",
+      "description"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "agent_id": {
+       "type": "string"
+      },
+      "delivery": {
+       "anyOf": [
+        {
+         "type": "object",
+         "required": [
+          "url"
+         ],
+         "properties": {
+          "url": {
+           "type": "string"
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "rotate_delivery_secret": {
+       "type": "boolean"
+      },
+      "name": {
+       "type": "string"
+      },
+      "description": {
+       "type": "string"
+      },
+      "skills": {
+       "type": "array",
+       "items": {}
+      },
+      "harness": {
+       "type": "string"
+      },
+      "model": {
+       "type": "string"
+      },
+      "takes_work": {
+       "type": "boolean"
+      },
+      "capacity": {
+       "type": "object",
+       "properties": {
+        "max_concurrent": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 20
+        },
+        "ttl_minutes": {
+         "type": "number",
+         "minimum": 1,
+         "maximum": 1440
+        }
+       }
+      }
+     }
+    },
+    "title": "Put an agent to work in a space",
+    "annotations": {
+     "title": "Put an agent to work in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "withdraw_space_agent",
+    "description": "Stops one of this person's agents working in a space (agent_id as published there): it takes no more work, work it held goes back up for others, and events still waiting for it are dropped and never sent.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "agent_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "agent_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Stop an agent working in a space",
+    "annotations": {
+     "title": "Stop an agent working in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "find_space_agents",
+    "description": "The agents at work in one space that match a job, with which member runs each and whether it is ready now.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "job": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Find agents in a space",
+    "annotations": {
+     "title": "Find agents in a space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "hand_off_in_space",
+    "description": "Hands a job to an agent in a shared space (to_agent from find_space_agents), or to whichever agent there takes it first. Everything in the handoff is seen by every member of the space, so include only what belongs there: case_id may name only an item of this space. request_key is any unique text; repeating it returns the same handoff.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "job",
+      "request_key"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "job": {
+       "type": "string"
+      },
+      "request_key": {
+       "type": "string"
+      },
+      "to_agent": {
+       "type": "string"
+      },
+      "input": {
+       "type": "object"
+      },
+      "from_agent": {
+       "type": "string"
+      },
+      "case_id": {
+       "type": "string"
+      },
+      "parent_handoff_id": {
+       "type": "string"
+      },
+      "hold_minutes": {
+       "type": "number",
+       "minimum": 1
+      }
+     }
+    },
+    "title": "Hand work to an agent in a space",
+    "annotations": {
+     "title": "Hand work to an agent in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "take_space_work",
+    "description": "Takes the oldest job waiting in a space for this agent (agent_id as you published it there), or one handoff_id.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "agent_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "agent_id": {
+       "type": "string"
+      },
+      "handoff_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Take work in a space",
+    "annotations": {
+     "title": "Take work in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "finish_space_work",
+    "description": "Records the result of a job this agent took in a space. Every member of the space sees it; put nothing private in it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "handoff_id",
+      "agent_id",
+      "result"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "handoff_id": {
+       "type": "string"
+      },
+      "agent_id": {
+       "type": "string"
+      },
+      "result": {},
+      "summary": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Finish work in a space",
+    "annotations": {
+     "title": "Finish work in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_space_handoff",
+    "description": "Reads one handoff in a space (handoff_id), or the newest handoffs there.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "handoff_id": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Read a handoff in a space",
+    "annotations": {
+     "title": "Read a handoff in a space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_space_rules",
+    "description": "Who may do what in one shared space: its rules, each with id, effect (allow or deny), says (what it means), who, actions and when (further conditions, a rule tree over facts), what each covers, the facts, kinds of who and actions a rule can name, the members a rule can name (member_id, name, member_type), and may_change (whether this person may replace them). Every space starts with rules that let its members read, write, share, invite and hand work, let whoever put something there take it back, and let whoever started it change the rules. Changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      }
+     }
+    },
+    "title": "Read who may do what in a space",
+    "annotations": {
+     "title": "Read who may do what in a space",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_space_rules",
+    "description": "Replaces who may do what in one shared space, for a person its rules let change them (at first, whoever started it). Send the whole list, read_space_rules first and change it: each rule is { id, effect: \"allow\" or \"deny\", says: what it means in plain words, refuses?: the words a deny says to the person it stops, who?: { kind: \"anyone\" } or { kind: \"any_member\" } or { kind: \"anyone_with_link\" } or { kind: \"member_type\", member_type } or { kind: \"person\", person: a member_id from read_space_rules }, actions?: [action ids] (every action when left out), when?: { kind: \"group\", combinator: \"and\" or \"or\", rules: [conditions or groups] } }, a condition being { kind: \"rule\", field: one of the facts, operator: \"is_any_of\" or \"is_none_of\", params: { values: [...] } } (is_member, is_owner, holds_link, made_it, maker_is_member and is_community are true or false; action, member_type and person are ids). A rule holds when its who, actions and when all hold. A deny that holds wins; otherwise an allow that holds lets the person act; when none holds they are refused. Who may change the rules is the action change_rules in the same list, and a list that would stop this person changing them again is refused. rules null puts back the rules every space starts with. Every member sees the new rules; say what will change and get the person's approval first.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "rules"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "rules": {
+       "anyOf": [
+        {
+         "type": "array",
+         "minItems": 1,
+         "maxItems": 100,
+         "items": {
+          "type": "object",
+          "required": [
+           "id",
+           "effect",
+           "says"
+          ],
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "effect": {
+            "type": "string",
+            "enum": [
+             "allow",
+             "deny"
+            ]
+           },
+           "says": {
+            "type": "string"
+           },
+           "refuses": {
+            "type": "string"
+           },
+           "who": {
+            "type": "object"
+           },
+           "actions": {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           },
+           "when": {
+            "type": "object"
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     }
+    },
+    "title": "Change who may do what in a space",
+    "annotations": {
+     "title": "Change who may do what in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_member_type",
+    "description": "Gives a member of one shared space another member type (member_id and the type ids from read_space_rules members and member_types), for a person the space's rules let give people their type (at first, its owner). A member's type is what the space's rules name in who: { kind: \"member_type\" }. A change that would leave nobody able to change who may do what is refused.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "member_id",
+      "member_type"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "member_id": {
+       "type": "string"
+      },
+      "member_type": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Give a member a type in a space",
+    "annotations": {
+     "title": "Give a member a type in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "add_member_type",
+    "description": "Adds a member type of the space's own to one shared space, by its name (for example \"Editor\"), for a person its rules let change who may do what. It is offered with the space's starting types wherever a type is chosen, and rules can name it by the id read_space_rules returns.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "label"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "label": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Add a member type to a space",
+    "annotations": {
+     "title": "Add a member type to a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "remove_member_type",
+    "description": "Removes a member type a shared space added itself, while nobody holds it and no rule names it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "member_type"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "member_type": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Remove a member type from a space",
+    "annotations": {
+     "title": "Remove a member type from a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "hide_in_space",
+    "description": "Hides one thing in a shared space from everyone who may not hide or show it (they see only that it is hidden and by whom), or shows it again with hidden false. Its words stay. Allowed when the space's rules let this person hide or show that thing (each thing read with read_space says so in may.hide_item).",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "space_id",
+      "item_id"
+     ],
+     "properties": {
+      "space_id": {
+       "type": "string",
+       "description": "A space_id from list_spaces"
+      },
+      "item_id": {
+       "type": "string"
+      },
+      "hidden": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Hide or show a thing in a space",
+    "annotations": {
+     "title": "Hide or show a thing in a space",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "make_agent_key",
+    "description": "Makes a personal key for an agent that reaches only what the person chooses: reach { private: false, spaces: [space_id] } for one shared space and nothing private, { private: false, spaces: \"all\" } for every space and nothing private, or { private: true, spaces: [] } for the private Trillion only. The key cannot reach further than the sign-in making it. Returns the key once; the person turns it off on their account page.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "reach"
+     ],
+     "properties": {
+      "reach": {
+       "type": "object",
+       "required": [
+        "private"
+       ],
+       "properties": {
+        "private": {
+         "type": "boolean"
+        },
+        "spaces": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "all"
+           ]
+          },
+          {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          }
+         ]
+        }
+       }
+      }
+     }
+    },
+    "title": "Make a key with a chosen reach",
+    "annotations": {
+     "title": "Make a key with a chosen reach",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "find_workflow",
+    "description": "Finds workflows that get a job done in several checked steps, described in plain words: Trillion's own, this account's saved ones and ones other accounts published. Returns each workflow_id, its job, its steps and next_call, the start_workflow call that runs it. It runs nothing. Use it when a job has a known method (research, a review, a plan) rather than a single tool call; find_tool_for_job finds single tools.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "job": {
+       "type": "string",
+       "description": "What needs doing, in plain words"
+      },
+      "limit": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 25
+      }
+     }
+    },
+    "title": "Find a workflow for a job",
+    "annotations": {
+     "title": "Find a workflow for a job",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "describe_workflow",
+    "description": "Reads one workflow whole: its job, input_schema, and every step with what to do (do), the shape of what the step hands back (submit, a JSON Schema) and the checks it must pass, plus the identity of this exact version. Use it before starting, or as the example to copy before save_workflow. Changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "workflow_id"
+     ],
+     "properties": {
+      "workflow_id": {
+       "type": "string",
+       "description": "A workflow_id from find_workflow, like workflow:l078-research-to-plan"
+      }
+     }
+    },
+    "title": "Read a workflow",
+    "annotations": {
+     "title": "Read a workflow",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "start_workflow",
+    "description": "Starts one run of a workflow with its input (matching its input_schema) and returns the first step: what to do, the shape to hand back and the checks. You do each step's work yourself, with your own tools, except a step that names a tool, which Trillion runs where that tool lives; a step is done only when its output is admitted. request_key is any unique text; the same workflow and request_key return the run already started. The run keeps the exact version of the workflow it started with.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "workflow_id",
+      "request_key"
+     ],
+     "properties": {
+      "workflow_id": {
+       "type": "string",
+       "description": "A workflow_id from find_workflow, like workflow:l078-research-to-plan"
+      },
+      "input": {
+       "type": "object",
+       "description": "The run's input, matching the workflow's input_schema"
+      },
+      "request_key": {
+       "type": "string",
+       "description": "Any unique text, so the same start sent twice starts one run"
+      }
+     }
+    },
+    "title": "Start a workflow",
+    "annotations": {
+     "title": "Start a workflow",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "submit_workflow_step",
+    "description": "Hands back the output of the step the run is on (step_id). It is admitted only when it fits the step's submit schema and passes every check; a refusal lists every problem at once, and nothing is kept until it passes. For a step that runs a tool (step.runs_tool), Trillion runs it and admits its output itself; while it is working, read_workflow_run later; when it failed or its output did not pass, run_again: true runs it again, or send output yourself. An admitted output is kept as evidence and the reply names the next step, or, after the last step, the whole result with every step's output. Steps go in order; sending the same admitted output again changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "run_id",
+      "step_id"
+     ],
+     "properties": {
+      "run_id": {
+       "type": "string",
+       "description": "A run_id from start_workflow"
+      },
+      "step_id": {
+       "type": "string"
+      },
+      "output": {
+       "type": "object",
+       "description": "What the step asks for, in the shape of its submit schema"
+      },
+      "run_again": {
+       "type": "boolean",
+       "description": "For a step that runs a tool: run the tool again"
+      }
+     }
+    },
+    "title": "Submit a workflow step",
+    "annotations": {
+     "title": "Submit a workflow step",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "read_workflow_run",
+    "description": "Reads one run (run_id) from any AI signed in to this account, and any tool run it is waiting on, so a tool that answered since is admitted now: the step it is on, the steps admitted, when, and what each handed back (a very large output shows its opening and read_whole_output), or the whole result when finished. With step_id too, reads that step's whole output. Leave run_id out to list this account's runs with the step each is on. It changes nothing except admitting a tool's finished output.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "run_id": {
+       "type": "string",
+       "description": "A run_id from start_workflow"
+      },
+      "step_id": {
+       "type": "string",
+       "description": "An admitted step: read its whole output"
+      }
+     }
+    },
+    "title": "Read a workflow run",
+    "annotations": {
+     "title": "Read a workflow run",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_workflow",
+    "description": "Keeps a workflow this account wrote, for example from a skill file, a checklist or a process the person already follows, so any AI signed in to this account can find it and run it. Send workflow: id (\"workflow:your-name\"), job (plain words; find_workflow matches it), label, input_schema (JSON Schema, \"type\": \"object\"), and steps, each with id, title, do (what to do), submit (a JSON Schema with \"type\": \"object\" for what the step hands back) and checks. Each check has says (what it asks for, in plain words), kind, and paths: a path is a list of keys starting with \"this\" (this step's output), \"input\" or \"steps\" then an earlier step's id, where \"*\" means every item of a list; of and in may also be a list of paths. Kinds: subset-of (every value at path is one of the values at of), covers (the values at path include every value at of, or every value in values), mentioned-in (every value at path appears inside some text at in), excludes-words (no text at path contains any of words), distinct-at-least (path holds at least count different values), exists (every value at path names a workflow or tool this account can find: catalog \"workflow\" or \"tool\"). A step done by a Workshop tool instead of the AI has run_tool: { tool_id, input }, where an input value { \"from\": path } takes the first value there and { \"all_from\": path } every value there; Trillion runs it where the tool lives when the run reaches the step, and checks its output like any other. Instead of steps, a workflow may give definition: { steps, edges }, the step graph Trillion's workflow engine runs, for branches, steps that run at the same time and loops: a step { id, kind: \"ask\", config: { name, input } } is answered by the AI (name \"ai\", input { do, submit }), a Workshop tool (name its tool id) or one of this account's agents (name \"agent:<agent_id>\"); an input value { \"$kind\": \"binding\", \"values\": path } takes the first value at a path (\"take\": \"all\" every value); a step { id, kind: \"check\", config: { subject: <step id>, rules: [checks as above] } } checks another step's output; edges are { from, to, kind: \"always\" }. The reply names similar_workflows that already do a job this close: improve that one instead of keeping two. describe_workflow on workflow:l078-research-to-plan shows a complete one. A refused save lists every problem at once. Saving the same id again replaces it; runs already started keep their version. It stays visible only to this account until publish_workflow.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "workflow"
+     ],
+     "properties": {
+      "workflow": {
+       "type": "object",
+       "description": "The workflow: id, job, label, input_schema, and steps or definition"
+      }
+     }
+    },
+    "title": "Save a workflow",
+    "annotations": {
+     "title": "Save a workflow",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "publish_workflow",
+    "description": "Makes a workflow this account saved findable and runnable by every Trillion account's AI. Their runs happen in their own accounts; nothing of this account's runs is shared. unpublish_workflow withdraws it.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "workflow_id"
+     ],
+     "properties": {
+      "workflow_id": {
+       "type": "string",
+       "description": "A workflow_id from find_workflow, like workflow:l078-research-to-plan"
+      }
+     }
+    },
+    "title": "Publish a workflow",
+    "annotations": {
+     "title": "Publish a workflow",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "unpublish_workflow",
+    "description": "Withdraws a workflow this account published, so only this account finds it again. Runs other accounts already started keep their copy.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "workflow_id"
+     ],
+     "properties": {
+      "workflow_id": {
+       "type": "string",
+       "description": "A workflow_id from find_workflow, like workflow:l078-research-to-plan"
+      }
+     }
+    },
+    "title": "Withdraw a published workflow",
+    "annotations": {
+     "title": "Withdraw a published workflow",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_rule",
+    "description": "Makes this person's Trillion do something by itself whenever something happens: a tool runs, or a workflow starts, with no AI in the loop. when says what sets it off, one of three ways. (1) Something recorded in this Trillion: { \"recorded\": \"message\" } (or \"pursuit\", \"decision\", or any other kind of record this account keeps), with optional where tests on the record's fields, all of which must hold: { \"field\": \"text\", \"contains\": \"invoice\" }, or equals, one_of (a list), starts_with, present: true. (2) An event from outside, such as a comment or a direct message: { \"source_id\": \"events:instagram\", \"event\": \"comment\", \"words\": [\"tennis\"] }; words (optional) must appear in the event, whole_word (default true) and field (default text) say how; once_per (optional) names an event field to act once per value of, like \"from_id\" for once per person. (3) Something added to a shared space this person is in, by any member (made there or shared from their private Trillion): { \"space_id\": \"membership_...\" } from list_spaces, with optional kind (only items of that kind, like \"decision\" or \"message\") and where tests on the item's fields as read_space shows it (title, kind, body.text and so on). It runs in this person's own Trillion and sees only what the space shows its members, never anyone's private records. Only a space this person is in now can be named; if they leave it, the rule stops and list_rules says so. then names what runs: { \"tool_id\", \"input\" } or { \"workflow_id\", \"input\" }, where an input value { \"fill\": { \"from\": \"record\", \"field\": \"text\" } } is taken from the record (\"id\" is the record's own id), { \"fill\": { \"from\": \"item\", \"field\": \"title\" } } from the space item (item_id, kind, title, body, space_id), or { \"fill\": { \"from\": \"event\", \"field\": \"comment_id\" } } from the event. It runs once for each thing that sets it off, never twice for the same thing, and only for what happens after the rule is set. Example: { \"when\": { \"recorded\": \"message\", \"where\": [{ \"field\": \"text\", \"contains\": \"invoice\" }] }, \"then\": { \"tool_id\": \"tool:...\", \"input\": { \"note\": { \"fill\": { \"from\": \"record\", \"field\": \"text\" } } } }, \"label\": \"file every invoice mentioned\" }. Give rule_id to change an existing rule. enabled (default true, and an existing rule keeps its own) turns it on or off: an off rule never fires; give only rule_id and enabled to turn it on or off and keep everything else. An event rule needs listen_for_events on its source once.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "rule_id": {
+       "type": "string",
+       "description": "A rule_id from list_rules"
+      },
+      "when": {
+       "type": "object",
+       "description": "{ recorded, where } for a record written in this Trillion, { space_id, kind, where } for something added to a shared space this person is in, or { source_id, event, words, whole_word, field, once_per } for an event from outside",
+       "properties": {
+        "recorded": {
+         "type": "string",
+         "description": "The kind of record, like message, pursuit or decision"
+        },
+        "space_id": {
+         "type": "string",
+         "description": "A shared space this person is in (from list_spaces): the rule runs when something is added there"
+        },
+        "kind": {
+         "type": "string",
+         "description": "With space_id: only items of this kind, like decision or message"
+        },
+        "where": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "field"
+          ],
+          "properties": {
+           "field": {
+            "type": "string"
+           },
+           "equals": {},
+           "one_of": {
+            "type": "array"
+           },
+           "starts_with": {
+            "type": "string"
+           },
+           "contains": {
+            "type": "string"
+           },
+           "present": {
+            "type": "boolean"
+           }
+          }
+         }
+        },
+        "source_id": {
+         "type": "string"
+        },
+        "event": {
+         "type": "string"
+        },
+        "words": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "whole_word": {
+         "type": "boolean"
+        },
+        "field": {
+         "type": "string"
+        },
+        "once_per": {
+         "type": "string"
+        }
+       }
+      },
+      "then": {
+       "type": "object",
+       "description": "What runs: { \"tool_id\": \"tool:...\", \"input\": {...} } (a tool from find_tool_for_job) or { \"workflow_id\": \"workflow:...\", \"input\": {...} } (a workflow from find_workflow)",
+       "properties": {
+        "tool_id": {
+         "type": "string"
+        },
+        "workflow_id": {
+         "type": "string"
+        },
+        "input": {
+         "type": "object"
+        }
+       }
+      },
+      "label": {
+       "type": "string",
+       "description": "What the rule is for, in plain words"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "On (true) or off (false)"
+      }
+     }
+    },
+    "title": "Set what happens by itself when something happens",
+    "annotations": {
+     "title": "Set what happens by itself when something happens",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_rules",
+    "description": "This person's rules (from set_rule): each rule_id, when, then, label and whether it is on (enabled); which outside sources are being listened to; the latest runs the rules started (with any problem); a rule about a shared space the person has left shows stopped, saying why; and the latest events that arrived with what each rule did (task ids readable with read_task). It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "List my rules",
+    "annotations": {
+     "title": "List my rules",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "remove_rule",
+    "description": "Removes one of this person's rules by rule_id (from list_rules), so nothing runs for it any more. Runs it already started and their results stay. It does not stop listening to an outside source; listen_for_events with stop true does.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "rule_id"
+     ],
+     "properties": {
+      "rule_id": {
+       "type": "string",
+       "description": "A rule_id from list_rules"
+      }
+     }
+    },
+    "title": "Remove a rule",
+    "annotations": {
+     "title": "Remove a rule",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "set_schedule",
+    "description": "Makes this person's Trillion run a tool or start a workflow at a time, by itself, with nobody calling. Give every for a repeating time: { \"unit\": \"day\" or \"week\", \"at\": \"09:00\" (24-hour local time), \"time_zone\": \"America/New_York\", \"on\": [\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\"] for a week, \"interval\": 2 for every other day or week }; clock changes are handled (a time that does not exist that night runs at the first minute that does). Or give once_at for one time: \"2026-10-01T09:00:00-04:00\". then names what runs: { \"tool_id\", \"input\" } or { \"workflow_id\", \"input\" }. starts_on (optional, \"2026-10-01\") is the first day it may run; a repeating schedule set after today's time starts with its next time. Example, every weekday at nine in New York: { \"every\": { \"unit\": \"week\", \"on\": [\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\"], \"at\": \"09:00\", \"time_zone\": \"America/New_York\" }, \"then\": { \"workflow_id\": \"workflow:...\", \"input\": {} }, \"label\": \"morning review\" }. Returns the next time it runs. Give schedule_id to change an existing schedule. enabled (default true, and an existing schedule keeps its own) turns it on or off: an off schedule never runs, and turned back on it counts from now, never catching up the times it was off for; give only schedule_id and enabled to turn it on or off and keep everything else.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "schedule_id": {
+       "type": "string",
+       "description": "A schedule_id from list_schedules"
+      },
+      "every": {
+       "type": "object",
+       "properties": {
+        "unit": {
+         "type": "string",
+         "enum": [
+          "day",
+          "week"
+         ]
+        },
+        "at": {
+         "type": "string",
+         "description": "Local time, like 09:00"
+        },
+        "time_zone": {
+         "type": "string",
+         "description": "Like America/New_York"
+        },
+        "on": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         },
+         "description": "Days, for a week: monday ... sunday"
+        },
+        "interval": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 52
+        }
+       }
+      },
+      "once_at": {
+       "type": "string",
+       "format": "date-time",
+       "description": "One time, with its zone"
+      },
+      "starts_on": {
+       "type": "string",
+       "description": "First day it may run, like 2026-10-01"
+      },
+      "then": {
+       "type": "object",
+       "description": "What runs: { \"tool_id\": \"tool:...\", \"input\": {...} } (a tool from find_tool_for_job) or { \"workflow_id\": \"workflow:...\", \"input\": {...} } (a workflow from find_workflow)",
+       "properties": {
+        "tool_id": {
+         "type": "string"
+        },
+        "workflow_id": {
+         "type": "string"
+        },
+        "input": {
+         "type": "object"
+        }
+       }
+      },
+      "label": {
+       "type": "string",
+       "description": "What the schedule is for, in plain words"
+      },
+      "enabled": {
+       "type": "boolean",
+       "description": "On (true) or off (false)"
+      }
+     }
+    },
+    "title": "Set something to run at a time",
+    "annotations": {
+     "title": "Set something to run at a time",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "list_schedules",
+    "description": "This person's schedules (from set_schedule): each schedule_id, when it repeats or the one time, what runs, whether it is on (enabled), when it runs next (none while off), and its last run (with the task_id or run_id to read with read_task or read_workflow_run). It changes nothing.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {}
+    },
+    "title": "List my schedules",
+    "annotations": {
+     "title": "List my schedules",
+     "openWorldHint": false,
+     "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "run_now",
+    "description": "Runs a rule's or a schedule's then once, now, on the same road run_tool and start_workflow take (so the plan checks hold), whether the rule or schedule is on or off. Give rule_id (from list_rules) or schedule_id (from list_schedules). A then input value filled from a record or event is left out, since nothing set it off; input (optional) is laid over the then's own input to supply it. Each call runs once more. Returns the task_id (read_task) or run_id (read_workflow_run); the run shows as the rule's latest run or the schedule's last_run.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "rule_id": {
+       "type": "string",
+       "description": "A rule_id from list_rules"
+      },
+      "schedule_id": {
+       "type": "string",
+       "description": "A schedule_id from list_schedules"
+      },
+      "input": {
+       "type": "object",
+       "description": "Values laid over the then's own input"
+      }
+     }
+    },
+    "title": "Run a rule or schedule now",
+    "annotations": {
+     "title": "Run a rule or schedule now",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "remove_schedule",
+    "description": "Removes one of this person's schedules by schedule_id (from list_schedules), so it never runs again. Runs it already started and their results stay.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "schedule_id"
+     ],
+     "properties": {
+      "schedule_id": {
+       "type": "string",
+       "description": "A schedule_id from list_schedules"
+      }
+     }
+    },
+    "title": "Remove a schedule",
+    "annotations": {
+     "title": "Remove a schedule",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": true,
+     "idempotentHint": true
+    }
+   }
+  ]
+ }
+}

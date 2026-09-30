@@ -1,0 +1,340 @@
+---
+title: "Decisions"
+description: "Walk a decision through its questions, record the choice, and learn from how it turned out."
+---
+
+A decision starts with a goal, the facts so far and at least two options. Your AI then answers one question at a time until none remain, records the choice with its reason, next action and how you will know it worked, and later reports how it went. On the free plan a decision is not kept after it is made; a paid plan keeps every decision, note and result.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## List decision methods
+
+`list_methods` · Reads only
+
+Lists the decision methods `start_decision` can use: the universal one (id "universal", for any decision) and methods for particular subjects such as cooking, relationships, changing software and tennis. Returns each method's id, name and what it is for; pass the id as `start_decision`'s method, or leave method out for the universal one. Needs nothing and changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Start a decision
+
+`start_decision` · Changes things
+
+Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each &#123;ref, claim&#125;, where ref is a short name the answers cite), and at least two options (&#123;id, label&#125;). method (optional) is an id from `list_methods`. Then `answer_question` until no question remains, and decide. It decides nothing by itself.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `source_id` | string | Yes |  |
+| `goal` | string | Yes |  |
+| `method` | string |  |  |
+| `evidence` | object[] | Yes |  |
+| `evidence[].ref` | string | Yes |  |
+| `evidence[].claim` | string | Yes |  |
+| `options` | object[] | Yes |  |
+| `options[].id` | string | Yes |  |
+| `options[].label` | string | Yes |  |
+
+```json Example
+{
+  "source_id": "launch-timing-2026-09-29",
+  "goal": "Launch the new pricing page this week or next",
+  "evidence": [
+    {
+      "ref": "signups",
+      "claim": "Signups dropped 20% since the old page went up"
+    },
+    {
+      "ref": "bug",
+      "claim": "Checkout fails for about 1 in 50 buyers"
+    }
+  ],
+  "options": [
+    {
+      "id": "this-week",
+      "label": "Launch this week"
+    },
+    {
+      "id": "next-week",
+      "label": "Fix checkout first, launch next week"
+    }
+  ]
+}
+```
+
+## Get the next question
+
+`next_question` · Reads only
+
+Reads a decision's current question by case_id: the question with its answer_schema, which checks were selected or left out, and whether it is ready to decide (then call decide). Use it to pick up a decision where it was left. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+
+```json Example
+{
+  "case_id": "<case_id>"
+}
+```
+
+## Answer a question
+
+`answer_question` · Changes things
+
+Saves the answer to the current question. The answer follows the answer_schema in the question: each listed field, evidence_refs naming the case evidence, and an optional scratchpad note. For fields listed in ask_others, answered_by records where the answer came from: "person", or the memory, file or conversation you found it in. When the question lists a checklist, checklist gives, for each check id, how the answer handles that check or why it does not bear on this decision. usage (optional) reports what answering this step cost you: model, model_calls, input_tokens, output_tokens, or anything else countable.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+| `step_id` | string | Yes |  |
+| `answer` | object | Yes |  |
+| `usage` | object |  | What this cost you: numbers such as model_calls, input_tokens, output_tokens, seconds, and short labels such as model |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "step_id": "<step id from the question>",
+  "answer": {
+    "<field from answer_schema>": "Fixing checkout first protects the buyers we already have.",
+    "evidence_refs": [
+      "bug"
+    ]
+  }
+}
+```
+
+## Revise the evidence
+
+`revise_evidence` · Changes things
+
+Changes the evidence of an open decision: add new facts (&#123;ref, claim&#125;), correct a claim that was wrong (&#123;ref, claim&#125;), or retract a fact that turned out false (&#123;ref, because&#125; or the ref). A retracted fact can no longer be cited; every change is logged. On a free plan use the case_id from the latest reply.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+| `add` | object[] |  |  |
+| `add[].ref` | string | Yes |  |
+| `add[].claim` | string | Yes |  |
+| `correct` | object[] |  |  |
+| `correct[].ref` | string | Yes |  |
+| `correct[].claim` | string | Yes |  |
+| `retract` | object[] |  |  |
+| `retract[].ref` | string | Yes |  |
+| `retract[].because` | string |  |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "add": [
+    {
+      "ref": "support",
+      "claim": "Two customers wrote in about the checkout bug today"
+    }
+  ],
+  "retract": [
+    {
+      "ref": "signups",
+      "because": "The drop was a tracking error"
+    }
+  ]
+}
+```
+
+## Add a note
+
+`add_note` · Changes things
+
+Adds a note to one decision (case_id), optionally tied to one question (step_id): a thought, a fact found along the way, anything worth keeping with that decision. Returns the note and how many notes the decision now has. It is only for decisions: for what the person is pursuing use `record_pursuits`, for what was said use `record_messages`, for what was learned about a file use `record_file_results`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+| `text` | string | Yes |  |
+| `step_id` | string |  |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "text": "Sarah says the payment provider fixes the bug on Friday."
+}
+```
+
+## Record the decision
+
+`decide` · Changes things
+
+Records the choice once every question is answered: option_id, reason, evidence_refs, next_action, success_measure, move when the move chosen is narrower than the option (the export then shows the move), and every field the last reply lists in decision_fields, each by its name. Sending the same decision again changes nothing and says already_decided. Returns the next action and what the whole run cost. usage (optional) reports what deciding cost you, the same way as for answers.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+| `option_id` | string | Yes |  |
+| `move` | string |  | The move actually chosen, in words, when it is narrower than the option |
+| `reason` | string | Yes |  |
+| `evidence_refs` | string[] | Yes |  |
+| `next_action` | string | Yes |  |
+| `success_measure` | string | Yes |  |
+| `usage` | object |  | What this cost you: numbers such as model_calls, input_tokens, output_tokens, seconds, and short labels such as model |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "option_id": "next-week",
+  "reason": "Checkout failures cost more than a week's delay.",
+  "evidence_refs": [
+    "bug"
+  ],
+  "next_action": "Fix the checkout bug today",
+  "success_measure": "No failed checkouts for 7 days, then launch"
+}
+```
+
+## Report how it went
+
+`report_result` · Changes things
+
+Records what actually happened after a decision (case_id) or a tool run (task_id), as the person tells it: result (met, failed or unknown), summary in their words, and answered_by ("person" when the person said it, or who saw it). Ask the person before reporting: a tool's contract passing only means its output had the right shape, and tools are ranked on these reports. Stored as the person's report, apart from checked results. Returns the decision or task with its reports.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string |  | Case id returned by `start_decision` |
+| `task_id` | string |  | Task id returned by `run_tool` |
+| `result` | string | Yes | One of `met`, `failed`, `unknown`. |
+| `summary` | string | Yes |  |
+| `answered_by` | string | Yes |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "result": "met",
+  "summary": "Launched a week later; 4 people bought in the first two days.",
+  "answered_by": "person"
+}
+```
+
+## List my decisions
+
+`list_decisions` · Reads only
+
+Lists this account's saved decisions, newest first: each with its id (the case_id other decision tools take), goal, status and the chosen option. Use it to find a decision to continue, export or report on. limit caps how many (default 20). It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Export a decision
+
+`export_decision` · Reads only
+
+Returns one whole decision (case_id) as a readable copy, as format "markdown" (the default) or "json". It changes nothing and does not send it anywhere.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+| `format` | string |  |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "format": "markdown"
+}
+```
+
+## Find similar decisions
+
+`related_decisions` · Reads only
+
+Finds decisions like this one (case_id): the person's own earlier ones (yours) and, where available, how other people decided in similar situations (others, anonymized, never naming anyone). Each shared decision offers questions to consider, linked to the anonymous source through `read_shared_decision`. Reading earlier decisions is part of the paid plan; on another plan it says so and returns none. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | Case id returned by `start_decision` |
+
+```json Example
+{
+  "case_id": "<case_id>"
+}
+```
+
+## Read the shared decision behind a question
+
+`read_shared_decision` · Reads only
+
+Reads the anonymous shared decision behind a suggested question. Use the shared_decision_id in the question's source. If its owner stops sharing it, the source is no longer available.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `shared_decision_id` | string | Yes |  |
+
+```json Example
+{
+  "shared_decision_id": "<shared_decision_id>"
+}
+```
+
+## What has helped
+
+`what_helped` · Reads only
+
+What has helped this person decide well, from their own saved decisions: how many hit their goal (with how many have a result yet), time from deciding to a checked result, whether their latest decisions are faster, cheaper or more often right than earlier ones, and which of the method's questions most often changed their answer and how those decisions turned out. Every share comes with its counts; below the minimum it says there is not enough data yet.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Score known answers
+
+`score_candidates` · Reads only
+
+Picks from answers you already have, instead of generating one: give the situation (state), optionally the question (instructions), and criteria as &#123; candidate id: description &#125;, 2 to 200 candidates. Returns each candidate's probability, the choice, a confidence from 0 to 1, and escalate: true when the confidence is below the line, meaning a slower check should decide. Fast and cheap; best for routing and shortlisting, not for judging whether something really happened.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `state` | string | Yes |  |
+| `instructions` | string |  |  |
+| `criteria` | object | Yes |  |
+
+```json Example
+{
+  "state": "A customer writes: my card was charged twice.",
+  "instructions": "Which team should answer?",
+  "criteria": {
+    "billing": "Payments, charges and refunds",
+    "product": "How a feature works",
+    "account": "Signing in and account access"
+  }
+}
+```

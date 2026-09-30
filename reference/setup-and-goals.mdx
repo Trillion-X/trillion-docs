@@ -1,0 +1,74 @@
+---
+title: "Setup and goals"
+description: "Start Trillion with a new person and keep what they are working toward."
+---
+
+These tools get a person started and keep what they are working toward. Every decision is weighed against these goals, so your AI reads them before it advises.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Start Trillion setup
+
+`start_setup` · Reads only
+
+Starts Trillion setup with this person. Call it first whenever they say "set me up with Trillion", "get me started", "onboard me" or "show me what Trillion can do", and on a new account with no pursuits. It means this Trillion connection, never an app on their computer. Returns the setup steps, the mission to say in your own words, the line to add to your own instructions, and what Trillion already knows about them (their pursuits and connected accounts), so you skip what is known and start at the first missing step. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## List what I am pursuing
+
+`list_pursuits` · Reads only
+
+Reads what this person is pursuing: each pursuit with its id, title, where it is now (now), where they want it to get (after) and why it matters. Decisions are weighed against these, so read them before advising. Returns a page of pursuits with total and next_offset; call again with offset set to next_offset until it is null. It changes nothing; `record_pursuits` changes them.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `offset` | integer |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Record what I am pursuing
+
+`record_pursuits` · Changes things
+
+Records what this person is pursuing, so every one of their AIs and every decision is weighed against it. Each pursuit needs title, now (where it stands today, concretely) and after (where they want it to get), and may have id, why_it_matters, drive_evidence, status, last_seen, evidence [&#123;where, date, quote_or_fact&#125;] and needle_mover (true on the one pursuit that, done, moves the others most: the person's biggest needle mover, shown first on their Home; set it false on any other that had it). A pursuit with the id `list_pursuits` gave it is updated; one without an id is added (or updated, when its title matches). Pursuits you leave out stay as they are, unless replace_all is true: then the list you send is the whole list and every pursuit left out is marked ended (never erased). Fill it from what you already know about the person (your memory of them, their files and past conversations) before asking them, and be specific: generic pursuits make generic decisions. Returns the pursuits now current.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `pursuits` | object[] | Yes |  |
+| `pursuits[].id` | string |  |  |
+| `pursuits[].title` | string | Yes |  |
+| `pursuits[].now` | string | Yes |  |
+| `pursuits[].after` | string | Yes |  |
+| `pursuits[].why_it_matters` | string |  |  |
+| `pursuits[].drive_evidence` | string |  |  |
+| `pursuits[].status` | string |  |  |
+| `pursuits[].last_seen` | string |  |  |
+| `pursuits[].needle_mover` | boolean |  |  |
+| `pursuits[].evidence` | object[] |  |  |
+| `replace_all` | boolean |  | true when this is the whole list: every current pursuit left out is ended |
+
+```json Example
+{
+  "pursuits": [
+    {
+      "title": "Ten paying customers",
+      "now": "3 paying customers, all from friends",
+      "after": "10 paying customers by December",
+      "why_it_matters": "It proves strangers will pay",
+      "needle_mover": true
+    }
+  ]
+}
+```

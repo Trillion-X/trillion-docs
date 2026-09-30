@@ -1,0 +1,56 @@
+---
+title: "Codex"
+description: "Add Trillion to Codex in your terminal, the Codex app and the editor extension."
+---
+
+For Codex in your terminal. The Codex app and the Codex editor extension read the same list, so this adds Trillion to them too. Do it once on each computer you use.
+
+<Steps>
+  <Step title="Open Terminal">
+    On a Mac press Command and Space, type `Terminal` and press Return. On Windows open PowerShell.
+  </Step>
+  <Step title="Paste this line and press Return">
+    Codex adds Trillion and opens your browser to sign in by itself.
+
+    ```bash
+    codex mcp add trillion --url https://app.gettrillion.ai/mcp
+    ```
+
+    **If not:** "command not found: codex" means Codex is not installed on this computer. Install it from [developers.openai.com/codex](https://developers.openai.com/codex), then paste the line again.
+  </Step>
+  <Step title="Tap your passkey in the browser">
+    A Trillion page opens in your browser: tap your passkey and allow Codex.
+
+    **When it worked:** Terminal says "Successfully logged in".
+
+    **If not:** if the browser did not open, paste this and press Return:
+
+    ```bash
+    codex mcp login trillion
+    ```
+  </Step>
+  <Step title="Check it">
+    Paste this and press Return.
+
+    ```bash
+    codex mcp list
+    ```
+
+    **When it worked:** a row for `trillion` with its address.
+  </Step>
+  <Step title="Let Trillion run without asking">
+    Open the file `~/.codex/config.toml`, find the part that starts with `[mcp_servers.trillion]` and add the line below under it. Codex then uses every Trillion tool without asking you each time.
+
+    ```toml ~/.codex/config.toml
+    [mcp_servers.trillion]
+    default_tools_approval_mode = "approve"
+    ```
+  </Step>
+  <Step title="Ask for something">
+    Start Codex by typing `codex`, then ask in plain words, for example:
+
+    ```text
+    Use Trillion to find a tool that transcribes my recording, then run it.
+    ```
+  </Step>
+</Steps>
