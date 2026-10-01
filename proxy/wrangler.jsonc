@@ -1,0 +1,12 @@
+// The Worker that answers at docs.gettrillion.ai and forwards to the Mintlify deployment.
+// Deploy: cd proxy && npx wrangler deploy   (attaching the custom domain creates its DNS record in the gettrillion.ai zone)
+{
+  "name": "trillion-docs",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-01",
+  "routes": [{ "pattern": "docs.gettrillion.ai", "custom_domain": true }],
+  "vars": {
+    "PUBLIC_HOST": "docs.gettrillion.ai",
+    "MINTLIFY_HOST": "trillion.mintlify.site"
+  }
+}
