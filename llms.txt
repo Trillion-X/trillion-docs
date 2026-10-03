@@ -9,7 +9,7 @@
 
 ## Guides: Connect your AI
 
-- [Connect your AI](https://docs.gettrillion.ai/connect/overview): Add Trillion to the AI app you already use. One address, one passkey, every app.
+- [Connect your AI](https://docs.gettrillion.ai/connect/overview): Add Trillion to the AI app you already use. One address, one sign-in, every app.
 - [Claude Code](https://docs.gettrillion.ai/connect/claude-code): Add Trillion to Claude Code in your terminal with one command.
 - [Codex](https://docs.gettrillion.ai/connect/codex): Add Trillion to Codex in your terminal, the Codex app and the editor extension.
 - [ChatGPT](https://docs.gettrillion.ai/connect/chatgpt): Add Trillion to ChatGPT in your web browser with Developer mode.
@@ -41,7 +41,7 @@
 
 ## Tool reference
 
-- [Tools reference](https://docs.gettrillion.ai/reference/overview): Every tool Trillion gives your AI, grouped by the job you want done. 155 tools in all.
+- [Tools reference](https://docs.gettrillion.ai/reference/overview): Every tool Trillion gives your AI, grouped by the job you want done. 279 tools in all.
 - [Setup and goals](https://docs.gettrillion.ai/reference/setup-and-goals): Start Trillion with a new person and keep what they are working toward.
 - [Decisions](https://docs.gettrillion.ai/reference/decisions): Walk a decision through its questions, record the choice, and learn from how it turned out.
 - [Messages and activity](https://docs.gettrillion.ai/reference/messages): Keep conversations word for word so every AI you use can read them, and see what your AIs did.
@@ -56,5 +56,8 @@
 - [Communities](https://docs.gettrillion.ai/reference/communities): Join a community, post, go to events, take courses and meet other members.
 - [Book a session](https://docs.gettrillion.ai/reference/sessions): See the sessions you can book with a person, pay, pick a time, and move or cancel it.
 - [Writing](https://docs.gettrillion.ai/reference/writing): Write in your own formats, and keep private answers to the questions your audience asks.
+- [Lists, sidebar and screen](https://docs.gettrillion.ai/reference/lists-and-screen): Keep lists, arrange the sidebar and screen, and show the person tours and looks.
+- [Posts, links and what was sent](https://docs.gettrillion.ai/reference/posts-and-links): Draft, check, approve and publish posts, keep a link-in-bio page, publish insights and see everything sent.
+- [Public apps and source projects](https://docs.gettrillion.ai/reference/public-apps): Publish small public apps with visitor actions, connect domains, and edit a connected GitHub project's source.
 
 Open Trillion: https://app.gettrillion.ai

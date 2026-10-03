@@ -10,7 +10,8 @@
       "tools": [
         "start_setup",
         "list_pursuits",
-        "record_pursuits"
+        "record_pursuits",
+        "read_awareness"
       ]
     },
     {
@@ -48,7 +49,14 @@
         "bring_in_chat",
         "bring_in_chat_export",
         "read_activity",
-        "trace_item"
+        "trace_item",
+        "send_to_all_ais",
+        "send_message",
+        "read_recent_messages",
+        "correct_message_duplicate",
+        "correct_message_provenance",
+        "correct_message_authored_at",
+        "correct_source_identity"
       ]
     },
     {
@@ -65,7 +73,10 @@
         "save_tool",
         "delete_tool",
         "publish_tool",
-        "unpublish_tool"
+        "unpublish_tool",
+        "add_to_shared_library",
+        "search_shared_library",
+        "remove_from_shared_library"
       ]
     },
     {
@@ -82,7 +93,8 @@
         "read_workflow_run",
         "save_workflow",
         "publish_workflow",
-        "unpublish_workflow"
+        "unpublish_workflow",
+        "remove_workflow"
       ]
     },
     {
@@ -101,7 +113,14 @@
         "remove_schedule",
         "list_connections",
         "connect_service",
-        "listen_for_events"
+        "listen_for_events",
+        "source_health",
+        "timed_work",
+        "try_timed_work_again",
+        "list_saved_logins",
+        "save_login",
+        "import_logins",
+        "read_saved_login"
       ]
     },
     {
@@ -125,8 +144,24 @@
         "list_file_results",
         "record_file_results",
         "list_media",
-        "search_media",
-        "next_media_edit"
+        "next_media_edit",
+        "search",
+        "set_file_facts",
+        "propose_file_tidy",
+        "list_file_tidy",
+        "apply_file_tidy",
+        "undo_file_tidy",
+        "file_tidy_history",
+        "delete_file",
+        "archive_file",
+        "list_recently_deleted",
+        "put_back_file",
+        "read_keep_for",
+        "set_keep_for",
+        "recent_files",
+        "record_file_use",
+        "save_browser_saved_items",
+        "save_x_bookmarks"
       ]
     },
     {
@@ -155,7 +190,14 @@
         "hand_off_in_space",
         "take_space_work",
         "finish_space_work",
-        "read_space_handoff"
+        "read_space_handoff",
+        "record_blocks",
+        "say_what_was_done",
+        "reopen_incorrect_finish",
+        "say_what_is_in_the_way",
+        "release_work",
+        "record_effect",
+        "choose_always_on_ai"
       ]
     },
     {
@@ -187,7 +229,17 @@
         "set_member_type",
         "add_member_type",
         "remove_member_type",
-        "hide_in_space"
+        "hide_in_space",
+        "find_space_tool_for_job",
+        "describe_space_tool",
+        "run_space_tool",
+        "read_space_task",
+        "set_space_capability",
+        "create_space",
+        "invite_to_space",
+        "grant_space_tool",
+        "list_space_tools",
+        "revoke_space_tool"
       ]
     },
     {
@@ -202,7 +254,17 @@
         "shared_with_me",
         "read_shared",
         "share_destinations",
-        "save_share_destinations"
+        "save_share_destinations",
+        "shares_sent",
+        "deliver_share",
+        "share_record_by_link",
+        "share_collection_by_link",
+        "revoke_share_collection_link",
+        "sharing_links_of",
+        "revoke_record_share_link",
+        "record_scope",
+        "set_record_scope",
+        "find_in_scope"
       ]
     },
     {
@@ -217,7 +279,12 @@
         "request_introduction",
         "network",
         "answer_introduction",
-        "label_person"
+        "label_person",
+        "my_referrals",
+        "save_stay",
+        "list_stays",
+        "request_stay",
+        "read_stay_request"
       ]
     },
     {
@@ -279,7 +346,91 @@
         "keep_audience_question",
         "review_audience_question",
         "admit_audience_question",
-        "save_audience_answer_draft"
+        "save_audience_answer_draft",
+        "shape_into_formats",
+        "follow_script"
+      ]
+    },
+    {
+      "id": "lists-and-screen",
+      "title": "Lists, sidebar and screen",
+      "icon": "layout-dashboard",
+      "description": "Keep lists, arrange the sidebar and screen, and show the person tours and looks.",
+      "intro": "These tools change what the person sees in Trillion: their lists and the rows in them, the sidebar, screen layouts, guided tours and screen looks, and a Trillion screen drawn right in the chat.",
+      "tools": [
+        "list_lists",
+        "read_list",
+        "save_list",
+        "put_list_rows",
+        "read_sidebar",
+        "note_in_sidebar",
+        "change_sidebar",
+        "read_layouts",
+        "save_layout",
+        "open_layout",
+        "read_tours",
+        "save_tour",
+        "show_tour",
+        "list_looks",
+        "read_look",
+        "wear_look",
+        "save_look",
+        "publish_look",
+        "withdraw_look",
+        "show_screen",
+        "screen_read"
+      ]
+    },
+    {
+      "id": "posts-and-links",
+      "title": "Posts, links and what was sent",
+      "icon": "send",
+      "description": "Draft, check, approve and publish posts, keep a link-in-bio page, publish insights and see everything sent.",
+      "intro": "These tools put the person's words out in the world only after they approve them: posts to their connected accounts, their link-in-bio page, insights they approved, and a record of everything their AIs sent.",
+      "tools": [
+        "list_post_destinations",
+        "connect_post_destination",
+        "draft_post",
+        "check_post",
+        "approve_post",
+        "publish_post",
+        "read_post",
+        "list_post_calendar",
+        "list_posts",
+        "read_link_page",
+        "set_link_page",
+        "list_public_insights",
+        "publish_insight",
+        "unpublish_insight",
+        "list_sent",
+        "record_sent"
+      ]
+    },
+    {
+      "id": "public-apps",
+      "title": "Public apps and source projects",
+      "icon": "globe",
+      "description": "Publish small public apps with visitor actions, connect domains, and edit a connected GitHub project's source.",
+      "intro": "These tools publish a public app (its pages and the actions visitors can take), install it in the account or a space, connect a domain, read responses and visits, and change a connected GitHub project's source at an exact revision.",
+      "tools": [
+        "publish_public_app_definition",
+        "install_public_app",
+        "list_public_app_installations",
+        "claim_public_app_domain",
+        "activate_public_app_domain",
+        "retire_public_app_domain",
+        "read_public_app_installation",
+        "read_public_app_records",
+        "edit_public_app_draft",
+        "publish_public_app_draft",
+        "restore_public_app_version",
+        "read_public_app_analytics",
+        "list_source_projects",
+        "connect_source_project",
+        "read_source_project",
+        "resolve_source_selection",
+        "edit_source_project",
+        "verify_source_project"
       ]
     }
   ],

@@ -1,0 +1,329 @@
+---
+title: "Posts, links and what was sent"
+description: "Draft, check, approve and publish posts, keep a link-in-bio page, publish insights and see everything sent."
+---
+
+These tools put the person's words out in the world only after they approve them: posts to their connected accounts, their link-in-bio page, insights they approved, and a record of everything their AIs sent.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## List where I can post
+
+`list_post_destinations` · Reads only
+
+The accounts this person can post to (each account_id, platform, name and whether it is ready), and for every place they have not connected yet a connect_url to open and connect it. It changes nothing in their posts. Use the account_id values as `draft_post` destinations.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Get a link to connect a place to post
+
+`connect_post_destination` · Reads only
+
+The link that connects one place to post (platform, as named in `list_post_destinations` not_connected). Give the link to the person; once they connect it, `list_post_destinations` shows the new account.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `platform` | string | Yes | A platform from `list_post_destinations` |
+
+```json Example
+{
+  "platform": "<platform>"
+}
+```
+
+## Draft a post
+
+`draft_post` · Changes things
+
+Keeps a post as a draft for the person to look at: caption (the words), media (a video or picture from their files, by file name or identity from `list_media`), and optionally destinations (account_id values from `list_post_destinations`; a draft may be kept going nowhere yet, as when the person has not connected a place to post, but it cannot be approved until it has at least one), caption_by_platform (&#123; platform: words &#125; where one place needs different words), settings_by_platform (&#123; platform: &#123; ... &#125; &#125; that place's own settings, like a video title), link (an https page, such as where people sign up; it is added after the words, tagged with the post and the place), scheduled_for (a date and time with its zone), time_zone and media_facts. The answer's ready says, for each destination, whether that place will take the post and what is missing, as `check_post` does; for a draft going nowhere it says to pick where it goes, with pick_from (the connected accounts, and the places not connected yet: `connect_post_destination` gives the link for one). Give post_id to change a draft; changing an approved post, or one set for later that nothing was sent for yet, makes it a draft again. Nothing is posted.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `post_id` | string |  | A post_id from `draft_post` or `list_posts` |
+| `caption` | string |  |  |
+| `media` | string |  | A file name like /Media/clip.mp4, or a file identity |
+| `destinations` | string[] |  | account_id values from `list_post_destinations` |
+| `caption_by_platform` | object |  |  |
+| `settings_by_platform` | object |  |  |
+| `link` | string |  |  |
+| `media_facts` | object |  | What you know about the video or picture that its file does not say (its length in seconds, width and height), so each place's length and shape limits are checked |
+| `media_facts.duration_seconds` | number |  |  |
+| `media_facts.width` | number |  |  |
+| `media_facts.height` | number |  |  |
+| `scheduled_for` | string |  |  |
+| `time_zone` | string |  | Like America/New_York |
+
+```json Example
+{}
+```
+
+## Check a post is ready for each place
+
+`check_post` · Reads only
+
+Whether a post is ready for each place it is going, before it is approved or published: for each destination, ready (true or false), problems (what that place will refuse, in plain words: words too long for it, a video or picture it needs, a kind or size of file it does not take, a setting it needs such as a YouTube title) and not_checked (limits Trillion could not compare, such as a video's length it was not told; give media_facts to `draft_post` to have them checked). Fix a problem with `draft_post` (caption_by_platform, settings_by_platform or media). It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `post_id` | string | Yes | A post_id from `draft_post` or `list_posts` |
+
+```json Example
+{
+  "post_id": "<post_id>"
+}
+```
+
+## Approve a post
+
+`approve_post` · Changes things
+
+Approves a drafted post after the person has looked at it, so `publish_post` may send it. A post going nowhere yet is refused: give it destinations with `draft_post` first. Only an approved post is ever published, exactly as approved.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `post_id` | string | Yes | A post_id from `draft_post` or `list_posts` |
+
+```json Example
+{
+  "post_id": "<post_id>"
+}
+```
+
+## Publish a post
+
+`publish_post` · Changes things
+
+Publishes an approved post to each of its destinations: now, or, when its scheduled_for is still ahead, by a schedule Trillion sets for that time. It refuses a post that is not approved. Calling it again never posts twice: it sends only to places that have not taken the post; a place whose outcome is not known is sent again only when its account_id is in resend, after checking the place. Leave post_id out to publish the approved post that has waited longest. To publish on a schedule or when something happens, use `set_schedule` or `set_rule` with then &#123; "tool_id": "tool:publish-a-post", "input": &#123; "post_id": "..." &#125; &#125; (or no post_id, for the next approved post).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `post_id` | string |  | A post_id from `draft_post` or `list_posts` |
+| `resend` | string[] |  | account_id values whose outcome was not known, checked and found missing |
+
+```json Example
+{}
+```
+
+## Read a post and where it went
+
+`read_post` · Reads only
+
+Reads one post, asking the service where each copy is now: its status (draft, approved, scheduled, posted, failed or partial), the address of each published copy (platform_urls), and anything that went wrong, in plain words.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `post_id` | string | Yes | A post_id from `draft_post` or `list_posts` |
+
+```json Example
+{
+  "post_id": "<post_id>"
+}
+```
+
+## Read my posting calendar
+
+`list_post_calendar` · Reads only
+
+What is on this person's posting calendar between from and to (dates and times with their zone, at most a year or so apart): each post whose scheduled time falls in between (or, sent without a time, when it was sent), earliest first, with its status, words and at; and the drafts and approved posts with no time yet (unscheduled). can_move says whether a post can still get a new time: `draft_post` with post_id and scheduled_for gives it one (or scheduled_for null to take its time away), which makes an approved or scheduled post a draft again to approve. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `from` | string | Yes |  |
+| `to` | string | Yes |  |
+
+```json Example
+{
+  "from": "<from>",
+  "to": "<to>"
+}
+```
+
+## List my posts
+
+`list_posts` · Reads only
+
+This person's posts, newest first, each with its status, words, video, destinations and published addresses, as last read. Give status to see only draft, approved, scheduled, posted, failed or partial posts. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `status` | string |  |  |
+
+```json Example
+{}
+```
+
+## Read my link-in-bio page and what people opened
+
+`read_link_page` · Reads only
+
+This person's link-in-bio page: whether it is on, its address, one address per place (addresses_by_place, each with ?from=&#60;place&#62; so visits from each place are counted apart; address_for_a_place for any other place), its title and line, their own links, the published posts with a link it lists, and counts: visits and opens in all and over the last days, by place (by_place) and by what was opened (by_item, each post_id or link_id with opens per place). Every open leaves tagged with the place and the post or link, so a sign-up says where it came from. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Change my link-in-bio page
+
+`set_link_page` · Changes things
+
+Changes this person's link-in-bio page and returns what `read_link_page` returns. on turns it on or off (off hides it from everyone; the address stays the same for when it is turned on again); title and about are its heading and line; links replaces the whole list of their own links (each &#123; label, url &#125;, keep link_id from `read_link_page` to keep its counts); add_link adds one link; remove_link removes one by link_id. Setting links for the first time turns the page on. Their published posts that carry a link are listed by themselves.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `on` | boolean |  |  |
+| `title` | string |  |  |
+| `about` | string |  |  |
+| `links` | object[] |  |  |
+| `links[].label` | string | Yes | The words people see |
+| `links[].url` | string | Yes | A full https address |
+| `links[].link_id` | string |  | Kept from `read_link_page` to keep its counts |
+| `add_link` | object |  |  |
+| `add_link.label` | string | Yes | The words people see |
+| `add_link.url` | string | Yes | A full https address |
+| `add_link.link_id` | string |  | Kept from `read_link_page` to keep its counts |
+| `remove_link` | string |  | A link_id from `read_link_page` |
+
+```json Example
+{}
+```
+
+## List published insights
+
+`list_public_insights` · Reads only
+
+Lists this account’s published insights and their public links.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Publish an approved insight
+
+`publish_insight` · Changes things
+
+Publishes one checkable insight only when approval_message_id names a saved message from the person containing the exact title, insight, method, data, trace and source quotes. Without approval_message_id, returns the exact words to show the person and publishes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `title` | string | Yes |  |
+| `insight` | string | Yes |  |
+| `method` | string | Yes |  |
+| `data` | string | Yes |  |
+| `trace` | string | Yes |  |
+| `sources` | object[] | Yes |  |
+| `sources[].url` | string | Yes |  |
+| `sources[].quote` | string | Yes |  |
+| `approval_message_id` | string |  |  |
+
+```json Example
+{
+  "title": "<title>",
+  "insight": "<insight>",
+  "method": "<method>",
+  "data": "<data>",
+  "trace": "<trace>",
+  "sources": [
+    {
+      "url": "<url>",
+      "quote": "<quote>"
+    }
+  ]
+}
+```
+
+## Take down an insight
+
+`unpublish_insight` · Changes things and can remove them
+
+Withdraws one insight this account published from its public page and feed.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `insight_id` | string | Yes |  |
+
+```json Example
+{
+  "insight_id": "<insight_id>"
+}
+```
+
+## List what my AIs sent
+
+`list_sent` · Reads only
+
+Everything this person's AIs sent out in the world, newest first: each email, post, comment, direct message, reply or order, with who it went to, its subject or title, the exact words (and the email as it was drawn), when it went, which tool or AI app sent it, a short preview and, when there is one, a link that opens it where it went (open, such as "Open in Gmail"). kinds says how each kind reads. limit caps how many (default 50, at most 200). It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Record something sent
+
+`record_sent` · Changes things
+
+Keeps one thing you sent out for this person by a road that did not keep it itself (an email from another app, a post, a comment, a direct message, a reply, an order), so it shows in their Sent with the rest: kind (email, post, comment, dm, reply, order, other), to (who or where it went: addresses, handles or places), body_markdown (the exact words), and optionally subject (an email's subject or a post's title), sent_at (when it went; now when left out), from, reply_to, provider and provider_id (the service and its own id for it), open_url (where it can be opened), body_html and body_text (the email as it was drawn), and id, task_id and tool_id when it came from a tool run. The same id again replaces it. Returns its id.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `kind` | string | Yes | One of `email`, `post`, `comment`, `dm`, `reply`, `order`, `other`. |
+| `to` | string or string[] | Yes | Who or where it went |
+| `body_markdown` | string | Yes | The exact words that were sent |
+| `subject` | string |  |  |
+| `sent_at` | string |  |  |
+| `from` | string |  |  |
+| `reply_to` | string |  |  |
+| `preheader` | string |  |  |
+| `provider` | string |  | The service it went through |
+| `provider_id` | string |  | That service's own id for it |
+| `open_url` | string |  | Where it can be opened |
+| `body_html` | string |  |  |
+| `body_text` | string |  |  |
+| `id` | string |  | Its id in Sent, such as the task id of the run that sent it; a new one when left out |
+| `task_id` | string |  | The tool run that sent it |
+| `tool_id` | string |  | The tool that sent it |
+
+```json Example
+{
+  "kind": "email",
+  "to": "<to>",
+  "body_markdown": "<body_markdown>"
+}
+```

@@ -11,7 +11,7 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `record_messages` · Changes things
 
-Keeps messages between this person and you in their Trillion account, word for word, so every other AI they use can read them (`read_messages`). Call it on every turn, before you send your reply, with both sides: the person's message (speaker "person") and the reply you are about to send (speaker "ai"), then send exactly that reply. Each message: conversation_id (the same id for every turn of this chat; make one up at the start if the app gives you none), app (your app, like "ChatGPT", "Claude", "Muse"; it defaults to the app you connected as), speaker, text (exactly as written, never summarized), at (leave it out for this turn and Trillion stamps the time; give it only for older messages you are sending from an earlier conversation, as their real ISO time), model (optional) and about (optional: what it concerns, as [&#123;kind, id&#125;], like &#123;"kind": "pursuit", "id": "pursuit:content"&#125;, &#123;"kind": "decision", "id": "&#60;case_id&#62;"&#125;, &#123;"kind": "tool", "id": "tool:extract-sound"&#125;, &#123;"kind": "file", "id": "1f:..."&#125;). Up to 100 messages a call, so an earlier conversation can be sent in batches. A retry with the same original at changes nothing; keep the original time when retrying. Without at, the time is when this call records it. Returns how many were new and each message's id. It does not send the messages to anyone.
+Keeps messages between this person and you in their Trillion account, word for word, so every other AI they use can read them (`read_messages`). In Codex and Claude Code, the verified transcript hook keeps both person prompts and AI replies; do not call this tool for that chat. In other apps, record both sides of an actual person turn before replying. Never record generated context, peer traffic, or SDK diagnostics as the person. Each message: conversation_id (the same id for every turn of this chat; make one up at the start if the app gives you none), app (your app, like "ChatGPT", "Claude", "Muse"; it defaults to the app you connected as), speaker, text (exactly as written, never summarized), at (leave it out for this turn and Trillion stamps the time; give it only for older messages you are sending from an earlier conversation, as their real ISO time), model (optional) and about (optional: what it concerns, as [&#123;kind, id&#125;], like &#123;"kind": "pursuit", "id": "pursuit:content"&#125;, &#123;"kind": "decision", "id": "&#60;case_id&#62;"&#125;, &#123;"kind": "tool", "id": "tool:extract-sound"&#125;, &#123;"kind": "file", "id": "1f:..."&#125;). Up to 100 messages a call, so an earlier conversation can be sent in batches. A retry with the same original at changes nothing; keep the original time when retrying. Without at, the time is when this call records it. Returns how many were new and each message's id. It does not send the messages to anyone.
 
 **Inputs**
 
@@ -49,7 +49,7 @@ Keeps messages between this person and you in their Trillion account, word for w
 
 `read_messages` · Reads only
 
-Reads messages this person exchanged with any of their AIs, newest first: each with id, conversation_id, app, speaker, text, at and about. Filter by conversation_id, by app, by not_app (everything except one app, like your own, to see what they said elsewhere), or by about_id (messages about one pursuit, decision, tool or file). Returns a page and next_before; pass next_before as before for the page before it. Read it at the start of a conversation to pick up what the person has been working on with their other AIs. It never changes anything.
+Reads messages this person exchanged with any of their AIs, newest first: each with id, conversation_id, app, speaker, text, at and about. Filter by conversation_id, by app, by not_app (everything except one app, like your own, to see what they said elsewhere), by about_id (messages about one pursuit, decision, tool or file), by speaker (exactly, like "person"), or by query (messages whose text holds every word of it, in any order, any case). One call looks through at most 1000 messages: it returns what it found, looked_through (how many it looked through) and next_before; pass next_before as before to go on, which finds older matches of a rare filter too. Read it at the start of a conversation to pick up what the person has been working on with their other AIs. It never changes anything.
 
 **Inputs**
 
@@ -59,6 +59,8 @@ Reads messages this person exchanged with any of their AIs, newest first: each w
 | `app` | string |  |  |
 | `not_app` | string |  |  |
 | `about_id` | string |  |  |
+| `speaker` | string |  | Only messages by this speaker, like "person" or "ai" |
+| `query` | string |  | Only messages whose text holds every one of these words, in any order, any case |
 | `before` | string |  |  |
 | `limit` | integer |  |  |
 
@@ -73,14 +75,14 @@ Reads messages this person exchanged with any of their AIs, newest first: each w
 
 `bring_in_chat` · Changes things
 
-Brings one earlier chat into Trillion from its exported archive, word for word, with the files its messages carried: into the person's private Trillion (leave space_id out) or into one shared space they name (space_id). Files are found among the person's own files and never copied: attachments maps each attachment id in the chat (like file-AbC123) to the name or identity of that file in their files, and attachments_folder names a folder whose files start with those ids, as in an export. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; put them in the person's files and bring the chat in again to add them. Bringing the same chat in again adds nothing twice. For a whole account export use `bring_in_chat_export`.
+Brings one earlier chat into Trillion from its exported archive, word for word, with the files its messages carried: into the person's private Trillion (leave space_id out) or into one space they name (space_id). Files are found among the person's own files and never copied: attachments maps each attachment id in the chat (like file-AbC123) to the name or identity of that file in their files, and attachments_folder names a folder whose files start with those ids, as in an export. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; put them in the person's files and bring the chat in again to add them. Bringing the same chat in again adds nothing twice. For a whole account export use `bring_in_chat_export`.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `conversation` | object | Yes | One conversation exactly as the chat app exported it (for ChatGPT: the conversation object with title, mapping and current_node). |
-| `space_id` | string |  | A space_id from `list_spaces` |
+| `conversation` | object | Yes | One conversation exactly as the chat app exported it (for ChatGPT: the conversation object with title, mapping and current_node), or as it was read off its own page: &#123; conversation_id, title, messages: [&#123; id: its place on the page, speaker: "person", "ai" or the name the page shows, text: word for word, at: its time when the page shows one, model: the model that wrote it when the page names one &#125;] &#125;. |
+| `space_id` | string |  | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `app` | string |  | The app it came from; ChatGPT when left out |
 | `attachments` | object |  | Attachment id to the name (like /chats/file-AbC123-photo.png) or identity of that file in the person's files |
 | `attachments_folder` | string |  | A folder in the person's files holding the chat's files, named with their ids first |
@@ -95,14 +97,14 @@ Brings one earlier chat into Trillion from its exported archive, word for word, 
 
 `bring_in_chat_export` · Changes things
 
-Brings a whole account export of chats (for ChatGPT, conversations.json) into Trillion, from a file already in the person's files (file: its name or identity), with the files the chats carried: into their private Trillion, or into the one shared space they name (space_id). Upload the whole export folder, not just conversations.json: its files are found in the same folder as conversations.json and the folders under it, or in attachments_folder if the person put them elsewhere, and are never copied. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; add them to the person's files and bring the export in again to add them. A page of conversations per call; call again with offset set to next_offset until it is null. Nothing is brought in twice. Needs the private reach, since the file is private.
+Brings a whole account export of chats (for ChatGPT, conversations.json) into Trillion, from a file already in the person's files (file: its name or identity), with the files the chats carried: into their private Trillion, or into the one space they name (space_id). Upload the whole export folder, not just conversations.json: its files are found in the same folder as conversations.json and the folders under it, or in attachments_folder if the person put them elsewhere, and are never copied. In a space, other members can open those files while the person stays in the space. Files that could not be found are listed in missing_attachments; add them to the person's files and bring the export in again to add them. A page of conversations per call; call again with offset set to next_offset until it is null. Nothing is brought in twice. Needs the private reach, since the file is private.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
 | `file` | string | Yes |  |
-| `space_id` | string |  | A space_id from `list_spaces` |
+| `space_id` | string |  | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `offset` | integer |  |  |
 | `limit` | integer |  |  |
 | `app` | string |  |  |
@@ -118,7 +120,7 @@ Brings a whole account export of chats (for ChatGPT, conversations.json) into Tr
 
 `read_activity` · Reads only
 
-What the AIs connected to this account did, newest first: each row says which AI app did it, what it did (handed off work, ran a tool, saved a file, published a tool...), the item it made or touched, whether it worked and, if not, why. Use it to see what another AI already did before repeating it. app narrows to one AI app by the name shown in its rows; for narrows to what was done for one thing (a decision's case_id, or an id a message was about); before (a row's seq) reads older rows; limit caps how many (default 50). Each row lists the ids it used and what it was for; `trace_item` follows them. It changes nothing.
+What the AIs connected to this account did, newest first: each row says which AI app did it, what it did (handed off work, ran a tool, saved a file, published a tool...), the item it made or touched, whether it worked and, if not, why. Use it to see what another AI already did before repeating it. app narrows to one AI app by the name shown in its rows; for narrows to what was done for one thing (a decision's case_id, or an id a message was about); failed true lists only what did not work (a call that failed, or a tool run that ended failed), each with its reason, the AI, its model and the chat it works in; before (a row's seq) reads older rows; limit caps how many (default 50). Each row lists the ids it used and what it was for; `trace_item` follows them. It changes nothing.
 
 **Inputs**
 
@@ -126,6 +128,7 @@ What the AIs connected to this account did, newest first: each row says which AI
 | --- | --- | --- | --- |
 | `app` | string |  |  |
 | `for` | string |  |  |
+| `failed` | boolean |  |  |
 | `before` | integer |  |  |
 | `limit` | integer |  |  |
 
@@ -148,5 +151,159 @@ Why did this happen: the chain of AI calls, tools and files that produced this i
 ```json Example
 {
   "item": "<item>"
+}
+```
+
+## Send to all my AIs
+
+`send_to_all_ais` · Changes things
+
+Sends one message from this person to every AI on their account at once: the Home box. The text is kept word for word in the shared Trillion conversation (conversation_id "trillion:shared"), then each AI is woken with a notice to read it with `read_messages`. Use it only for words the person wrote to all of their AIs. files (optional, at most 19) names the person's own files by identity, like &#123;"identity": "1f:..."&#125;; each AI is pointed at them, never sent their bytes. Returns message_id, conversation_id, files, delivery (agent_id, name and state for each AI: waiting, delivered, or next_connection when it can only see it the next time it connects) and a plain message. Being woken is not the same as having read it. Fails when no AI is connected yet.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `text` | string | Yes | The person's words, exactly as written |
+| `files` | object[] |  |  |
+| `files[].identity` | string | Yes |  |
+
+```json Example
+{
+  "text": "<text>"
+}
+```
+
+## Send a message from my own account
+
+`send_message` · Changes things
+
+Sends a message from the person's own account on a service their computer carries (for example iMessage from their Mac, or their WhatsApp): to is a phone number (country code first) or an email handle the service knows, or "me" for the person themself; text and an optional link (at least one). The computer sends it and answers with what happened; only a computer that is awake can send, and nothing is queued for later. request_key is any unique text: the same key never sends twice. Send only what the person asked for, to the people they meant.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `service` | string | Yes | The service, as `list_connections` names it (its vendor), such as imessage or whatsapp. It must be carried by one of the person's computers that is awake. |
+| `to` | string | Yes |  |
+| `text` | string |  |  |
+| `link` | string |  |  |
+| `request_key` | string | Yes |  |
+| `wait_seconds` | number |  | How long to wait for the computer's answer (default 20 seconds); after that the answer is read with `read_handoff`. |
+
+```json Example
+{
+  "service": "<service>",
+  "to": "<to>",
+  "request_key": "<request_key>"
+}
+```
+
+## Read my recent messages
+
+`read_recent_messages` · Reads only
+
+Reads the person's recent messages on a service their computer carries (for example iMessage on their Mac, or their WhatsApp), newest first: each with who sent it, when, and its words. with (optional) keeps only one conversation, by phone number, email handle or name; limit is how many (default the computer's own, at most 50). Only a computer that is awake can answer.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `service` | string | Yes | The service, as `list_connections` names it (its vendor), such as imessage or whatsapp. It must be carried by one of the person's computers that is awake. |
+| `with` | string |  |  |
+| `limit` | integer |  |  |
+| `wait_seconds` | number |  | How long to wait for the computer's answer (default 20 seconds); after that the answer is read with `read_handoff`. |
+
+```json Example
+{
+  "service": "<service>"
+}
+```
+
+## Correct a duplicate AI reply
+
+`correct_message_duplicate` · Changes things and can remove them
+
+Retires one proven manual AI copy of a nearby identical transcript reply in the same app and conversation. Keeps the transcript row and any links from the manual copy. Check both exact message IDs and source evidence first; commentary and finals are distinct messages unless their text matches exactly.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `duplicate_id` | string | Yes |  |
+| `kept_id` | string | Yes |  |
+| `evidence` | string | Yes |  |
+
+```json Example
+{
+  "duplicate_id": "<duplicate_id>",
+  "kept_id": "<kept_id>",
+  "evidence": "<evidence>"
+}
+```
+
+## Correct a message source
+
+`correct_message_provenance` · Changes things and can remove them
+
+Corrects a message that was falsely recorded as the person speaking, after checking its original transcript or source. Use only for a proven SDK diagnostic, peer prompt, or generated context row. The original words and correction evidence remain in the private audit history; the false founder message and arrival are retired, and the message is kept under its actual speaker. Open work must be finished first.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `message_id` | string | Yes |  |
+| `speaker` | string | Yes | One of `sdk diagnostic`, `peer`, `generated context`. |
+| `evidence` | string | Yes | Exact source and provenance fields proving the correction |
+
+```json Example
+{
+  "message_id": "<message_id>",
+  "speaker": "sdk diagnostic",
+  "evidence": "<evidence>"
+}
+```
+
+## Correct when a message was written
+
+`correct_message_authored_at` · Changes things
+
+Corrects when a previously kept person message was actually written, using its original chat transcript as evidence. Keeps the existing message, decision and handoff IDs; shows authored_at separately from the later captured_at. Use only after confirming the transcript words exactly match.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `message_id` | string | Yes |  |
+| `authored_at` | string | Yes |  |
+| `evidence` | string | Yes |  |
+
+```json Example
+{
+  "message_id": "<message_id>",
+  "authored_at": "<authored_at>",
+  "evidence": "<evidence>"
+}
+```
+
+## Correct the original chat
+
+`correct_source_identity` · Changes things
+
+Correct a saved message decision that falsely targets a Claude chat when its kept person message and original handoff both identify the same Codex chat. The service verifies both records, derives the corrected wording, and keeps the prior decision in history. It does not finish work or report an outcome.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | The case_id from the latest reply about this decision (`start_decision` gives the first; on the free plan every reply gives a new one, so always send the newest) |
+| `message_id` | string | Yes |  |
+| `handoff_id` | string | Yes |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "message_id": "<message_id>",
+  "handoff_id": "<handoff_id>"
 }
 ```

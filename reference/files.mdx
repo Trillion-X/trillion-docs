@@ -70,7 +70,7 @@ Reads what one of this person's files contains, by its path name (starting with 
 
 `show_file` · Reads only
 
-Shows one of this person's files to them in this chat, by its path name (starting with /) or content identity: a picture, video or sound appears in the conversation where the app draws tool results, from an address that works for an hour. A picture up to 3 MiB is also handed to you as an image. Use it whenever the person should see a file, such as a picture or video a tool made; describing a file does not show it.
+Shows one of this person's files to them in this chat, by its path name (starting with /) or content identity: a picture, video or sound appears in the conversation where the app draws tool results, from an address that works for an hour. A picture up to 3 MiB is also handed to you as an image. Use it whenever the person should see a file, such as a picture or video a tool made; describing a file does not show it. On the person's screen (This chat), use it whenever they should see a file you made or found, show it with `show_file` instead of describing it; when a job ends, put its answer as cards in `finish_work` result.show.
 
 **Inputs**
 
@@ -277,7 +277,7 @@ Records what was worked out about files, so no AI has to work it out again: resu
 
 `list_media` · Reads only
 
-Lists this person's recordings and media made by their tools, with the file identity, playback address, measured duration, title, transcript word count and whether an edit uses it. Pass revision from the earlier reply to read only when the library changes. An unknown duration is null; never invent clip end times.
+Lists this person's recordings and media made by their tools, with the file identity, playback address, measured duration, title, transcript word count, whether an edit uses it, and facts: every fact kept about the file (captured_at, place, location, camera, resolution and the person's own fields; set them with `set_file_facts`). Pass revision from the earlier reply to read only when the library changes. An unknown duration is null; never invent clip end times.
 
 **Inputs**
 
@@ -289,24 +289,6 @@ Lists this person's recordings and media made by their tools, with the file iden
 {}
 ```
 
-## Find moments in my media
-
-`search_media` · Reads only
-
-Finds real moments in this person's recordings by words said, meaning or file name. Returns each source identity and start/end in seconds, with the measured words and search lanes. unavailable names a search lane that could not run. Use the returned range in a media-composition tool; never infer a timestamp from a title.
-
-**Inputs**
-
-| Input | Type | Required | What it is |
-| --- | --- | --- | --- |
-| `question` | string | Yes |  |
-
-```json Example
-{
-  "question": "where I talk about pricing"
-}
-```
-
 ## Read my next edit suggestion
 
 `next_media_edit` · Reads only
@@ -314,6 +296,319 @@ Finds real moments in this person's recordings by words said, meaning or file na
 Reads the same next-edit suggestion the person sees in Media: which real clips to use, their measured lengths, why, and the chosen destination. It changes nothing and runs no render. Use `run_tool` with the media-composition tools to make the edit.
 
 It takes no inputs.
+
+```json Example
+{}
+```
+
+## Search everything I keep
+
+`search` · Reads only
+
+Searches everything this person keeps with one question: their files (the words said in a recording, what is seen in it, its name and title, their notes), their Trillion records (decisions, pursuits, messages) and connected services such as GitHub. Each result is one thing with found_in (the places it matched: name, said, seen, written) and, for a recording, moments with start and end in seconds and the words said there, so a clip can be cut from them without guessing. places (optional) keeps only those places, for example ["said"] for what is said or ["name"] for titles; sources (optional) keeps only those sources, for example ["files"]. unavailable names a place or source that could not answer and why; pending names one still working (searching what is seen starts a picture model once per question): ask again in a few seconds. `find_file` reaches a file by its exact name instead.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `question` | string | Yes |  |
+| `places` | string[] |  |  |
+| `sources` | string[] |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{
+  "question": "<question>"
+}
+```
+
+## Set facts about a file
+
+`set_file_facts` · Changes things
+
+Sets facts about one of this person's files, by its content identity (1f: or 12: then 64 hex), the way the person fills a column in Files and Media: facts is an object of the facts to set, and only those change; a fact set to null is taken away. Known facts: captured_at (when it was filmed or taken, as an ISO date and time), place (the place's name, such as "Lisbon"), location (&#123; latitude, longitude &#125;), camera, duration (seconds) and resolution ("1920×1080"); any other name is one of the person's own fields (such as client or shot_type) and shows as a field they can filter by. Returns every fact the file now has. `read_file_results` with kind facts reads them.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `identity` | string | Yes |  |
+| `facts` | object | Yes | The facts to set, by name; null takes one away |
+| `produced_by` | string |  |  |
+
+```json Example
+{
+  "identity": "<identity>",
+  "facts": {}
+}
+```
+
+## Suggest titles and folders for my files
+
+`propose_file_tidy` · Changes things
+
+Suggests a title and/or a folder for some of this person's files, for them to accept or reject on their Tidy up screen: items is a list (at most 200) of &#123; name, title, folder, evidence, reason &#125;. name is the file's path (starting with /); title (optional) is a short plain title for what the file is; folder (optional) is the folder path it belongs in (an existing one, or a new one its words name); evidence lists the kinds of results already kept about the file that the suggestion comes from (read them first with `read_file_results`: transcript, summary, facts). The title and a new folder must be supported by those results' words, or the suggestion is refused with why; a file with nothing kept about it needs a transcript or summary first (`record_file_results`). A newer suggestion for the same file replaces one still waiting. Nothing changes until the person accepts it and it is applied (`apply_file_tidy`).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `items` | object[] | Yes |  |
+| `items[].name` | string | Yes |  |
+| `items[].title` | string |  |  |
+| `items[].folder` | string |  |  |
+| `items[].evidence` | string[] | Yes |  |
+| `items[].reason` | string |  |  |
+
+```json Example
+{
+  "items": [
+    {
+      "name": "<name>",
+      "evidence": [
+        "<evidence>"
+      ]
+    }
+  ]
+}
+```
+
+## List title and folder suggestions
+
+`list_file_tidy` · Reads only
+
+Lists the title and folder suggestions for this person's files, newest first: each with its id, the file (name), the title and folder suggested, the results it cites (evidence), why, who suggested it, its state (review: waiting for the person; accepted; rejected; applied; stale: the file or what is known about it changed since, so it will not be applied; undone) and, once applied, the tidy-up it was part of. counts says how many are in each state; can_undo names the tidy-up `undo_file_tidy` would reverse. state (optional) keeps only one state.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `state` | string |  | One of `review`, `accepted`, `rejected`, `applied`, `stale`, `undone`. |
+
+```json Example
+{}
+```
+
+## Apply the accepted suggestions
+
+`apply_file_tidy` · Changes things
+
+Applies the suggestions this person accepted as one tidy-up: each title is recorded as the file's title (kind title) and each file is moved into its folder by name (its bytes are not touched). Each is checked again first: a file renamed, moved or replaced since, what is known about it changed since, or a name already taken refuses that one (state stale, with why) and applies nothing for it. ids (optional) applies only those accepted suggestions. Returns the tidy-up, how many were applied and which were refused.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `ids` | string[] |  |  |
+
+```json Example
+{}
+```
+
+## Undo the last tidy-up
+
+`undo_file_tidy` · Changes things
+
+Undoes this person's latest tidy-up that is not undone yet: every title goes back to what it was and every moved file goes back to its old name. Refused, changing nothing, when any of those files was renamed, moved or given another title since.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## List past tidy-ups
+
+`file_tidy_history` · Reads only
+
+Lists this person's applied tidy-ups, newest first: when each was applied and undone, whether it is the one `undo_file_tidy` would reverse (can_undo), and for each file its name before and after and its title before and after.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Delete files to Recently Deleted
+
+`delete_file` · Changes things and can remove them
+
+Deletes files or folders of this person's (by path name) or a recording with every name it has (by content identity): they leave Files, Media and search and go to Recently Deleted, where `put_back_file` brings them back until their keep-for days end (`read_keep_for`); then their names are gone for good. The bytes are not erased. Answers set_aside (each with its id, days_left and due_at) and refused (each with why, for example a file still uploading).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `names_or_identities` | string[] | Yes | Path names (starting with /) of files or folders, or file content identities |
+
+```json Example
+{
+  "names_or_identities": [
+    "<names_or_identities>"
+  ]
+}
+```
+
+## Archive files
+
+`archive_file` · Changes things and can remove them
+
+Archives files, folders or recordings of this person's: like `delete_file` they leave Files, Media and search, but go to Archived, and move on to Recently Deleted only when Archived's keep-for days end (`read_keep_for`). `put_back_file` brings them back. Answers set_aside and refused as `delete_file` does.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `names_or_identities` | string[] | Yes | Path names (starting with /) of files or folders, or file content identities |
+
+```json Example
+{
+  "names_or_identities": [
+    "<names_or_identities>"
+  ]
+}
+```
+
+## List Recently Deleted and Archived
+
+`list_recently_deleted` · Reads only
+
+Lists what this person deleted or archived, newest first: each with its id (for `put_back_file`), label, state, the names it had, where it was, when and by whom, and days_left before it moves on (null: kept until put back). state (optional) keeps one: deleted (Recently Deleted: deleted for good after its keep-for days); archived (Archived: moves to recently deleted after its keep-for days). Pass next_after's ms and id as after_ms and after_id for the next page. Also answers keep_for.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `state` | string |  | One of `deleted`, `archived`. |
+| `after_ms` | integer |  |  |
+| `after_id` | string |  |  |
+| `limit` | integer |  |  |
+
+```json Example
+{}
+```
+
+## Put back deleted files
+
+`put_back_file` · Changes things
+
+Puts back what this person deleted or archived, by the ids `list_recently_deleted` gives: every name it had comes back where it was. One whose name another file took in the meantime stays in Recently Deleted and says so.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `ids` | string[] | Yes |  |
+
+```json Example
+{
+  "ids": [
+    "<ids>"
+  ]
+}
+```
+
+## Read how long deleted files are kept
+
+`read_keep_for` · Reads only
+
+Reads how many days this person's Recently Deleted and Archived keep things before they move on (after_days, null: until put back), each state's default, and the usual choices. States: deleted (Recently Deleted: deleted for good after its keep-for days); archived (Archived: moves to recently deleted after its keep-for days).
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Change how long deleted files are kept
+
+`set_keep_for` · Changes things and can remove them
+
+Changes how many days a state keeps things: after_days is &#123; state: days &#125; (a whole number from 0 to 36500, or null to keep until put back). It applies at once to everything already there, so a shorter time can make things move on (or be gone for good) at the next sweep. States: deleted (Recently Deleted: deleted for good after its keep-for days); archived (Archived: moves to recently deleted after its keep-for days).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `after_days` | object | Yes |  |
+
+```json Example
+{
+  "after_days": {}
+}
+```
+
+## List the files I used recently
+
+`recent_files` · Reads only
+
+Lists the files this person used most recently, newest first, the same list as their Recent screen: each file once, with its identity, name, title, media_type, what happened last (last_kind, such as opened, watched, edited or published, and last_words, how the screen says it), when (last_at) and the newest time of every kind of use (kinds). Use it to pick up where the person left off. before (a last_at from next_before) reads older files; limit caps how many (default 100). It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `limit` | integer |  |  |
+| `before` | string |  |  |
+
+```json Example
+{}
+```
+
+## Keep that I used a file
+
+`record_file_use` · Changes things
+
+Keeps that this person used one of their files, so it rises to the top of their Recent screen and of `recent_files`: file is its path name (starting with /) or content identity, and kind says what happened in one short lowercase word or words joined by dashes (opened, watched, edited, published, or any other, such as sent-to-a-client). Record it when you open, play, change or publish a file for them. Trillion stamps the time; the same use again only moves the time.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `file` | string | Yes |  |
+| `kind` | string | Yes |  |
+
+```json Example
+{
+  "file": "<file>",
+  "kind": "<kind>"
+}
+```
+
+## Save my browser's pinned tabs and folders
+
+`save_browser_saved_items` · Changes things
+
+Saves the links a person keeps in their browser (Arc: every space's pinned tabs and folders, and the favorites along the top) into their Trillion files, one file per space under /Saved links, from the browser's own saved-items file. First send that file into their files: on their Mac, Arc keeps it at ~/Library/Application Support/Arc/StorableSidebar.json; send it with `start_file_upload` (or `write_file`), then give its identity or name as file. Each space's earlier file is replaced, because the browser's file is the whole truth. Returns each space's file and how many links it holds.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `file` | string | Yes | The saved-items file in their files: its identity (1f: then 64 hex) or its name, like /Arc/StorableSidebar.json |
+| `format` | string |  | The browser, when the file does not say: arc-sidebar |
+
+```json Example
+{
+  "file": "<file>"
+}
+```
+
+## Save my X bookmarks
+
+`save_x_bookmarks` · Changes things
+
+Saves this person's X (Twitter) bookmarks into their Trillion files (/Saved links/X - Bookmarks.json, newest first), keeping every one already saved. Leave since out to save every bookmark X hands out (its newest 800); give since, the newest id a read returned, to save only the ones made after it and get them back as items. Trillion also does this by itself every 30 minutes once X is connected, handing each new bookmark to the person's rules. Needs X connected on the Connections screen; `list_connections` says whether it is.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `since` | string |  | The newest bookmark id an earlier read returned |
 
 ```json Example
 {}

@@ -9,9 +9,9 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 ## Start Trillion setup
 
-`start_setup` · Reads only
+`start_setup` · Changes things
 
-Starts Trillion setup with this person. Call it first whenever they say "set me up with Trillion", "get me started", "onboard me" or "show me what Trillion can do", and on a new account with no pursuits. It means this Trillion connection, never an app on their computer. Returns the setup steps, the mission to say in your own words, the line to add to your own instructions, and what Trillion already knows about them (their pursuits and connected accounts), so you skip what is known and start at the first missing step. It changes nothing.
+Starts Trillion setup with this person. Call it first whenever they say "set me up with Trillion", "get me started", "onboard me" or "show me what Trillion can do", and on a new account with no pursuits. It means this Trillion connection, never an app on their computer. If Network is included in their plan, it fills their Network basics from the account name once, without replacing later edits. Returns the setup steps, the mission to say in your own words, the line to add to your own instructions, and what Trillion already knows about them (their pursuits and connected accounts), and which of the Trillion apps for their devices they already have (install.devices), so you skip what is known and start at the first missing step.
 
 It takes no inputs.
 
@@ -23,7 +23,7 @@ It takes no inputs.
 
 `list_pursuits` · Reads only
 
-Reads what this person is pursuing: each pursuit with its id, title, where it is now (now), where they want it to get (after) and why it matters. Decisions are weighed against these, so read them before advising. Returns a page of pursuits with total and next_offset; call again with offset set to next_offset until it is null. It changes nothing; `record_pursuits` changes them.
+Reads what this person is pursuing: each pursuit with its id, title, where it is now (now), where they want it to get (after), why it matters, and how pursuits nest: parents (the pursuits it is set under) and children (the pursuits set under it). One pursuit can sit under several; `set_record_scope` with add.pursuits puts a pursuit under another. Decisions are weighed against these, so read them before advising. Returns a page of pursuits with total and next_offset; call again with offset set to next_offset until it is null. It changes nothing; `record_pursuits` changes them.
 
 **Inputs**
 
@@ -71,4 +71,20 @@ Records what this person is pursuing, so every one of their AIs and every decisi
     }
   ]
 }
+```
+
+## Read what Trillion has figured out about me
+
+`read_awareness` · Changes things
+
+What Trillion has figured out about this person from everything that came in (their messages with every AI, transcripts and summaries of their recordings and files, what their AIs did), read continuously in the background: their trajectory; their values, passions, skills and goals, each with evidence; each pursuit it sees with where it is heading and whether it is worthwhile for them and good for people; each thing found walked through awareness, possibilities, focus, what they bring, the worthwhile pursuit and the greater good; and what they are doing right now and whether it is on their path. reading says when it last read, how many things it has read and whether earlier history is still being read. read_now true reads what is new at once first. Read it before advising the person or choosing what to work on.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `read_now` | boolean |  |  |
+
+```json Example
+{}
 ```

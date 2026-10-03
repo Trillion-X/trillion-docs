@@ -11,16 +11,16 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `set_rule` · Changes things
 
-Makes this person's Trillion do something by itself whenever something happens: a tool runs, or a workflow starts, with no AI in the loop. when says what sets it off, one of three ways. (1) Something recorded in this Trillion: &#123; "recorded": "message" &#125; (or "pursuit", "decision", or any other kind of record this account keeps), with optional where tests on the record's fields, all of which must hold: &#123; "field": "text", "contains": "invoice" &#125;, or equals, one_of (a list), starts_with, present: true. (2) An event from outside, such as a comment or a direct message: &#123; "source_id": "events:instagram", "event": "comment", "words": ["tennis"] &#125;; words (optional) must appear in the event, whole_word (default true) and field (default text) say how; once_per (optional) names an event field to act once per value of, like "from_id" for once per person. (3) Something added to a shared space this person is in, by any member (made there or shared from their private Trillion): &#123; "space_id": "membership_..." &#125; from `list_spaces`, with optional kind (only items of that kind, like "decision" or "message") and where tests on the item's fields as `read_space` shows it (title, kind, body.text and so on). It runs in this person's own Trillion and sees only what the space shows its members, never anyone's private records. Only a space this person is in now can be named; if they leave it, the rule stops and `list_rules` says so. then names what runs: &#123; "tool_id", "input" &#125; or &#123; "workflow_id", "input" &#125;, where an input value &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; is taken from the record ("id" is the record's own id), &#123; "fill": &#123; "from": "item", "field": "title" &#125; &#125; from the space item (item_id, kind, title, body, space_id), or &#123; "fill": &#123; "from": "event", "field": "comment_id" &#125; &#125; from the event. It runs once for each thing that sets it off, never twice for the same thing, and only for what happens after the rule is set. Example: &#123; "when": &#123; "recorded": "message", "where": [&#123; "field": "text", "contains": "invoice" &#125;] &#125;, "then": &#123; "tool_id": "tool:...", "input": &#123; "note": &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; &#125; &#125;, "label": "file every invoice mentioned" &#125;. Give rule_id to change an existing rule. enabled (default true, and an existing rule keeps its own) turns it on or off: an off rule never fires; give only rule_id and enabled to turn it on or off and keep everything else. An event rule needs `listen_for_events` on its source once.
+Makes this person's Trillion do something by itself whenever something happens: a tool runs, or a workflow starts, with no AI in the loop. when says what sets it off, one of three ways. (1) Something recorded in this Trillion: &#123; "recorded": "message" &#125; (or "pursuit", "decision", or any other kind of record this account keeps), with optional where tests on the record's fields, all of which must hold: &#123; "field": "text", "contains": "invoice" &#125;, or equals, one_of (a list), starts_with, present: true. (2) An event from outside, such as a comment or a direct message: &#123; "source_id": "events:instagram", "event": "comment", "words": ["tennis"] &#125;; words (optional) must appear in the event, whole_word (default true) and field (default text) say how; once_per (optional) names an event field to act once per value of, like "from_id" for once per person; skip (optional) lists tests on the event's fields that leave an event out, each &#123; "field", "matches": a pattern &#125; or &#123; "field", "equals": a value &#125;; batch (optional) &#123; "every_minutes": 1440 &#125; gathers the events and runs once per window with the gathered batch as the event (count, first_at, last_at, events), and &#123; "key" &#125; lets several rules share one batch. (3) Something added to a space this person is in, by any member (made there or shared from their private Trillion): &#123; "space_id": "membership_..." &#125; from `list_spaces`, with optional kind (only items of that kind, like "decision" or "message") and where tests on the item's fields as `read_space` shows it (title, kind, body.text and so on). It runs in this person's own Trillion and sees only what the space shows its members, never anyone's private records. Only a space this person is in now can be named; if they leave it, the rule stops and `list_rules` says so. then names what runs: &#123; "tool_id", "input" &#125; or &#123; "workflow_id", "input" &#125;, where an input value &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; is taken from the record ("id" is the record's own id), &#123; "fill": &#123; "from": "item", "field": "title" &#125; &#125; from the space item (item_id, kind, title, body, space_id), or &#123; "fill": &#123; "from": "event", "field": "comment_id" &#125; &#125; from the event. It runs once for each thing that sets it off, never twice for the same thing, and only for what happens after the rule is set. Example: &#123; "when": &#123; "recorded": "message", "where": [&#123; "field": "text", "contains": "invoice" &#125;] &#125;, "then": &#123; "tool_id": "tool:...", "input": &#123; "note": &#123; "fill": &#123; "from": "record", "field": "text" &#125; &#125; &#125; &#125;, "label": "file every invoice mentioned" &#125;. Give rule_id to change an existing rule. enabled (default true, and an existing rule keeps its own) turns it on or off: an off rule never fires; give only rule_id and enabled to turn it on or off and keep everything else. An event rule needs `listen_for_events` on its source once.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
 | `rule_id` | string |  | A rule_id from `list_rules` |
-| `when` | object |  | &#123; recorded, where &#125; for a record written in this Trillion, &#123; space_id, kind, where &#125; for something added to a shared space this person is in, or &#123; source_id, event, words, whole_word, field, once_per &#125; for an event from outside |
+| `when` | object |  | &#123; recorded, where &#125; for a record written in this Trillion, &#123; space_id, kind, where &#125; for something added to a space this person is in, or &#123; source_id, event, words, whole_word, field, once_per &#125; for an event from outside |
 | `when.recorded` | string |  | The kind of record, like message, pursuit or decision |
-| `when.space_id` | string |  | A shared space this person is in (from `list_spaces`): the rule runs when something is added there |
+| `when.space_id` | string |  | A space this person is in (from `list_spaces`): the rule runs when something is added there |
 | `when.kind` | string |  | With space_id: only items of this kind, like decision or message |
 | `when.where` | object[] |  |  |
 | `when.where[].field` | string | Yes |  |
@@ -35,6 +35,8 @@ Makes this person's Trillion do something by itself whenever something happens: 
 | `when.whole_word` | boolean |  |  |
 | `when.field` | string |  |  |
 | `when.once_per` | string |  |  |
+| `when.skip` | object[] |  |  |
+| `when.batch` | object |  |  |
 | `then` | object |  | What runs: &#123; "tool_id": "tool:...", "input": &#123;...&#125; &#125; (a tool from `find_tool_for_job`) or &#123; "workflow_id": "workflow:...", "input": &#123;...&#125; &#125; (a workflow from `find_workflow`) |
 | `then.tool_id` | string |  |  |
 | `then.workflow_id` | string |  |  |
@@ -71,7 +73,7 @@ Makes this person's Trillion do something by itself whenever something happens: 
 
 `list_rules` · Reads only
 
-This person's rules (from `set_rule`): each rule_id, when, then, label and whether it is on (enabled); which outside sources are being listened to; the latest runs the rules started (with any problem); a rule about a shared space the person has left shows stopped, saying why; and the latest events that arrived with what each rule did (task ids readable with `read_task`). It changes nothing.
+This person's rules (from `set_rule`): each rule_id, when, then, label and whether it is on (enabled); which outside sources are being listened to; the latest runs the rules started (with any problem); a rule about a space the person has left shows stopped, saying why; and the latest events that arrived with what each rule did (task ids readable with `read_task`). It changes nothing.
 
 It takes no inputs.
 
@@ -239,5 +241,122 @@ Starts receiving events from a source for this person's own connected account (f
 ```json Example
 {
   "source_id": "events:instagram"
+}
+```
+
+## How each place things arrive from is doing
+
+`source_health` · Reads only
+
+How each place things arrive from is doing for this person: Apple Notes, Voice Memos and Email through the one door, each connected account Trillion listens to (Gmail, Notion, GitHub, Stripe and the rest), and each schedule. For each: how many arrived in the last day and week, the last one and when, which rule it set off and the workflow run or task that started, whether that worked, the last failure in plain words, and a state (working, quiet, failing, not connected). The same list the Automations screen shows under Sources. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## What could not run at its time
+
+`timed_work` · Reads only
+
+What this person's Trillion does by itself at a time (schedules, scheduled tool runs, reads of connected accounts, deliveries to agents, retries) and could not do: each thing set aside after a failure, with its error in plain words, how many times it failed, and when it is tried again; one that failed every automatic try is held and waits for `try_timed_work_again` or the next Trillion update. Also the last wake: how many things were due, ran, failed and were left for the next wake, and how long the oldest one had waited. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Try held timed work again
+
+`try_timed_work_again` · Changes things
+
+Tries again now what `timed_work` shows set aside or held: everything, or one source (name, like event-reads) or one entry (key, as `timed_work` lists it). Each gets a fresh set of automatic tries. Returns what was released and when Trillion next wakes.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name` | string |  | A source name from `timed_work` |
+| `key` | string |  | One entry's key from `timed_work` |
+
+```json Example
+{}
+```
+
+## List my saved logins
+
+`list_saved_logins` · Reads only
+
+Lists the logins this person keeps in Trillion (Saved logins on their Connections screen): each login_id, title, site, user_name, the names of its values (never the values), whether they let their AIs read it (ai_can_read), and when each value was last shown and to whom. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Save a login for me
+
+`save_login` · Changes things
+
+Keeps one login for this person, its values locked in their account: site, user_name and fields (each &#123; label, value &#125;, such as Password, Notes or a PIN). The same title and user name again replaces those values and keeps the others. The person sees and copies each value on their Connections screen after confirming it is them. Save only logins the person gave you or asked you to keep, never one you found that is not theirs.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `site` | string |  | The site or app, such as an address |
+| `title` | string |  | The name it is listed under; the site's name when left out |
+| `user_name` | string |  |  |
+| `fields` | object[] | Yes |  |
+| `fields[].label` | string | Yes | Like Password, Notes, PIN or API token |
+| `fields[].value` | string | Yes |  |
+
+```json Example
+{
+  "fields": [
+    {
+      "label": "<label>",
+      "value": "<value>"
+    }
+  ]
+}
+```
+
+## Import my logins
+
+`import_logins` · Changes things
+
+Keeps many logins for this person at once from text: a CSV export from a password manager or browser (a header row such as name, url, username, password, notes), or the text of a page where they keep logins (each service a toggle or indented item holding its user names, each user name holding its password). Same title and user name replaces. Returns how many were saved and replaced and which lines were skipped and why. Never echo the text back.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `text` | string | Yes |  |
+
+```json Example
+{
+  "text": "<text>"
+}
+```
+
+## Read a login I let my AIs use
+
+`read_saved_login` · Reads only
+
+Reads every value of one saved login (login_id from `list_saved_logins`), only when the person turned on "Let my AIs read this login" for it; otherwise it is refused, and only the person can turn it on, on their Connections screen. Each read is listed for the person under the login with this app's name. Use the values only for what the person asked (such as signing in), never repeat them in chat, files or logs.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `login_id` | string | Yes |  |
+
+```json Example
+{
+  "login_id": "<login_id>"
 }
 ```

@@ -178,3 +178,44 @@ Save a private answer and proposed HTTPS destination for admitted question work.
   "destination_url": "<destination_url>"
 }
 ```
+
+## Shape a thought into my formats
+
+`shape_into_formats` · Reads only
+
+Drops one thought into each of this person's content formats (or only the format_ids named, in that order) and returns each as a script to say or write: its parts in order, the first carrying the thought and every later part what to say next in the format's own words, plus the whole script as text and the format's input, steps and output. The same scripts the Formats screen shows. Use it to show someone how one idea reads as a post, a thread, a video and the rest, then write the one they pick. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `thought` | string | Yes | What they want to talk about, in their words |
+| `format_ids` | string[] |  | Only these formats (ids from `content_formats`); every format when left out |
+
+```json Example
+{
+  "thought": "<thought>"
+}
+```
+
+## Follow my script
+
+`follow_script` · Reads only
+
+Finds how far someone has read through a format's script from the words heard (a live transcript or a finished one), the way the Record screen's teleprompter follows a voice: each word heard is looked for a few words ahead of the place reached, so an aside or a misheard word never loses the place and it never moves back. Give format_id and about (the thought the script was made with) as `shape_into_formats` took them, heard, and said (the place from an earlier call) to continue. Returns said (script words read), total, progress (0 to 1), done, and next_words, what comes next. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `format_id` | string | Yes |  |
+| `about` | string |  |  |
+| `heard` | string | Yes | The words heard since said |
+| `said` | integer |  | The place already reached (said from an earlier call); 0 when left out |
+
+```json Example
+{
+  "format_id": "<format_id>",
+  "heard": "<heard>"
+}
+```

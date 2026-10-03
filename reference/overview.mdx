@@ -1,6 +1,6 @@
 ---
 title: "Tools reference"
-description: "Every tool Trillion gives your AI, grouped by the job you want done. 155 tools in all."
+description: "Every tool Trillion gives your AI, grouped by the job you want done. 279 tools in all."
 ---
 
 When your AI is connected to Trillion, it gets a set of tools. You never call them by name: you ask in plain words, like "Use Trillion to help me decide what to focus on this week", and your AI picks the tools that do it.
@@ -50,6 +50,15 @@ These pages list every tool, grouped by the job a person does, with what it does
   <Card title="Writing" icon="pen" href="/reference/writing">
     Write in your own formats, and keep private answers to the questions your audience asks.
   </Card>
+  <Card title="Lists, sidebar and screen" icon="layout-dashboard" href="/reference/lists-and-screen">
+    Keep lists, arrange the sidebar and screen, and show the person tours and looks.
+  </Card>
+  <Card title="Posts, links and what was sent" icon="send" href="/reference/posts-and-links">
+    Draft, check, approve and publish posts, keep a link-in-bio page, publish insights and see everything sent.
+  </Card>
+  <Card title="Public apps and source projects" icon="globe" href="/reference/public-apps">
+    Publish small public apps with visitor actions, connect domains, and edit a connected GitHub project's source.
+  </Card>
 </CardGroup>
 
 ## How the tools work
@@ -64,9 +73,10 @@ These pages list every tool, grouped by the job a person does, with what it does
 
 | Tool | What it does | Page | Effect |
 | --- | --- | --- | --- |
-| [`start_setup`](/reference/setup-and-goals) | Start Trillion setup | Setup and goals | Reads only |
+| [`start_setup`](/reference/setup-and-goals) | Start Trillion setup | Setup and goals | Changes things |
 | [`list_pursuits`](/reference/setup-and-goals) | List what I am pursuing | Setup and goals | Reads only |
 | [`record_pursuits`](/reference/setup-and-goals) | Record what I am pursuing | Setup and goals | Changes things |
+| [`read_awareness`](/reference/setup-and-goals) | Read what Trillion has figured out about me | Setup and goals | Changes things |
 | [`list_methods`](/reference/decisions) | List decision methods | Decisions | Reads only |
 | [`start_decision`](/reference/decisions) | Start a decision | Decisions | Changes things |
 | [`next_question`](/reference/decisions) | Get the next question | Decisions | Reads only |
@@ -87,6 +97,13 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`bring_in_chat_export`](/reference/messages) | Bring in a chat export | Messages and activity | Changes things |
 | [`read_activity`](/reference/messages) | Read what my AIs did | Messages and activity | Reads only |
 | [`trace_item`](/reference/messages) | Trace how something came about | Messages and activity | Reads only |
+| [`send_to_all_ais`](/reference/messages) | Send to all my AIs | Messages and activity | Changes things |
+| [`send_message`](/reference/messages) | Send a message from my own account | Messages and activity | Changes things |
+| [`read_recent_messages`](/reference/messages) | Read my recent messages | Messages and activity | Reads only |
+| [`correct_message_duplicate`](/reference/messages) | Correct a duplicate AI reply | Messages and activity | Changes things and can remove them |
+| [`correct_message_provenance`](/reference/messages) | Correct a message source | Messages and activity | Changes things and can remove them |
+| [`correct_message_authored_at`](/reference/messages) | Correct when a message was written | Messages and activity | Changes things |
+| [`correct_source_identity`](/reference/messages) | Correct the original chat | Messages and activity | Changes things |
 | [`find_tool_for_job`](/reference/tools) | Find a tool for a job | Workshop tools | Reads only |
 | [`run_tool`](/reference/tools) | Run a tool | Workshop tools | Changes things |
 | [`read_task`](/reference/tools) | Read a tool run | Workshop tools | Reads only |
@@ -95,6 +112,9 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`delete_tool`](/reference/tools) | Delete a saved tool | Workshop tools | Changes things and can remove them |
 | [`publish_tool`](/reference/tools) | Publish a tool | Workshop tools | Changes things |
 | [`unpublish_tool`](/reference/tools) | Withdraw a published tool | Workshop tools | Changes things and can remove them |
+| [`add_to_shared_library`](/reference/tools) | Add to the shared library | Workshop tools | Changes things |
+| [`search_shared_library`](/reference/tools) | Search the shared library | Workshop tools | Reads only |
+| [`remove_from_shared_library`](/reference/tools) | Remove my entry from the shared library | Workshop tools | Changes things and can remove them |
 | [`find_workflow`](/reference/workflows) | Find a workflow for a job | Workflows | Reads only |
 | [`describe_workflow`](/reference/workflows) | Read a workflow | Workflows | Reads only |
 | [`start_workflow`](/reference/workflows) | Start a workflow | Workflows | Changes things |
@@ -103,6 +123,7 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`save_workflow`](/reference/workflows) | Save a workflow | Workflows | Changes things |
 | [`publish_workflow`](/reference/workflows) | Publish a workflow | Workflows | Changes things |
 | [`unpublish_workflow`](/reference/workflows) | Withdraw a published workflow | Workflows | Changes things and can remove them |
+| [`remove_workflow`](/reference/workflows) | Remove a workflow | Workflows | Changes things and can remove them |
 | [`set_rule`](/reference/automations) | Set what happens by itself when something happens | Rules, schedules and connected accounts | Changes things |
 | [`list_rules`](/reference/automations) | List my rules | Rules, schedules and connected accounts | Reads only |
 | [`remove_rule`](/reference/automations) | Remove a rule | Rules, schedules and connected accounts | Changes things and can remove them |
@@ -113,6 +134,13 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`list_connections`](/reference/automations) | List my connected accounts | Rules, schedules and connected accounts | Reads only |
 | [`connect_service`](/reference/automations) | Connect one of my accounts | Rules, schedules and connected accounts | Changes things |
 | [`listen_for_events`](/reference/automations) | Start receiving comments and messages | Rules, schedules and connected accounts | Changes things |
+| [`source_health`](/reference/automations) | How each place things arrive from is doing | Rules, schedules and connected accounts | Reads only |
+| [`timed_work`](/reference/automations) | What could not run at its time | Rules, schedules and connected accounts | Reads only |
+| [`try_timed_work_again`](/reference/automations) | Try held timed work again | Rules, schedules and connected accounts | Changes things |
+| [`list_saved_logins`](/reference/automations) | List my saved logins | Rules, schedules and connected accounts | Reads only |
+| [`save_login`](/reference/automations) | Save a login for me | Rules, schedules and connected accounts | Changes things |
+| [`import_logins`](/reference/automations) | Import my logins | Rules, schedules and connected accounts | Changes things |
+| [`read_saved_login`](/reference/automations) | Read a login I let my AIs use | Rules, schedules and connected accounts | Reads only |
 | [`list_files`](/reference/files) | List a folder of my files | Files and media | Reads only |
 | [`find_file`](/reference/files) | Find one of my files | Files and media | Reads only |
 | [`read_file`](/reference/files) | Read one of my files | Files and media | Reads only |
@@ -127,8 +155,24 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`list_file_results`](/reference/files) | List what is known about my files | Files and media | Reads only |
 | [`record_file_results`](/reference/files) | Record what was worked out about files | Files and media | Changes things |
 | [`list_media`](/reference/files) | List my media | Files and media | Reads only |
-| [`search_media`](/reference/files) | Find moments in my media | Files and media | Reads only |
 | [`next_media_edit`](/reference/files) | Read my next edit suggestion | Files and media | Reads only |
+| [`search`](/reference/files) | Search everything I keep | Files and media | Reads only |
+| [`set_file_facts`](/reference/files) | Set facts about a file | Files and media | Changes things |
+| [`propose_file_tidy`](/reference/files) | Suggest titles and folders for my files | Files and media | Changes things |
+| [`list_file_tidy`](/reference/files) | List title and folder suggestions | Files and media | Reads only |
+| [`apply_file_tidy`](/reference/files) | Apply the accepted suggestions | Files and media | Changes things |
+| [`undo_file_tidy`](/reference/files) | Undo the last tidy-up | Files and media | Changes things |
+| [`file_tidy_history`](/reference/files) | List past tidy-ups | Files and media | Reads only |
+| [`delete_file`](/reference/files) | Delete files to Recently Deleted | Files and media | Changes things and can remove them |
+| [`archive_file`](/reference/files) | Archive files | Files and media | Changes things and can remove them |
+| [`list_recently_deleted`](/reference/files) | List Recently Deleted and Archived | Files and media | Reads only |
+| [`put_back_file`](/reference/files) | Put back deleted files | Files and media | Changes things |
+| [`read_keep_for`](/reference/files) | Read how long deleted files are kept | Files and media | Reads only |
+| [`set_keep_for`](/reference/files) | Change how long deleted files are kept | Files and media | Changes things and can remove them |
+| [`recent_files`](/reference/files) | List the files I used recently | Files and media | Reads only |
+| [`record_file_use`](/reference/files) | Keep that I used a file | Files and media | Changes things |
+| [`save_browser_saved_items`](/reference/files) | Save my browser's pinned tabs and folders | Files and media | Changes things |
+| [`save_x_bookmarks`](/reference/files) | Save my X bookmarks | Files and media | Changes things |
 | [`publish_agent`](/reference/hand-off) | Say what this agent does | Hand off work | Changes things |
 | [`set_agent_capacity`](/reference/hand-off) | Report this agent’s capacity | Hand off work | Changes things |
 | [`agent_presence`](/reference/hand-off) | Say this agent is present | Hand off work | Changes things |
@@ -149,16 +193,23 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`take_space_work`](/reference/hand-off) | Take work in a space | Hand off work | Changes things |
 | [`finish_space_work`](/reference/hand-off) | Finish work in a space | Hand off work | Changes things |
 | [`read_space_handoff`](/reference/hand-off) | Read a handoff in a space | Hand off work | Reads only |
-| [`list_spaces`](/reference/spaces) | List my shared spaces | Shared spaces | Reads only |
-| [`open_space`](/reference/spaces) | Open a shared space | Shared spaces | Reads only |
-| [`create_membership`](/reference/spaces) | Start a shared space | Shared spaces | Changes things |
-| [`read_space`](/reference/spaces) | Read a shared space | Shared spaces | Reads only |
-| [`add_to_space`](/reference/spaces) | Add to a shared space | Shared spaces | Changes things |
+| [`record_blocks`](/reference/hand-off) | Record work blocks | Hand off work | Changes things |
+| [`say_what_was_done`](/reference/hand-off) | Say what I did | Hand off work | Changes things |
+| [`reopen_incorrect_finish`](/reference/hand-off) | Correct an early finish | Hand off work | Changes things |
+| [`say_what_is_in_the_way`](/reference/hand-off) | Say what is in the way of work | Hand off work | Changes things |
+| [`release_work`](/reference/hand-off) | Give back work this AI cannot finish now | Hand off work | Changes things |
+| [`record_effect`](/reference/hand-off) | Record an effect so it is never done twice | Hand off work | Changes things |
+| [`choose_always_on_ai`](/reference/hand-off) | Choose the always-on AI | Hand off work | Changes things |
+| [`list_spaces`](/reference/spaces) | List my spaces | Shared spaces | Reads only |
+| [`open_space`](/reference/spaces) | Open a space | Shared spaces | Reads only |
+| [`create_membership`](/reference/spaces) | Start a space | Shared spaces | Changes things |
+| [`read_space`](/reference/spaces) | Read a space | Shared spaces | Reads only |
+| [`add_to_space`](/reference/spaces) | Add to a space | Shared spaces | Changes things |
 | [`share_to_space`](/reference/spaces) | Share one record into a space | Shared spaces | Changes things |
 | [`withdraw_from_space`](/reference/spaces) | Withdraw from a space | Shared spaces | Changes things and can remove them |
 | [`read_shared_file`](/reference/spaces) | Read a shared file | Shared spaces | Reads only |
 | [`mark_space_seen`](/reference/spaces) | Mark a space seen | Shared spaces | Changes things |
-| [`describe_space`](/reference/spaces) | Describe a space and set its picture | Shared spaces | Changes things |
+| [`describe_space`](/reference/spaces) | Describe a space and set its picture and colour | Shared spaces | Changes things |
 | [`read_space_picture`](/reference/spaces) | Read a space's picture | Shared spaces | Reads only |
 | [`name_in_space`](/reference/spaces) | Set my name in a space | Shared spaces | Changes things |
 | [`make_space_invite`](/reference/spaces) | Make an invite link to a space | Shared spaces | Changes things |
@@ -172,18 +223,43 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`add_member_type`](/reference/spaces) | Add a member type to a space | Shared spaces | Changes things |
 | [`remove_member_type`](/reference/spaces) | Remove a member type from a space | Shared spaces | Changes things and can remove them |
 | [`hide_in_space`](/reference/spaces) | Hide or show a thing in a space | Shared spaces | Changes things |
+| [`find_space_tool_for_job`](/reference/spaces) | Find a tool in a space | Shared spaces | Reads only |
+| [`describe_space_tool`](/reference/spaces) | Read a tool granted in a space | Shared spaces | Reads only |
+| [`run_space_tool`](/reference/spaces) | Run a tool in a space | Shared spaces | Changes things |
+| [`read_space_task`](/reference/spaces) | Read a tool run in a space | Shared spaces | Reads only |
+| [`set_space_capability`](/reference/spaces) | Turn a part of a space on or off | Shared spaces | Changes things |
+| [`create_space`](/reference/spaces) | Start a space | Shared spaces | Changes things |
+| [`invite_to_space`](/reference/spaces) | Invite someone into a space | Shared spaces | Changes things |
+| [`grant_space_tool`](/reference/spaces) | Grant a Workshop tool in a space | Shared spaces | Changes things |
+| [`list_space_tools`](/reference/spaces) | List tools granted in a space | Shared spaces | Reads only |
+| [`revoke_space_tool`](/reference/spaces) | Revoke a tool grant | Shared spaces | Changes things and can remove them |
 | [`sharing_of`](/reference/sharing) | See who a record is shared with | Sharing | Reads only |
 | [`set_sharing`](/reference/sharing) | Choose who a record is shared with | Sharing | Changes things |
 | [`shared_with_me`](/reference/sharing) | See what people shared with me | Sharing | Reads only |
 | [`read_shared`](/reference/sharing) | Read something shared with me | Sharing | Reads only |
 | [`share_destinations`](/reference/sharing) | Read where my shares go | Sharing | Reads only |
 | [`save_share_destinations`](/reference/sharing) | Change where my shares go | Sharing | Changes things |
+| [`shares_sent`](/reference/sharing) | Read what I shared before | Sharing | Reads only |
+| [`deliver_share`](/reference/sharing) | Send a share where I share | Sharing | Changes things |
+| [`share_record_by_link`](/reference/sharing) | Make a link to a record | Sharing | Changes things |
+| [`share_collection_by_link`](/reference/sharing) | Make one link for a mixed selection | Sharing | Changes things |
+| [`revoke_share_collection_link`](/reference/sharing) | Stop a mixed share link | Sharing | Changes things and can remove them |
+| [`sharing_links_of`](/reference/sharing) | See links to a record | Sharing | Reads only |
+| [`revoke_record_share_link`](/reference/sharing) | Stop a share link | Sharing | Changes things and can remove them |
+| [`record_scope`](/reference/sharing) | See which pursuits and spaces a record is in | Sharing | Reads only |
+| [`set_record_scope`](/reference/sharing) | Put a record in or out of a pursuit or space | Sharing | Changes things |
+| [`find_in_scope`](/reference/sharing) | Find records in pursuits and spaces | Sharing | Reads only |
 | [`network_profile`](/reference/people) | Set how people can find me | People and introductions | Changes things |
 | [`find_people`](/reference/people) | Find people | People and introductions | Reads only |
 | [`request_introduction`](/reference/people) | Ask to meet someone | People and introductions | Changes things |
 | [`network`](/reference/people) | My network | People and introductions | Reads only |
 | [`answer_introduction`](/reference/people) | Answer a request to meet | People and introductions | Changes things |
 | [`label_person`](/reference/people) | Label a person | People and introductions | Changes things |
+| [`my_referrals`](/reference/people) | My referral link and who joined | People and introductions | Reads only |
+| [`save_stay`](/reference/people) | Offer or change a stay | People and introductions | Changes things |
+| [`list_stays`](/reference/people) | See stays | People and introductions | Reads only |
+| [`request_stay`](/reference/people) | Ask to stay | People and introductions | Changes things |
+| [`read_stay_request`](/reference/people) | Read a stay request | People and introductions | Reads only |
 | [`list_communities`](/reference/communities) | Communities | Communities | Reads only |
 | [`community`](/reference/communities) | Open a community | Communities | Reads only |
 | [`join_community`](/reference/communities) | Join a community | Communities | Changes things |
@@ -219,3 +295,60 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`review_audience_question`](/reference/writing) | Review an audience question | Writing | Changes things |
 | [`admit_audience_question`](/reference/writing) | Add to private drafts | Writing | Changes things |
 | [`save_audience_answer_draft`](/reference/writing) | Save a private answer draft | Writing | Changes things |
+| [`shape_into_formats`](/reference/writing) | Shape a thought into my formats | Writing | Reads only |
+| [`follow_script`](/reference/writing) | Follow my script | Writing | Reads only |
+| [`list_lists`](/reference/lists-and-screen) | List my lists | Lists, sidebar and screen | Reads only |
+| [`read_list`](/reference/lists-and-screen) | Read a list and its rows | Lists, sidebar and screen | Reads only |
+| [`save_list`](/reference/lists-and-screen) | Make or change a list | Lists, sidebar and screen | Changes things |
+| [`put_list_rows`](/reference/lists-and-screen) | Keep or remove rows in a list | Lists, sidebar and screen | Changes things and can remove them |
+| [`read_sidebar`](/reference/lists-and-screen) | Read my sidebar | Lists, sidebar and screen | Reads only |
+| [`note_in_sidebar`](/reference/lists-and-screen) | Point to a list or row in my sidebar | Lists, sidebar and screen | Changes things |
+| [`change_sidebar`](/reference/lists-and-screen) | Change my sidebar lists | Lists, sidebar and screen | Changes things |
+| [`read_layouts`](/reference/lists-and-screen) | Read my screen layouts | Lists, sidebar and screen | Reads only |
+| [`save_layout`](/reference/lists-and-screen) | Make or rearrange a screen layout | Lists, sidebar and screen | Changes things |
+| [`open_layout`](/reference/lists-and-screen) | Open a layout on my screen now | Lists, sidebar and screen | Changes things |
+| [`read_tours`](/reference/lists-and-screen) | Read the tours my AIs wrote | Lists, sidebar and screen | Reads only |
+| [`save_tour`](/reference/lists-and-screen) | Write a guided tour on my screen | Lists, sidebar and screen | Changes things |
+| [`show_tour`](/reference/lists-and-screen) | Show me a tour now | Lists, sidebar and screen | Changes things |
+| [`list_looks`](/reference/lists-and-screen) | List my screen looks | Lists, sidebar and screen | Reads only |
+| [`read_look`](/reference/lists-and-screen) | Read one screen look | Lists, sidebar and screen | Reads only |
+| [`wear_look`](/reference/lists-and-screen) | Wear a screen look | Lists, sidebar and screen | Changes things |
+| [`save_look`](/reference/lists-and-screen) | Make or change a screen look | Lists, sidebar and screen | Changes things |
+| [`publish_look`](/reference/lists-and-screen) | Publish a screen look on the Marketplace | Lists, sidebar and screen | Changes things |
+| [`withdraw_look`](/reference/lists-and-screen) | Withdraw a screen look from the Marketplace | Lists, sidebar and screen | Changes things and can remove them |
+| [`show_screen`](/reference/lists-and-screen) | Show a Trillion screen | Lists, sidebar and screen | Reads only |
+| [`screen_read`](/reference/lists-and-screen) | Read for a Trillion screen | Lists, sidebar and screen | Changes things |
+| [`list_post_destinations`](/reference/posts-and-links) | List where I can post | Posts, links and what was sent | Reads only |
+| [`connect_post_destination`](/reference/posts-and-links) | Get a link to connect a place to post | Posts, links and what was sent | Reads only |
+| [`draft_post`](/reference/posts-and-links) | Draft a post | Posts, links and what was sent | Changes things |
+| [`check_post`](/reference/posts-and-links) | Check a post is ready for each place | Posts, links and what was sent | Reads only |
+| [`approve_post`](/reference/posts-and-links) | Approve a post | Posts, links and what was sent | Changes things |
+| [`publish_post`](/reference/posts-and-links) | Publish a post | Posts, links and what was sent | Changes things |
+| [`read_post`](/reference/posts-and-links) | Read a post and where it went | Posts, links and what was sent | Reads only |
+| [`list_post_calendar`](/reference/posts-and-links) | Read my posting calendar | Posts, links and what was sent | Reads only |
+| [`list_posts`](/reference/posts-and-links) | List my posts | Posts, links and what was sent | Reads only |
+| [`read_link_page`](/reference/posts-and-links) | Read my link-in-bio page and what people opened | Posts, links and what was sent | Reads only |
+| [`set_link_page`](/reference/posts-and-links) | Change my link-in-bio page | Posts, links and what was sent | Changes things |
+| [`list_public_insights`](/reference/posts-and-links) | List published insights | Posts, links and what was sent | Reads only |
+| [`publish_insight`](/reference/posts-and-links) | Publish an approved insight | Posts, links and what was sent | Changes things |
+| [`unpublish_insight`](/reference/posts-and-links) | Take down an insight | Posts, links and what was sent | Changes things and can remove them |
+| [`list_sent`](/reference/posts-and-links) | List what my AIs sent | Posts, links and what was sent | Reads only |
+| [`record_sent`](/reference/posts-and-links) | Record something sent | Posts, links and what was sent | Changes things |
+| [`publish_public_app_definition`](/reference/public-apps) | Publish a public app | Public apps and source projects | Changes things |
+| [`install_public_app`](/reference/public-apps) | Install a public app | Public apps and source projects | Changes things |
+| [`list_public_app_installations`](/reference/public-apps) | List installed public apps | Public apps and source projects | Reads only |
+| [`claim_public_app_domain`](/reference/public-apps) | Start connecting a domain | Public apps and source projects | Changes things |
+| [`activate_public_app_domain`](/reference/public-apps) | Connect a verified domain | Public apps and source projects | Changes things |
+| [`retire_public_app_domain`](/reference/public-apps) | Stop serving a domain | Public apps and source projects | Changes things and can remove them |
+| [`read_public_app_installation`](/reference/public-apps) | Read installed public app | Public apps and source projects | Reads only |
+| [`read_public_app_records`](/reference/public-apps) | Read public app responses | Public apps and source projects | Reads only |
+| [`edit_public_app_draft`](/reference/public-apps) | Edit a public app draft | Public apps and source projects | Changes things |
+| [`publish_public_app_draft`](/reference/public-apps) | Publish a public app draft | Public apps and source projects | Changes things |
+| [`restore_public_app_version`](/reference/public-apps) | Restore a public app version | Public apps and source projects | Changes things |
+| [`read_public_app_analytics`](/reference/public-apps) | Read public app analytics | Public apps and source projects | Reads only |
+| [`list_source_projects`](/reference/public-apps) | List source projects | Public apps and source projects | Reads only |
+| [`connect_source_project`](/reference/public-apps) | Connect original source | Public apps and source projects | Changes things |
+| [`read_source_project`](/reference/public-apps) | Read source project revision | Public apps and source projects | Reads only |
+| [`resolve_source_selection`](/reference/public-apps) | Find selected element in source | Public apps and source projects | Reads only |
+| [`edit_source_project`](/reference/public-apps) | Edit original source | Public apps and source projects | Changes things |
+| [`verify_source_project`](/reference/public-apps) | Check source project build | Public apps and source projects | Reads only |

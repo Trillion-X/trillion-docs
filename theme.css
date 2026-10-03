@@ -60,7 +60,7 @@
   --trillion-glass-bg-secondary: rgba(25, 25, 25, 0.03);
   --trillion-glass-bg-tertiary: rgba(255, 253, 248, 0.6);
   --trillion-glass-bg-input: rgba(25, 25, 25, 0.04);
-  --trillion-glass-bg-popover: rgba(255, 253, 248, 0.98);
+  --trillion-glass-bg-popover: #ffffff;
   --trillion-glass-bg-hover: rgba(25, 25, 25, 0.05);
   --trillion-glass-bg-active: rgba(25, 25, 25, 0.08);
   --trillion-glass-bg-subtle: rgba(25, 25, 25, 0.035);
@@ -105,7 +105,7 @@
   --trillion-button-primary-bg: #ff1d1d;
   --trillion-button-primary-text: #ffffff;
   --trillion-button-primary-bg-hover: #e01212;
-  --trillion-color-info: #191919;
+  --trillion-color-info: #2563eb;
   --trillion-scrollbar-thumb: rgba(25, 25, 25, 0.14);
   --trillion-scrollbar-thumb-hover: rgba(25, 25, 25, 0.24);
   --trillion-chat-input-bg: rgba(255, 253, 248, 0.92);
@@ -137,7 +137,7 @@
   --trillion-font-size-overline: 0.75rem;
   --trillion-font-size-micro: 0.625rem;
   --trillion-white-pure: #ffffff;
-  --trillion-color-success: #191919;
+  --trillion-color-success: #16865c;
   --trillion-color-warning: #b45309;
   --trillion-color-error: #e01212;
   --trillion-diff-added-bg: rgba(25, 25, 25, 0.06);
@@ -160,7 +160,7 @@ html.dark {
   --trillion-glass-bg-secondary: rgba(255, 255, 255, 0.03);
   --trillion-glass-bg-tertiary: rgba(13, 13, 13, 0.6);
   --trillion-glass-bg-input: rgba(255, 255, 255, 0.04);
-  --trillion-glass-bg-popover: rgba(13, 13, 13, 0.98);
+  --trillion-glass-bg-popover: #1c1c1c;
   --trillion-glass-bg-hover: rgba(255, 255, 255, 0.05);
   --trillion-glass-bg-active: rgba(255, 255, 255, 0.08);
   --trillion-glass-bg-subtle: rgba(255, 255, 255, 0.035);
@@ -205,7 +205,7 @@ html.dark {
   --trillion-button-primary-bg: #ff1d1d;
   --trillion-button-primary-text: #ffffff;
   --trillion-button-primary-bg-hover: #e01212;
-  --trillion-color-info: #ffffff;
+  --trillion-color-info: #6aa8ff;
   --trillion-scrollbar-thumb: rgba(255, 255, 255, 0.14);
   --trillion-scrollbar-thumb-hover: rgba(255, 255, 255, 0.24);
   --trillion-chat-input-bg: rgba(13, 13, 13, 0.92);
@@ -237,7 +237,7 @@ html.dark {
   --trillion-font-size-overline: 0.75rem;
   --trillion-font-size-micro: 0.625rem;
   --trillion-white-pure: #ffffff;
-  --trillion-color-success: #ffffff;
+  --trillion-color-success: #4fcf94;
   --trillion-color-warning: #f59e0b;
   --trillion-color-error: #e01212;
   --trillion-diff-added-bg: rgba(255, 255, 255, 0.06);

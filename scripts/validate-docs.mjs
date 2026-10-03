@@ -15,16 +15,18 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const manifest = JSON.parse(readFileSync(join(root, 'docs.manifest.json'), 'utf8'));
-const skipped = new Set(['node_modules', '.git', 'scripts']);
 const pageFile = /\.(mdx|md)$/;
-const notPages = new Set(['README.md']);
+// What is never published is what .mintignore says (a folder ends with /), so a page is judged by the same list Mintlify uses.
+const ignored = readFileSync(join(root, '.mintignore'), 'utf8').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#'));
+const isIgnored = (path, directory) => ignored.some(entry => (entry.endsWith('/') ? `${path}/` === entry || path.startsWith(entry) : path === entry)) || (directory && path === '.git');
 
 function walk(directory, files = []) {
   for (const name of readdirSync(directory)) {
-    if (skipped.has(name)) continue;
-    const path = join(directory, name);
-    if (statSync(path).isDirectory()) walk(path, files);
-    else if (pageFile.test(name) && !(directory === root && notPages.has(name))) files.push(relative(root, path));
+    const path = relative(root, join(directory, name));
+    const isDirectory = statSync(join(directory, name)).isDirectory();
+    if (isIgnored(path, isDirectory)) continue;
+    if (isDirectory) walk(join(directory, name), files);
+    else if (pageFile.test(name)) files.push(path);
   }
   return files;
 }

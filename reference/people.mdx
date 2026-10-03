@@ -11,16 +11,24 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `network_profile` · Changes things
 
-Sets whether this person can be found in the network, what they offer and what they are looking for, and the contact they share only with people they agree to meet. findable false removes them from searches. Returns what is saved.
+Changes this person's Network profile. When Network is available, setup fills known basics once; send only fields they want to change. A findable profile appears to other people. Contact is released only after both people agree to meet and while both stay connected. A handle is unique and can be changed. Connected AIs, counts and pursuits each stay hidden until turned on.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `findable` | boolean | Yes |  |
+| `findable` | boolean |  |  |
+| `name` | string |  |  |
+| `handle` | string |  |  |
+| `about` | string |  |  |
 | `offering` | string |  |  |
 | `seeking` | string |  |  |
-| `contact` | string |  | Email, phone or handle; released only to someone both sides agreed to meet, and only while both stay connected |
+| `links` | string[] |  |  |
+| `open_to_messages` | boolean |  |  |
+| `show_ais` | boolean |  |  |
+| `show_counts` | boolean |  |  |
+| `show_pursuits` | boolean |  |  |
+| `contact` | string |  | Email, phone or handle; released only after an accepted introduction |
 
 ```json Example
 {
@@ -53,7 +61,7 @@ Finds people in the network by meaning: what they offer and seek, how close the 
 
 `request_introduction` · Changes things
 
-Asks to meet a person found with `find_people`, or invites them into a group, project or event this person belongs to (membership_id); a group or project is a shared space its members work in together (`list_spaces`). The reply is always "sent": a person who ignores or declines it looks the same as one who does not exist. Contact details are shared only if they accept.
+Asks to meet a person found with `find_people`, or invites them into a group, project or event this person belongs to (membership_id); a group or project is a space its members work in together (`list_spaces`). The reply is always "sent": a person who ignores or declines it looks the same as one who does not exist. Contact details are shared only if they accept.
 
 **Inputs**
 
@@ -86,7 +94,7 @@ It takes no inputs.
 
 `answer_introduction` · Changes things
 
-Accepts or declines a request waiting for this person (from the network tool). Accepting connects both people and shares each one's contact with the other; accepting an invitation into a group or project also joins its shared space, which holds only what members put there, never anyone's private Trillion. Declining is never told to the asker.
+Accepts or declines a request waiting for this person (from the network tool). Accepting connects both people and shares each one's contact with the other; accepting an invitation into a group or project also joins its space, which holds only what members put there, never anyone's private Trillion. Declining is never told to the asker.
 
 **Inputs**
 
@@ -119,5 +127,106 @@ Gives a person in the network a label: unwanted-requests, unsafe or vouched. Eno
 {
   "relay": "<relay>",
   "label": "<label>"
+}
+```
+
+## My referral link and who joined
+
+`my_referrals` · Reads only
+
+Reads this person's own referral link and who joined with it: links (the addresses to share; the first is the one to give out), friend_gets (what someone who joins with the link gets off their first payment of the paid plan: kind amount with amount_cents and currency, or kind percent with percent), you_get (amount_cents and currency: credit taken off their bill for each of those people the first time they pay, with no limit unless at_most_per_year names one), counts (joined, paying, credit_given_cents, waiting: a credit waits until this person pays for a plan themselves) and people (each person's account name, when they joined, when they first paid and what it earned). Use it to share their link (with someone pursuing something worthwhile for the greater good of human society who needs better decisions) or tell them what they earned. It changes nothing.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Offer or change a stay
+
+`save_stay` · Changes things
+
+Offers a place to stay because of the person hosting it. A city or area is shown, never a street address. A stay appears to others only while your Network profile is findable. A nightly price is a quoted offer; payment is arranged in Trillion only after you accept a guest.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `stay_id` | string |  | The stay to change; leave out to create one |
+| `title` | string | Yes |  |
+| `where` | string | Yes | City or area, not a street address |
+| `about` | string |  |  |
+| `when` | string |  |  |
+| `price` | object | Yes |  |
+| `price.kind` | string | Yes | One of `free`, `per-night`, `ask`. |
+| `price.amount_cents` | integer |  |  |
+| `price.currency` | string |  |  |
+| `active` | boolean |  |  |
+
+```json Example
+{
+  "title": "<title>",
+  "where": "<where>",
+  "price": {
+    "kind": "free"
+  }
+}
+```
+
+## See stays
+
+`list_stays` · Reads only
+
+Lists this person's stays, or the public stays of one findable person in the Network. A host's private address is never listed.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `host_relay` | string |  |  |
+
+```json Example
+{}
+```
+
+## Ask to stay
+
+`request_stay` · Changes things
+
+Asks a host about specific dates. This uses the Network introduction credits. The host may accept to open a private stay space. A paid stay remains unpaid until Trillion confirms payment; sending a request never charges the nightly price.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `stay_id` | string | Yes |  |
+| `start_date` | string | Yes |  |
+| `end_date` | string | Yes |  |
+| `note` | string | Yes |  |
+
+```json Example
+{
+  "stay_id": "<stay_id>",
+  "start_date": "<start_date>",
+  "end_date": "<end_date>",
+  "note": "<note>"
+}
+```
+
+## Read a stay request
+
+`read_stay_request` · Reads only
+
+Reads one stay request you sent or received: dates, nightly-price total, accepted private space and payment state. Only the host and guest can read it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `request_id` | string | Yes |  |
+
+```json Example
+{
+  "request_id": "<request_id>"
 }
 ```

@@ -1,0 +1,405 @@
+---
+title: "Public apps and source projects"
+description: "Publish small public apps with visitor actions, connect domains, and edit a connected GitHub project's source."
+---
+
+These tools publish a public app (its pages and the actions visitors can take), install it in the account or a space, connect a domain, read responses and visits, and change a connected GitHub project's source at an exact revision.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## Publish a public app
+
+`publish_public_app_definition` · Changes things
+
+Publish the files and declared visitor actions for a reusable public app. Check that words, assets and any promised action are ready to share before publishing. Returns the version to install.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `id` | string | Yes |  |
+| `files` | object | Yes | File paths mapped to their UTF-8 contents; include index.html. |
+| `actions` | object[] | Yes |  |
+| `actions[].id` | string | Yes |  |
+| `actions[].record_kind` | string | Yes |  |
+| `actions[].fields` | object[] | Yes |  |
+| `actions[].fields[].id` | string | Yes |  |
+| `actions[].fields[].type` | string | Yes | One of `text`, `email`, `number`, `boolean`, `date`. |
+| `actions[].fields[].required` | boolean |  |  |
+
+```json Example
+{
+  "id": "<id>",
+  "files": {
+    "index.html": "<index.html>"
+  },
+  "actions": [
+    {
+      "id": "<id>",
+      "record_kind": "<record_kind>",
+      "fields": [
+        {
+          "id": "<id>",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Install a public app
+
+`install_public_app` · Changes things
+
+Install a published public app version in this account or a Space you can add items to. Returns its live link. Visitor records belong to the chosen place.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `app_id` | string | Yes |  |
+| `version` | string | Yes |  |
+| `context` | string or object | Yes |  |
+| `installation_id` | string |  | Optional stable id for safe retries. |
+
+```json Example
+{
+  "app_id": "<app_id>",
+  "version": "<version>",
+  "context": "<context>"
+}
+```
+
+## List installed public apps
+
+`list_public_app_installations` · Reads only
+
+List this account’s installed public apps, or those in a Space you belong to when space_id is given.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `space_id` | string |  | A Space id from `list_spaces`. |
+
+```json Example
+{}
+```
+
+## Start connecting a domain
+
+`claim_public_app_domain` · Changes things
+
+Start connecting a domain you control to one installed public app. Returns the DNS TXT record that proves control.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `host` | string | Yes | The domain name, without https:// or a path. |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "host": "<host>"
+}
+```
+
+## Connect a verified domain
+
+`activate_public_app_domain` · Changes things
+
+Check domain ownership, require the hosting provider to confirm this exact hostname is attached to this app, then confirm its HTTPS address reaches the public app host. Activates only when every check agrees.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `host` | string | Yes |  |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "host": "<host>"
+}
+```
+
+## Stop serving a domain
+
+`retire_public_app_domain` · Changes things and can remove them
+
+Stop serving an installed public app from one connected domain, then retire it only after the hosting provider confirms it is detached.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `host` | string | Yes |  |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "host": "<host>"
+}
+```
+
+## Read installed public app
+
+`read_public_app_installation` · Reads only
+
+Read the live files, visitor actions and revision of an installed public app, plus any saved draft.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+
+```json Example
+{
+  "installation_id": "<installation_id>"
+}
+```
+
+## Read public app responses
+
+`read_public_app_records` · Reads only
+
+Read visitor responses saved for one installed public app in the account or Space you can access.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+
+```json Example
+{
+  "installation_id": "<installation_id>"
+}
+```
+
+## Edit a public app draft
+
+`edit_public_app_draft` · Changes things
+
+Save exact text replacements in an installed public app HTML or CSS file. The draft does not change the live page until `publish_public_app_draft` runs.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `expected_revision` | string | Yes | The current revision returned by `read_public_app_installation`. |
+| `commands` | object[] | Yes |  |
+| `commands[].type` | string | Yes |  |
+| `commands[].path` | string | Yes |  |
+| `commands[].find` | string | Yes |  |
+| `commands[].replace` | string | Yes |  |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "expected_revision": "<expected_revision>",
+  "commands": [
+    {
+      "type": "<type>",
+      "path": "<path>",
+      "find": "<find>",
+      "replace": "<replace>"
+    }
+  ]
+}
+```
+
+## Publish a public app draft
+
+`publish_public_app_draft` · Changes things
+
+Put a saved public app draft live at its existing link and keep the prior version for restore.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `expected_revision` | string | Yes | The current revision returned by `read_public_app_installation`. |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "expected_revision": "<expected_revision>"
+}
+```
+
+## Restore a public app version
+
+`restore_public_app_version` · Changes things
+
+Restore an earlier installed app version at the same live link.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `revision` | string | Yes | The current revision returned by `read_public_app_installation`. |
+| `expected_revision` | string | Yes | The current revision returned by `read_public_app_installation`. |
+
+```json Example
+{
+  "installation_id": "<installation_id>",
+  "revision": "<revision>",
+  "expected_revision": "<expected_revision>"
+}
+```
+
+## Read public app analytics
+
+`read_public_app_analytics` · Reads only
+
+Read page views, visitors and successful submissions for one public app installation.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `installation_id` | string | Yes | The public app installation id. |
+| `from` | string |  |  |
+| `to` | string |  |  |
+
+```json Example
+{
+  "installation_id": "<installation_id>"
+}
+```
+
+## List source projects
+
+`list_source_projects` · Reads only
+
+List original GitHub source projects connected to this Trillion account.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `cursor` | string |  |  |
+
+```json Example
+{}
+```
+
+## Connect original source
+
+`connect_source_project` · Changes things
+
+Connect a GitHub repository and exact branch this account can read. This uses the existing sealed GitHub connection; it does not publish or copy the app backend.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `owner` | string | Yes |  |
+| `repo` | string | Yes |  |
+| `branch` | string | Yes |  |
+| `preview_url` | string |  |  |
+| `live_url` | string |  |  |
+
+```json Example
+{
+  "owner": "<owner>",
+  "repo": "<repo>",
+  "branch": "<branch>"
+}
+```
+
+## Read source project revision
+
+`read_source_project` · Reads only
+
+Read a connected source project and its current branch commit. A stale connection is reported when the branch has changed.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `project_id` | string | Yes |  |
+
+```json Example
+{
+  "project_id": "<project_id>"
+}
+```
+
+## Find selected element in source
+
+`resolve_source_selection` · Reads only
+
+Confirm a selected element on the connected running preview, then map its evidence to one source location at the exact branch commit. The preview deployment revision is reported separately and may be unverified. Returns ambiguous or unsupported when no unique source span is proven.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `project_id` | string | Yes |  |
+| `expected_commit` | string | Yes |  |
+| `selection` | object | Yes |  |
+
+```json Example
+{
+  "project_id": "<project_id>",
+  "expected_commit": "<expected_commit>",
+  "selection": {}
+}
+```
+
+## Edit original source
+
+`edit_source_project` · Changes things
+
+Apply one supported visual edit to the verified original source file at its exact revision. Returns the committed source and verification state; a build or live deployment is never inferred from the commit.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `project_id` | string | Yes |  |
+| `expected_commit` | string | Yes |  |
+| `selection` | object | Yes |  |
+| `locator` | object | Yes |  |
+| `intent` | object | Yes |  |
+
+```json Example
+{
+  "project_id": "<project_id>",
+  "expected_commit": "<expected_commit>",
+  "selection": {},
+  "locator": {},
+  "intent": {}
+}
+```
+
+## Check source project build
+
+`verify_source_project` · Reads only
+
+Read the connected branch, GitHub build checks, and selected rendered value for a source commit. A matching value is partial evidence until the deployment commit, comparable visuals, and backend behavior are independently proved.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `project_id` | string | Yes |  |
+| `commit` | string | Yes |  |
+
+```json Example
+{
+  "project_id": "<project_id>",
+  "commit": "<commit>"
+}
+```

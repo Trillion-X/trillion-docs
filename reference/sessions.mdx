@@ -69,7 +69,7 @@ Books one open time for a bought session: start from `open_session_times`, and o
 | --- | --- | --- | --- |
 | `start` | string | Yes |  |
 | `bookable_id` | string |  |  |
-| `case_id` | string |  | Case id returned by `start_decision` |
+| `case_id` | string |  | The case_id from the latest reply about this decision (`start_decision` gives the first; on the free plan every reply gives a new one, so always send the newest) |
 | `name` | string |  |  |
 | `time_zone` | string |  |  |
 

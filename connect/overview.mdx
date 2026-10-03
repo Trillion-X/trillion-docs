@@ -1,9 +1,9 @@
 ---
 title: "Connect your AI"
-description: "Add Trillion to the AI app you already use. One address, one passkey, every app."
+description: "Add Trillion to the AI app you already use. One address, one sign-in, every app."
 ---
 
-Trillion works inside the AI you already use. You add it once to each AI app, sign in with your passkey, and that AI gets Trillion's tools. Every AI you connect reaches the same Trillion, so what you start in one, another can pick up.
+Trillion works inside the AI you already use. You add it once to each AI app, sign in, and that AI gets Trillion's tools. Every AI you connect reaches the same Trillion, so what you start in one, another can pick up.
 
 ## What every app needs
 
@@ -13,12 +13,12 @@ Trillion works inside the AI you already use. You add it once to each AI app, si
 
     `https://app.gettrillion.ai/mcp`
   </Card>
-  <Card title="Your passkey" icon="fingerprint">
-    The app opens a Trillion page and you tap your passkey (Touch ID, Face ID or your device code). There is no password, API key or client id to type.
+  <Card title="Your sign-in" icon="fingerprint">
+    The app opens a Trillion page and you sign in with your passkey (Touch ID, Face ID or your device code), your email and password, or an emailed code. There is no API key or client id to type.
   </Card>
 </CardGroup>
 
-If you do not have a Trillion account yet, the sign-in page has **Create your Trillion account** under **New here?**. It takes one tap.
+If you do not have a Trillion account yet, the sign-in page has **Sign up** under **Don't have an account?**.
 
 ## Pick your app
 
@@ -55,14 +55,14 @@ Copy the message below and paste it into the AI you use. If it can run terminal 
 
 ```text Setup message
 Help me connect Trillion to the AI app I use, so you (or that app) can use Trillion's tools. Set up only the AI app I am using or explicitly choose. If that AI cannot connect, or the required sign-in or connector is unavailable, stop at that exact boundary and tell me what is missing; never choose the first installed or shipped AI, CLI, model, or another app as a fallback. Trillion is an MCP server at this address: https://app.gettrillion.ai/mcp
-It signs in with OAuth and a passkey. I never need a password or an API key for it. When I use Chrome or another Chromium browser, also offer the official Send to Trillion extension from the Chrome Web Store so I can send pages, selections, pictures and files to this Trillion. If the extension is not listed there yet, say that plainly and do not tell me to install an untrusted copy or load an unpacked folder.
+It signs in with OAuth: I sign in on a Trillion page with my passkey, my password or an emailed code, never an API key. When I use Chrome or another Chromium browser, also offer the official Send to Trillion extension from the Chrome Web Store so I can send pages, selections, pictures and files to this Trillion. If the extension is not listed there yet, say that plainly and do not tell me to install an untrusted copy or load an unpacked folder.
 
 Please do this:
 1. If you can run terminal commands yourself, do the setup for me instead of explaining it:
    - If you are Claude Code, run: claude mcp add --transport http --scope user trillion https://app.gettrillion.ai/mcp
-     Then ask me to type /mcp, choose trillion and choose Authenticate (or run claude mcp login trillion in my own terminal), and I will tap my passkey.
+     Then ask me to type /mcp, choose trillion and choose Authenticate (or run claude mcp login trillion in my own terminal), and I will sign in.
    - If you are Codex, run: codex mcp add trillion --url https://app.gettrillion.ai/mcp
-     It opens my browser to sign in; I will tap my passkey.
+     It opens my browser to sign in; I will sign in.
    Afterwards run claude mcp list or codex mcp list and show me that trillion is there.
    Then let Trillion's tools run without asking me each time: in Claude Code add "mcp__trillion" to permissions.allow in ~/.claude/settings.json; in Codex add default_tools_approval_mode = "approve" under [mcp_servers.trillion] in ~/.codex/config.toml.
 2. Otherwise, ask me which app I want to connect (claude.ai or the Claude desktop app, ChatGPT, Muse, Cursor, or another one), then walk me through it ONE step at a time. For each step tell me the exact menu or button to click, what to type or paste, and what to leave alone. Wait for me to say done before giving the next step. Then tell me what I should see if it worked.
@@ -79,7 +79,7 @@ Please do this:
 
 - **Each app adds Trillion once.** Claude, ChatGPT, Cursor and the others each keep their own list of connectors, so you add Trillion in each app you use.
 - **Terminal apps add it once per computer.** Claude Code, Codex and Cursor keep their list on each computer, so you add Trillion once on each computer you use them on.
-- **Every app reaches the same Trillion.** Sign in with the same passkey and every app reads and writes the same decisions, files and goals.
+- **Every app reaches the same Trillion.** Sign in to the same account and every app reads and writes the same decisions, files and goals.
 
 ## What your plan includes
 

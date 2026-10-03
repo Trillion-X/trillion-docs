@@ -158,3 +158,21 @@ Withdraws a workflow this account published, so only this account finds it again
   "workflow_id": "<workflow_id>"
 }
 ```
+
+## Remove a workflow
+
+`remove_workflow` · Changes things and can remove them
+
+Removes a workflow this account saved, so no AI finds or starts it again (and withdraws it if it was published). Runs already started keep their version. A trigger or schedule that started it stops working until it names another.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `workflow_id` | string | Yes | A workflow_id from `find_workflow`, like workflow:l078-research-to-plan |
+
+```json Example
+{
+  "workflow_id": "<workflow_id>"
+}
+```

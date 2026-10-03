@@ -1,0 +1,413 @@
+---
+title: "Lists, sidebar and screen"
+description: "Keep lists, arrange the sidebar and screen, and show the person tours and looks."
+---
+
+These tools change what the person sees in Trillion: their lists and the rows in them, the sidebar, screen layouts, guided tours and screen looks, and a Trillion screen drawn right in the chat.
+
+You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
+
+## List my lists
+
+`list_lists` · Reads only
+
+The lists this person keeps (their CRM, customers, the AIs in a space, anything): each list's id, label, fields and how many rows it holds. It changes nothing; `read_list` reads one list's rows. On the person's screen (Lists), use it when they keep track of several things of one kind across messages, files or notes: make the list, fill it from what you found, then show it with a tour or a layout.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Read a list and its rows
+
+`read_list` · Reads only
+
+One list with its rows: each row's id, title (the value of its title field), values by field id, and for each link field the linked rows with their titles. Also field_kinds, the kinds a field can have. It changes nothing. On the person's screen (Lists), use it when they keep track of several things of one kind across messages, files or notes: make the list, fill it from what you found, then show it with a tour or a layout.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `list_id` | string | Yes | A list id from `list_lists`, like "trillion-crm" |
+
+```json Example
+{
+  "list_id": "<list_id>"
+}
+```
+
+## Make or change a list
+
+`save_list` · Changes things
+
+Keeps a list: give label and fields to make one (its id is made from the label), or id with the whole fields list to change one, such as adding a field. A link field (kind "link", links_to another list's id) holds rows of that list, so a Customers list can link each customer to their CRM row. row_type (optional, only when making a list) names the kind of the person's records its rows are: rows other tools already keep, such as "customer", show in the list as they are. title_field names the field that is each row's name (the first field when left out). views are saved slices of the rows (Customers, Leads), kept on the list. Rows are kept. On the person's screen (Lists), use it when they keep track of several things of one kind across messages, files or notes: make the list, fill it from what you found, then show it with a tour or a layout.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `id` | string |  | A list id from `list_lists`, like "trillion-crm" |
+| `label` | string |  | The name people see, like "Trillion CRM" |
+| `fields` | object[] |  | Every field, in order: sending fields replaces the list's fields |
+| `fields[].id` | string |  | Short name of letters, digits, dashes or underscores; made from the label when left out |
+| `fields[].label` | string | Yes |  |
+| `fields[].kind` | string |  | A field kind id from `read_list` field_kinds: text, long-text, number, date, choice, tags, email, phone, link-address, link, formula or button |
+| `fields[].links_to` | string |  | For a link field: the id of the list its values are rows of |
+| `fields[].choices` | string[] |  | For a choice field: the choices, in order |
+| `fields[].derive` | object |  | For a formula field: &#123; request: &#123; binding &#125;, context_from_fields? &#125;, where binding is a formula-engine binding over the row's values, like &#123; "$kind": "binding", "select": &#123; "from": "self", "path": ["minutes"] &#125;, "transform": [&#123; "op": "op:core.mul", "args": &#123; "value": 60 &#125; &#125;] &#125;. Its value is worked out on every row and never kept. |
+| `fields[].action` | object |  | For a button field: &#123; label, definition_ids: [&#60;Workshop tool id&#62;], input?, copy?: [&#123; key: &#60;tool input&#62;, from: "answers.&#60;field id&#62;" \| "record.title" &#125;] &#125;. Each row shows the button; pressing it runs the tool with that row's values, and the tool receives only the inputs its schema takes. |
+| `row_type` | string |  | The kind of record the rows are; the list id when left out |
+| `title_field` | string |  |  |
+| `icon` | string |  | A Lucide icon name, like "Users" |
+| `about` | string |  | One sentence on what the list is for |
+| `remove` | boolean |  | true with id removes the list itself; its rows stay as the person's records |
+| `views` | object[] |  | Every saved view, replacing the list's views: a slice of the same rows, like Customers (Stage is Paying) or Leads, each &#123; label, search?, rules? &#125; where rules is a filter rule group &#123; kind: "group", combinator: "and", negate: false, rules: [&#123; kind: "rule", field: &#60;field id&#62;, operator: "is_any_of", params: &#123; values: [...] &#125; &#125;] &#125;. Make a view, not a second list, when the rows are the same people. |
+| `views[].id` | string |  |  |
+| `views[].label` | string | Yes |  |
+| `views[].search` | string |  |  |
+| `views[].rules` | object |  |  |
+
+```json Example
+{}
+```
+
+## Keep or remove rows in a list
+
+`put_list_rows` · Changes things and can remove them
+
+Keeps rows in a list and removes rows from it. Each row is &#123; id?, values: &#123; field_id: value &#125; &#125;: the values merge into that row (a row without id is new; null clears one field). A link field's value is a row id or a list of row ids of the list it links to; a tags field takes a list of texts. remove lists row ids to take away. Returns the rows kept with their ids. On the person's screen (Lists), use it when they keep track of several things of one kind across messages, files or notes: make the list, fill it from what you found, then show it with a tour or a layout.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `list_id` | string | Yes | A list id from `list_lists`, like "trillion-crm" |
+| `rows` | object[] |  |  |
+| `rows[].id` | string |  |  |
+| `rows[].values` | object | Yes |  |
+| `remove` | string[] |  | Row ids to remove |
+
+```json Example
+{
+  "list_id": "<list_id>"
+}
+```
+
+## Read my sidebar
+
+`read_sidebar` · Reads only
+
+What this person's Trillion sidebar shows: every list (list_id, name, the list it sits inside) with its rows in order (row_id, label), every row a list can hold (each screen and tool), and the notes on lists and rows. Read it to find the ids `note_in_sidebar` and `change_sidebar` take. It changes nothing. On the person's screen (The sidebar), use it when something waits for them in one place, put a note with a count there and take it off once they did it; when things they keep coming back to belong together, make a list of them; when something matters only for a while, show it only for that while (shown_when).
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Point to a list or row in my sidebar
+
+`note_in_sidebar` · Changes things
+
+Points the person to a list or row in their sidebar: on is a list_id or row_id from `read_sidebar`; message is what you want them to do there, in a sentence; count a number to show on it; highlight true marks it; opens names screens (row_ids) offered in its hover card. The note shows on that list or row and when the person points at it, and a message also reaches their notifications once. One note per list or row: a new one replaces it, and a note with only on takes it off. Take it off once they did it. On the person's screen (The sidebar), use it when something waits for them in one place, put a note with a count there and take it off once they did it; when things they keep coming back to belong together, make a list of them; when something matters only for a while, show it only for that while (shown_when).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `on` | string | Yes | A list_id or row_id from `read_sidebar` |
+| `message` | string |  | What you want the person to do there, in one sentence |
+| `count` | integer |  | A number to show on it, such as how many things wait there |
+| `highlight` | boolean |  | true marks it so it stands out |
+| `opens` | string[] |  | row_ids of screens to offer in its hover card |
+| `by` | string |  | Your name as the person knows you, such as Claude or ChatGPT |
+
+```json Example
+{
+  "on": "<on>"
+}
+```
+
+## Change my sidebar lists
+
+`change_sidebar` · Changes things
+
+Changes the person's sidebar lists, in order, as one change: &#123; do: "make_list", name, list_id?, holds?, order_by?, shown_when? &#125; makes a list; &#123; do: "`set_rule`", list_id, row_id?, holds?, order_by?, shown_when? &#125; puts rules on one of their own lists, or on one row of it (shown_when only), null taking a rule off. holds is a rule over each row's facts and the list holds every row it is true for (beside that row's own list); shown_when is a rule over the list's facts (or, with row_id, the row's) and it shows only while the rule holds; order_by is &#123; path: ["listed_on"], descending: true &#125;. A rule is the formula engine's tree &#123; kind: "group", combinator: "and" | "or", negate: false, rules: [&#123; kind: "rule", field, operator, params &#125;] &#125; over the facts `read_sidebar` lists under facts (now is a date in milliseconds; days_since_made, days_since_listed and the like are numbers). For 7 days after it is made: &#123; field: "days_since_made", operator: "less_than", params: &#123; value: 7 &#125; &#125;; until a time: &#123; field: "now", operator: "before", params: &#123; value: &#60;ms&#62; &#125; &#125;. Rules are decided again as time passes, so a list or row comes and goes by itself; `read_sidebar` shows those hidden now under not_shown_now; &#123; do: "rename_list", list_id, name &#125;; &#123; do: "remove_list", list_id &#125; deletes one of their own lists; &#123; do: "add", list_id, row_id &#125; puts any row (a screen or a tool) in a list, which may hold rows of any kind; &#123; do: "remove", list_id, row_id &#125; takes it out; &#123; do: "order", list_id, row_id, before | after | at &#125; moves it within the list; &#123; do: "move", from_list_id, list_id, row_id &#125; moves it to another list; &#123; do: "style", row_id, colour?, place? &#125; draws a row in a colour (grey, blue, turquoise, green, yellow, orange, red, pink, purple) and keeps it in a place of the sidebar ("bottom": at the foot below every list; "controls": among the icons at the top), null putting either back. A list of Trillion's own becomes the person's copy on its first change. Returns the lists as they are now. On the person's screen (The sidebar), use it when something waits for them in one place, put a note with a count there and take it off once they did it; when things they keep coming back to belong together, make a list of them; when something matters only for a while, show it only for that while (shown_when).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `changes` | object[] | Yes |  |
+| `changes[].do` | string | Yes | One of `make_list`, `rename_list`, `remove_list`, `add`, `remove`, `order`, `move`, `style`, `set_rule`. |
+| `changes[].list_id` | string |  | A list_id from `read_sidebar` (for make_list, an id of your choosing, made for you when left out) |
+| `changes[].from_list_id` | string |  | For move: the list the row is in now |
+| `changes[].row_id` | string |  | A row_id from `read_sidebar` |
+| `changes[].name` | string |  | For make_list and rename_list: what the list is called |
+| `changes[].colour` | string or null |  | For style: a colour of the palette, or null for the app's own |
+| `changes[].place` | string or null |  | For style: bottom or controls, or null to keep it in its lists |
+| `changes[].holds` | object or null |  | For make_list and `set_rule`: a rule tree over each row's facts; the list holds every row it is true for |
+| `changes[].order_by` | object or null |  | With holds: &#123; path, descending? &#125;, the row value its rows are ordered by |
+| `changes[].shown_when` | object or null |  | For make_list and `set_rule`: a rule tree over the list's facts (or, with row_id, the row's); it shows only while the rule holds |
+| `changes[].before` | string |  | Put it just before this row_id in the same list |
+| `changes[].after` | string |  | Put it just after this row_id in the same list |
+| `changes[].at` | string |  | Put it first or last One of `start`, `end`. |
+
+```json Example
+{
+  "changes": [
+    {
+      "do": "make_list"
+    }
+  ]
+}
+```
+
+## Read my screen layouts
+
+`read_layouts` · Reads only
+
+The screens this person can arrange (screen_id, label), the layouts their AIs made (each with its category), the categories they are filed in (in order) and the most recent, and the arrangement on their screen now (current) in the same short shape, so you can rearrange it. It changes nothing. On the person's screen (Layouts), use it when they work across two or more screens at once (a decision and its files, Media beside a draft, messages beside a space) or ask to see things together: make the layout and open it (open_now true) instead of offering it; their old arrangement stays one click away as Previous layout.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Make or rearrange a screen layout
+
+`save_layout` · Changes things
+
+Makes a screen layout for the person, or rearranges the one on screen: layout is &#123; id?, name, icon?, arrangement &#125; where arrangement is a pane &#123; kind: "pane", surfaces: [screen ids, or one thing such as the list you just made as &#123; id, input, title? &#125; with a screen from `read_layouts` opens_one_thing], show? &#125; or a split &#123; kind: "split", dir: "row" | "column", sizes?, children: [...] &#125; (`read_layouts` gives the screen ids and the current arrangement to change). It sits in their Layouts menu, under category when given (made when new; a layout sits in one category, so naming another moves it); open_now true opens it now on their open Trillion page, keeping the one it replaces as Previous layout. The same id again changes it; remove true with layout.id takes it away. On the person's screen (Layouts), use it when they work across two or more screens at once (a decision and its files, Media beside a draft, messages beside a space) or ask to see things together: make the layout and open it (open_now true) instead of offering it; their old arrangement stays one click away as Previous layout.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `layout` | object |  | &#123; id?, name, icon? (a Lucide icon name), arrangement &#125; |
+| `category` | string |  | The category it is filed under in the Layouts menu, in a few words, such as "Launch" or "Writing" |
+| `open_now` | boolean |  | true opens it now on the person's open page |
+| `remove` | boolean |  | true with layout.id removes that layout |
+| `by` | string |  | Your name as the person knows you, such as Claude or ChatGPT |
+
+```json Example
+{}
+```
+
+## Open a layout on my screen now
+
+`open_layout` · Changes things
+
+Opens a layout your AIs made (layout_id from `read_layouts`) now on the person's open Trillion page; the arrangement it replaces is kept as Previous layout. On the person's screen (Layouts), use it when they work across two or more screens at once (a decision and its files, Media beside a draft, messages beside a space) or ask to see things together: make the layout and open it (open_now true) instead of offering it; their old arrangement stays one click away as Previous layout.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `layout_id` | string | Yes | A layout_id from `read_layouts` |
+| `by` | string |  | Your name as the person knows you |
+
+```json Example
+{
+  "layout_id": "<layout_id>"
+}
+```
+
+## Read the tours my AIs wrote
+
+`read_tours` · Reads only
+
+The guided tours this person's AIs wrote: each tour (tour_id, title, steps, category, who wrote it, when, whether the person took it), the categories in order, the most recent, the card kinds a step can show (card_kinds) and the fields of a step (step_fields). Read it before `save_tour`. It changes nothing. On the person's screen (Guided tours), use it after you finish work they can see (a file you made, a list or layout you built, something you fixed or connected), end the turn with a short tour pointing at it (`save_tour` with show_now true); also when they ask how something works or where something is.
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Write a guided tour on my screen
+
+`save_tour` · Changes things
+
+Keeps a guided tour you write for this moment, as DATA the person's Trillion runs: the page dims and blurs, each step points at an element (target_ref, a CSS selector) or shows centred, and each card is a glance card (icon, tone, title, the one key value, facts, chips, a chart), never a paragraph. tour is &#123; id?, title, summary?, steps: [step], entry_step? &#125; with steps as `read_tours` step_fields says; category files it (made when new; "From your AIs" when left out); show_now true starts it at once on the person's open Trillion page. The same id again changes that tour. remove true with tour.id takes it away. Returns the tour kept. On the person's screen (Guided tours), use it after you finish work they can see (a file you made, a list or layout you built, something you fixed or connected), end the turn with a short tour pointing at it (`save_tour` with show_now true); also when they ask how something works or where something is. On the person's screen (What's new), use it when something they use changed while they were away (you connected a service, added a tool, changed their lists), shown once the next time they are on their page.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tour` | object |  | &#123; id?, title, summary?, steps: [&#123; id, content: &#123; content_kind, payload &#125;, target_ref?, target_preparation?, placement?, centered_when_target_missing?, nav? &#125;], entry_step? &#125; |
+| `category` | string |  | The category to file it in, in a few words, such as "Your week" or "Launch" |
+| `show_now` | boolean |  | true starts it now on the person's open page |
+| `remove` | boolean |  | true with tour.id removes that tour |
+| `by` | string |  | Your name as the person knows you, such as Claude or ChatGPT |
+
+```json Example
+{}
+```
+
+## Show me a tour now
+
+`show_tour` · Changes things
+
+Starts a tour now on the person's open Trillion page: one your AIs wrote (tour_id from `read_tours`) or one of Trillion's own. The person can skip a step or end it. On the person's screen (Guided tours), use it after you finish work they can see (a file you made, a list or layout you built, something you fixed or connected), end the turn with a short tour pointing at it (`save_tour` with show_now true); also when they ask how something works or where something is.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `tour_id` | string | Yes | A tour_id from `read_tours` |
+| `by` | string |  | Your name as the person knows you |
+
+```json Example
+{
+  "tour_id": "<tour_id>"
+}
+```
+
+## List my screen looks
+
+`list_looks` · Reads only
+
+The screen looks this person can wear in Trillion (Trillion's own and the ones they made or took from the Marketplace) and which one they wear now. Each look has its look_id, name, description, made_by, its main colours (background, text, accent) and, for their own, whether it is published on the Marketplace. It changes nothing. On the person's screen (Looks), use it only when they ask for a different look, or say the screen is hard to read (bigger text, more contrast).
+
+It takes no inputs.
+
+```json Example
+{}
+```
+
+## Read one screen look
+
+`read_look` · Reads only
+
+One look in full: every token (its key, label, kind and value) you can change with `save_look`, and the look as a record (the .look.json file a person downloads or opens). It changes nothing. On the person's screen (Looks), use it only when they ask for a different look, or say the screen is hard to read (bigger text, more contrast).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `look_id` | string | Yes | A look_id from `list_looks` |
+
+```json Example
+{
+  "look_id": "<look_id>"
+}
+```
+
+## Wear a screen look
+
+`wear_look` · Changes things
+
+Makes this person's Trillion wear a look everywhere they are signed in. A look another account published (from the Marketplace) is kept among their own looks first. On the person's screen (Looks), use it only when they ask for a different look, or say the screen is hard to read (bigger text, more contrast).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `look_id` | string | Yes | A look_id from `list_looks` |
+
+```json Example
+{
+  "look_id": "<look_id>"
+}
+```
+
+## Make or change a screen look
+
+`save_look` · Changes things
+
+Makes a new look or changes one of this person's looks. With look_id it changes that look (a change to one of Trillion's looks is kept as their own version under the same id); without it, it makes a new look from `from` (a look_id, else the look worn now) under a new id from its name. tokens sets token values by key (`read_look` lists them: colours as #hex or rgb(), numbers within their range). The saved look is worn unless wear is false. On the person's screen (Looks), use it only when they ask for a different look, or say the screen is hard to read (bigger text, more contrast).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `look_id` | string |  | The look to change; leave out to make a new one |
+| `from` | string |  | The look a new one starts from; the worn look when left out |
+| `name` | string |  |  |
+| `description` | string |  |  |
+| `tokens` | object |  | Token key to its new value |
+| `wear` | boolean |  | false keeps the look now worn |
+
+```json Example
+{}
+```
+
+## Publish a screen look on the Marketplace
+
+`publish_look` · Changes things
+
+Publishes one of this person's own looks on the Marketplace, where anyone can wear it. A change to one of Trillion's looks is saved as a new look first (`save_look` with from).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `look_id` | string | Yes | A look_id from `list_looks` |
+
+```json Example
+{
+  "look_id": "<look_id>"
+}
+```
+
+## Withdraw a screen look from the Marketplace
+
+`withdraw_look` · Changes things and can remove them
+
+Takes one of this person's looks off the Marketplace. People who already took it keep their copy.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `look_id` | string | Yes | A look_id from `list_looks` |
+
+```json Example
+{
+  "look_id": "<look_id>"
+}
+```
+
+## Show a Trillion screen
+
+`show_screen` · Reads only
+
+Shows the person one of their Trillion screens right here in the chat, drawn by Trillion itself in their own look, live and usable (they can open, sort, filter and act there as in Trillion). screen is a screen's address (/decisions, /files, /decisions/&#60;case_id&#62;, /lists/&#60;list_id&#62;), its name (Decisions, Files, Progress, Spaces, Automations, Workshop) or a tool id whose own screen to show (tool:drives); input (optional) is what that screen opens on. Use it whenever the person wants to see something Trillion keeps, instead of describing it or pasting its data: the screens are Home (/home), Find anything (/find), Notifications (/notifications), Message your AIs (/message), Your tray (/tray), Write (/write), Record (/record), Record audio (/record-audio), Record video (/record-video), Formats (/formats), Files (/files), Media (/media), Decisions (/decisions), Audience questions (/audience-questions), AI activity (/activity), AI work (/ai-work), Sent (/sent), Task map (/message-task-canvas), Messages (/messages), Network (/network), Spaces (/spaces), Progress (/progress), Book a session (/book), Clients (/clients), Get started (/get-started), Use Trillion in your AI (/ai), Tours (/tours), Connections (/connections), Sharing (/sharing), Notification settings (/notification-settings), Plan & billing (/plan), Account & security (/account), Business (/business), Automations (/automations), Funnels (/funnels), Lists (/lists), Workshop (/workshop), Marketplace (/marketplace), Public apps (/public-apps), Draw (/draw).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `screen` | string | Yes | An address, a screen name or a tool id |
+| `input` | object |  | What the screen opens on, when its address does not say |
+
+```json Example
+{
+  "screen": "<screen>"
+}
+```
+
+## Read for a Trillion screen
+
+`screen_read` · Changes things
+
+For the Trillion screen view only: one read or change the screen drawn in this chat makes in the person's Trillion, as the signed-in page would. An AI never calls it; `show_screen` shows a screen.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `path` | string | Yes |  |
+| `method` | string |  |  |
+| `text` | string |  |  |
+| `base64` | string |  |  |
+| `headers` | object |  |  |
+
+```json Example
+{
+  "path": "<path>"
+}
+```

@@ -8,7 +8,8 @@ The public help site for Trillion at https://docs.gettrillion.ai, built with Min
 |---|---|
 | `docs.manifest.json` | The one place site facts and navigation live: name, description, search prompt, navbar links, SEO text, fonts, which Trillion looks are light and dark, and every tab, group and page route. Adding a page is one route here. |
 | `scripts/generate-docs.mjs` | Writes `docs.json`, `theme.css`, `theme.js` and `llms.txt` from the manifest; `--check` fails when any of them is out of date. Colours come from the Trillion app's own looks through the app's own resolver. |
-| `scripts/validate-docs.mjs` | Fails when a page is missing from the navigation, a navigation route has no page, or a link inside a page lands nowhere. |
+| `scripts/validate-docs.mjs` | Fails when a page is missing from the navigation, a navigation route has no page, or a link inside a page lands nowhere. What counts as a page skips everything `.mintignore` keeps off the site. |
+| `scripts/make-reference.mjs` | Writes `reference/overview.mdx` and one `reference/<group>.mdx` per group from `scripts/reference/tools.json` (the live `tools/list` as a new account sees it) and `scripts/reference/groups.json` (which page each tool is on); refuses when a live tool is unplaced, placed twice or no longer exists. |
 | `scripts/validate-public-boundary.mjs` | Fails when a file holds a local computer path, a retired product name, leftover starter-kit text or an unfinished-work marker. |
 | `docs.json` | Generated Mintlify settings and navigation. Never edit by hand. |
 | `theme.css` | Generated: the font faces plus every look variable as `--trillion-*`, light under `:root`, dark under `html.dark`. Never edit by hand. |

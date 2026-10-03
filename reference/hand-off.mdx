@@ -11,7 +11,7 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `publish_agent` · Changes things
 
-Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery null stops events; rotate_delivery_secret true makes a new secret.
+Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery &#123; stream: true &#125; is for an agent on a computer the internet cannot reach: Trillion's helper on that computer (harness/wake-sessions.mjs) holds the live connection for it, each event is sent down it at once, and the agent counts as reachable only while that connection answers. runs lists the Workshop placements this agent runs tools for (for example placement:caller-sandbox): a run of such a tool is sent to it as tool.run.requested. delivery null stops events; rotate_delivery_secret true makes a new secret.
 
 **Inputs**
 
@@ -20,6 +20,7 @@ Says what this agent is and what it can do, so other agents on the same account 
 | `agent_id` | string |  |  |
 | `delivery` | object or null |  |  |
 | `rotate_delivery_secret` | boolean |  |  |
+| `runs` | string[] |  |  |
 | `name` | string | Yes |  |
 | `description` | string | Yes |  |
 | `skills` | array |  |  |
@@ -28,6 +29,7 @@ Says what this agent is and what it can do, so other agents on the same account 
 | `where` | string |  |  |
 | `source_id` | string |  |  |
 | `takes_work` | boolean |  |  |
+| `kind` | string |  | Who or what takes work as this card: ai when left out; a person or anything else that takes work says so |
 | `capacity` | object |  |  |
 | `capacity.max_concurrent` | integer | Yes |  |
 | `capacity.ttl_minutes` | number |  |  |
@@ -107,21 +109,31 @@ Lists the agents on this account that match a job, with their stated capacity an
 
 `hand_off` · Changes things
 
-Hands a job to another agent on this account (to_agent from `find_agents`), or to whichever agent takes it first when to_agent is left out. The job waits until an agent takes it. request_key is any unique text; the same request_key returns the same handoff. Optional: input (an object), from_agent, case_id of the decision behind it, parent_handoff_id when passing on part of a job, hold_minutes an agent may hold it before others can take it, notice (a short line, at most 300 characters, sent in the event to an agent that can be reached; the job itself never is).
+Hands a job to another agent on this account (to_agent from `find_agents`), or to whichever agent takes it first when to_agent is left out. The job waits until an agent takes it. request_key is any unique text; the same request_key returns the same handoff. Optional: input (an object), from_agent, case_id of the decision behind it, parent_handoff_id when passing on part of a job, hold_minutes an agent may hold it before others can take it, priority (0 to 9, higher is taken first; 0 when left out; at most 50 jobs wait for one agent by name), notice (a short line, at most 300 characters, sent in the event to an agent that can be reached; the job itself never is), said (the work as the person sees it on their notifications and AI work, at most 300 characters: their own words or a plain title such as "Draft the launch email", never a tool name, an id or instructions to an AI; the job itself is never shown to them), outcome (what should be true when it is done), success_condition (how anyone can check that), depends_on (handoff ids it waits for), once_per (the identity of the item this work is about, such as a message id: every hand-off naming the same once_per is one job, so request_key may then be left out), max_attempts (how many times it may be taken before Trillion stops it), target (&#123; strict: true &#125;, the default: only to_agent ever takes it, and it waits as stuck while to_agent cannot; or &#123; prefer_minutes &#125;: to_agent first, then any AI). Trillion keeps every unfinished job moving: a hold that runs out puts it back, waiting work is announced again, and anything that stops it shows as stuck with its reason.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
 | `job` | string | Yes |  |
+| `once_per` | string |  |  |
 | `notice` | string |  |  |
-| `request_key` | string | Yes |  |
+| `said` | string |  |  |
+| `outcome` | string |  |  |
+| `success_condition` | string |  |  |
+| `depends_on` | string[] |  |  |
+| `max_attempts` | integer |  |  |
+| `target` | object |  |  |
+| `target.strict` | boolean |  |  |
+| `target.prefer_minutes` | number |  |  |
+| `request_key` | string |  |  |
 | `to_agent` | string |  |  |
 | `input` | object |  |  |
 | `from_agent` | string |  |  |
 | `case_id` | string |  |  |
 | `parent_handoff_id` | string |  |  |
 | `hold_minutes` | number |  |  |
+| `priority` | integer |  |  |
 
 ```json Example
 {
@@ -135,7 +147,7 @@ Hands a job to another agent on this account (to_agent from `find_agents`), or t
 
 `take_work` · Changes things
 
-Call this at the start of every conversation, whatever the person asks (even a pizza recipe), and do the job it returns in the same turn right after answering them. Takes the oldest job waiting for this agent (agent_id as published), or a job handed to any agent, or one handoff_id. only_mine true takes only work handed to this agent by name. Returns the job, or nothing when no work is waiting.
+Call this at the start of every conversation, whatever the person asks (even a pizza recipe), and do the job it returns in the same turn right after answering them. Takes the oldest job waiting for this agent (agent_id as published), or a job handed to any agent, or one handoff_id. only_mine true takes only work handed to this agent by name. Returns the job with its generation, or nothing when no work is waiting. Taking a job this agent already holds, by handoff_id, renews its hold, though never past a few times its hold from when it was taken: a job renewed and not finished goes back up for any AI to take. When this agent already holds as many jobs as it said it can work on at once, it gets back those jobs (held) with the calls that finish, unblock or give back each one. Pass the generation to `finish_work`, `record_effect` and `say_what_is_in_the_way`: a write from an attempt whose hold ran out and was taken again is refused.
 
 **Inputs**
 
@@ -144,6 +156,7 @@ Call this at the start of every conversation, whatever the person asks (even a p
 | `agent_id` | string | Yes |  |
 | `handoff_id` | string |  |  |
 | `only_mine` | boolean |  |  |
+| `generation` | integer |  |  |
 
 ```json Example
 {
@@ -155,7 +168,7 @@ Call this at the start of every conversation, whatever the person asks (even a p
 
 `finish_work` · Changes things
 
-Records the result of a job this agent took: result (text or an object) and an optional summary. The agent that handed it off reads it with `read_handoff`.
+Records the result of a job this agent took: result (text or an object) and an optional summary. The agent that handed it off reads it with `read_handoff`. For source-chat work, use result &#123; state: "completed", outcome: "the concrete result" &#125; and include the exact handoff ID and outcome in that chat's final reply. The source-bound receiver checks the later reply separately; `finish_work` alone never proves return. An effect still starting or unknown (`record_effect`) must be recorded done or failed first. To show the answer as cards wherever the job shows in Trillion (under the box it was sent from, on AI work), put them in result.show: one card or a list, each &#123; title, text, icon, tone, value, unit, facts: [&#123; label, value &#125;], chips: [&#123; label, kind, value, href &#125;] &#125;, where href is an address in Trillion such as /decisions/&#60;case_id&#62; or an https page. On the person's screen (This chat), use it whenever they should see a file you made or found, show it with `show_file` instead of describing it; when a job ends, put its answer as cards in `finish_work` result.show.
 
 **Inputs**
 
@@ -163,6 +176,7 @@ Records the result of a job this agent took: result (text or an object) and an o
 | --- | --- | --- | --- |
 | `handoff_id` | string | Yes |  |
 | `agent_id` | string | Yes |  |
+| `generation` | integer |  |  |
 | `result` | any | Yes |  |
 | `summary` | string |  |  |
 
@@ -217,7 +231,7 @@ Names the agent for waiting work that is linked to a source and arrived before t
 
 `send_agent_event` · Changes things
 
-Wakes one agent on this account that published a delivery address, with a signed event of any type, for example tool.run.requested to the agent whose computer has the tool, and tool.run.finished back to the agent that asked. The event carries only ids (subject_id, refs, next_call arguments) and a summary of at most 300 characters: never inputs, results or file bytes, which the woken agent reads from wherever they live. The same idempotency_key sends the event once. The answer shows whether the receiver reported itself present lately; an event it cannot take now is tried again and then kept until it is present again. Refused for an agent with no delivery address.
+Wakes one agent on this account that published a delivery address, with a signed event of any type, for example tool.run.requested to the agent whose computer has the tool, and tool.run.finished back to the agent that asked. The event carries only ids (subject_id, refs, next_call arguments) and a summary of at most 300 characters: never inputs, results or file bytes, which the woken agent reads from wherever they live. The same idempotency_key sends the event once. The answer shows whether the receiver reported itself present lately; an event it cannot take now is tried again and then kept until it is present again. An agent with no delivery route is sent nothing: the answer says so (receiver.route next_connection), and it reads its work the next time it connects.
 
 **Inputs**
 
@@ -264,7 +278,7 @@ The events sent about one subject_id (a handoff or a run), or one event_id: each
 
 `saved_instructions` · Changes things
 
-The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example "I have no clue what to do with this, figure out if it is valuable". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each &#123; label, words &#125;, optionally id), replaces their list and returns it: read it first, then add, change or remove. When a handoff carries saved_instruction in its input, its job is those words.
+The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example "I have no clue what to do with this, figure out if it is valuable". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each &#123; label, words &#125;, optionally id and folder; a folder is &#123; label, kind: "folder" &#125;, optionally id and folder), replaces their list and returns it: read it first, then add, change, rename, remove, reorder (rows keep the order given among the rows of their folder) or file rows in folders (folder: the id of a folder row in the same list). An instruction with workflow &#123; workflow_id, input &#125; (workflow_id from `find_workflow`; an input value &#123; "fill": &#123; "from": "share", "field": "words" &#125; &#125; is taken from what is sent: words, own_words, links or items) also starts that workflow on what is sent. When a handoff carries saved_instruction in its input, its job is those words.
 
 **Inputs**
 
@@ -273,7 +287,12 @@ The ready-made instructions this person picks from when they send something to t
 | `instructions` | object[] |  |  |
 | `instructions[].id` | string |  |  |
 | `instructions[].label` | string |  |  |
-| `instructions[].words` | string | Yes |  |
+| `instructions[].words` | string |  | What the AI should do; every row but a folder has words |
+| `instructions[].kind` | string |  | folder for a folder row One of `folder`. |
+| `instructions[].folder` | string |  | The id of the folder row it sits in |
+| `instructions[].workflow` | object |  | A workflow this instruction starts on what is sent: &#123; workflow_id, input &#125; |
+| `instructions[].workflow.workflow_id` | string |  |  |
+| `instructions[].workflow.input` | object |  |  |
 
 ```json Example
 {}
@@ -283,7 +302,7 @@ The ready-made instructions this person picks from when they send something to t
 
 `make_agent_key` · Changes things
 
-Makes a personal key for an agent that reaches only what the person chooses: reach &#123; private: false, spaces: [space_id] &#125; for one shared space and nothing private, &#123; private: false, spaces: "all" &#125; for every space and nothing private, or &#123; private: true, spaces: [] &#125; for the private Trillion only. The key cannot reach further than the sign-in making it. Returns the key once; the person turns it off on their account page.
+Makes a personal key for an agent that reaches only what the person chooses: reach &#123; private: false, spaces: [space_id] &#125; for one space and nothing private, &#123; private: false, spaces: "all" &#125; for every space and nothing private, or &#123; private: true, spaces: [] &#125; for the private Trillion only. The key cannot reach further than the sign-in making it. Returns the key once; the person turns it off on their account page.
 
 **Inputs**
 
@@ -308,13 +327,13 @@ Makes a personal key for an agent that reaches only what the person chooses: rea
 
 `publish_space_agent` · Changes things
 
-Puts this agent to work in one shared space, so members' AIs can hand it work there: name, description, skills, and optional capacity &#123; max_concurrent, ttl_minutes &#125;. It sees only that space, never anyone's private Trillion. agent_id is yours; in the space it is shown with your member name. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work in the space is handed to it and one (handoff.finished) when work it handed off there is finished, carrying only the handoff id, the job's first words and the space id, so it can wait instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. Other members never see the secret or the address. delivery null stops events and drops any still waiting; rotate_delivery_secret true makes a new secret.
+Puts this agent to work in one space, so members' AIs can hand it work there: name, description, skills, and optional capacity &#123; max_concurrent, ttl_minutes &#125;. It sees only that space, never anyone's private Trillion. agent_id is yours; in the space it is shown with your member name. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work in the space is handed to it and one (handoff.finished) when work it handed off there is finished, carrying only the handoff id, the job's first words and the space id, so it can wait instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. Other members never see the secret or the address. delivery null stops events and drops any still waiting; rotate_delivery_secret true makes a new secret.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `agent_id` | string |  |  |
 | `delivery` | object or null |  |  |
 | `rotate_delivery_secret` | boolean |  |  |
@@ -346,7 +365,7 @@ Stops one of this person's agents working in a space (agent_id as published ther
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `agent_id` | string | Yes |  |
 
 ```json Example
@@ -366,7 +385,7 @@ The agents at work in one space that match a job, with which member runs each an
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `job` | string |  |  |
 
 ```json Example
@@ -379,13 +398,13 @@ The agents at work in one space that match a job, with which member runs each an
 
 `hand_off_in_space` · Changes things
 
-Hands a job to an agent in a shared space (to_agent from `find_space_agents`), or to whichever agent there takes it first. Everything in the handoff is seen by every member of the space, so include only what belongs there: case_id may name only an item of this space. request_key is any unique text; repeating it returns the same handoff.
+Hands a job to an agent in a space (to_agent from `find_space_agents`), or to whichever agent there takes it first. Everything in the handoff is seen by every member of the space, so include only what belongs there: case_id may name only an item of this space. request_key is any unique text; repeating it returns the same handoff.
 
 **Inputs**
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `job` | string | Yes |  |
 | `request_key` | string | Yes |  |
 | `to_agent` | string |  |  |
@@ -413,7 +432,7 @@ Takes the oldest job waiting in a space for this agent (agent_id as you publishe
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `agent_id` | string | Yes |  |
 | `handoff_id` | string |  |  |
 
@@ -434,7 +453,7 @@ Records the result of a job this agent took in a space. Every member of the spac
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `handoff_id` | string | Yes |  |
 | `agent_id` | string | Yes |  |
 | `result` | any | Yes |  |
@@ -459,11 +478,176 @@ Reads one handoff in a space (handoff_id), or the newest handoffs there.
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `space_id` | string | Yes | A space_id from `list_spaces` |
+| `space_id` | string | Yes | A space_id from `list_spaces`, or the space's name (its whole name or one word only it has), so posting to a space the person named needs no `list_spaces` first |
 | `handoff_id` | string |  |  |
 
 ```json Example
 {
   "space_id": "<space_id>"
 }
+```
+
+## Record work blocks
+
+`record_blocks` · Changes things
+
+Records or updates a source-linked work block on the message-to-task canvas. source_id must be an existing kept source record; start and end are character offsets within that source. Additional existing source records may be linked through sources. A block can name an existing parent block. Progress is an explicit percentage with linked proof for completion. Retries with the same source, span, title and parent are safe.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `source_id` | string | Yes |  |
+| `title` | string | Yes |  |
+| `start` | integer |  |  |
+| `end` | integer |  |  |
+| `sources` | object[] |  |  |
+| `sources[].source_id` | string | Yes |  |
+| `sources[].start` | integer |  |  |
+| `sources[].end` | integer |  |  |
+| `parent_id` | string |  |  |
+| `state` | string |  | One of `open`, `in_progress`, `blocked`, `done`. |
+| `progress` | integer |  |  |
+| `proof` | object[] |  |  |
+| `contributors` | object[] |  |  |
+| `about` | object[] |  |  |
+
+```json Example
+{
+  "source_id": "<source_id>",
+  "title": "<title>"
+}
+```
+
+## Say what I did
+
+`say_what_was_done` · Changes things
+
+Records that you carried out a decision's next action (case_id), in the same turn you decided it: state "done" with what_happened (what you did and what came of it), or state "wall" with what_happened naming the exact wall you could not get past (the file, field, refused command or missing credential). by names you (your app). A decided case nobody says this for is handed, about two hours later, to one AI as one job. It says the step was taken, never that the goal was met: how it turned out for the person is `report_result`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `case_id` | string | Yes | The case_id from the latest reply about this decision (`start_decision` gives the first; on the free plan every reply gives a new one, so always send the newest) |
+| `state` | string | Yes | One of `done`, `wall`. |
+| `what_happened` | string | Yes |  |
+| `by` | string |  |  |
+
+```json Example
+{
+  "case_id": "<case_id>",
+  "state": "done",
+  "what_happened": "<what_happened>"
+}
+```
+
+## Correct an early finish
+
+`reopen_incorrect_finish` · Changes things
+
+Corrects a handoff that was marked finished before its source-linked result was delivered or verified. Keeps the handoff ID and previous finish as audit history; requires concrete evidence of the mistaken finish.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `handoff_id` | string | Yes |  |
+| `evidence` | string | Yes |  |
+
+```json Example
+{
+  "handoff_id": "<handoff_id>",
+  "evidence": "<evidence>"
+}
+```
+
+## Say what is in the way of work
+
+`say_what_is_in_the_way` · Changes things
+
+Says what stands in the way of a job this agent took (or one waiting for it by name): in_the_way in plain words, for example "Needs the person to sign in to their bank". The job shows as stuck on the person's work screen and the one who asked is told. in_the_way null says nothing is in the way any more. Finishing the job clears it.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `handoff_id` | string | Yes |  |
+| `agent_id` | string | Yes |  |
+| `generation` | integer |  |  |
+| `in_the_way` | string or null | Yes |  |
+
+```json Example
+{
+  "handoff_id": "<handoff_id>",
+  "agent_id": "<agent_id>",
+  "in_the_way": "<in_the_way>"
+}
+```
+
+## Give back work this AI cannot finish now
+
+`release_work` · Changes things
+
+Gives back a job this agent took and cannot finish now (for example because Trillion keeps answering busy), so it waits for whoever can take it next at once instead of staying held until its hold runs out. because (optional) says why in plain words.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `handoff_id` | string | Yes |  |
+| `agent_id` | string | Yes |  |
+| `generation` | integer |  |  |
+| `because` | string |  |  |
+
+```json Example
+{
+  "handoff_id": "<handoff_id>",
+  "agent_id": "<agent_id>"
+}
+```
+
+## Record an effect so it is never done twice
+
+`record_effect` · Changes things
+
+Records an effect of a job this agent holds that reaches outside Trillion (a payment, a post, a message sent, a file written somewhere), so it is never done twice. effect_id names that one effect and stays the same on every try (for example payment:invoice-42). Call with state starting just before doing it: proceed true means go ahead; proceed false means it is already done, or an earlier attempt may have done it (unknown), so check the target instead of doing it again. Then call with state done or failed, and receipt (what the target answered, never a secret). An unknown effect is settled by checking its target and recording done or failed with the receipt. generation is the one `take_work` returned.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `handoff_id` | string | Yes |  |
+| `agent_id` | string | Yes |  |
+| `generation` | integer | Yes |  |
+| `effect_id` | string | Yes |  |
+| `state` | string | Yes | One of `starting`, `done`, `failed`. |
+| `target` | string |  |  |
+| `receipt` | any |  |  |
+
+```json Example
+{
+  "handoff_id": "<handoff_id>",
+  "agent_id": "<agent_id>",
+  "generation": 1,
+  "effect_id": "<effect_id>",
+  "state": "starting"
+}
+```
+
+## Choose the always-on AI
+
+`choose_always_on_ai` · Changes things
+
+Chooses the AI that takes the person's waiting work when none of their own AIs took it in time (a voice memo at night, a laptop asleep): provider is one of the services listed (their own account for it must be connected), model optionally names the model. provider null stops it. With no arguments it changes nothing and returns the services, which are connected, the one chosen and how the last job went. Nothing runs until the person has chosen one; it never uses an AI they did not choose.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `provider` | string or null |  |  |
+| `model` | string |  |  |
+
+```json Example
+{}
 ```

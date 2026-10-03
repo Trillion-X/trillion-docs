@@ -17,7 +17,7 @@ Who one of this person's records is shared with, as the sharing sheet shows it: 
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools; workflow:&#60;id&#62; for a workflow |
 
 ```json Example
 {
@@ -35,7 +35,7 @@ Chooses who one of this person's records is shared with, only when they asked. n
 
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools; workflow:&#60;id&#62; for a workflow |
 | `network` | boolean or null |  |  |
 | `spaces` | string[] |  |  |
 | `people` | string[] |  |  |
@@ -86,7 +86,7 @@ Reads one thing another person shared with this person (offer_id from `shared_wi
 
 `share_destinations` · Reads only
 
-Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id "private", and each shared space they have not hidden, each &#123; id, label, to, on_by_default &#125;), actions (their saved instructions, each &#123; id, label, words &#125;), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.
+Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id "private", and each space they have not hidden, each &#123; id, label, to, on_by_default &#125;), actions (their saved instructions, each &#123; id, label, words, folder &#125;, and workflow &#123; workflow_id, input &#125; when it starts a workflow on what is sent, in the order their list shows them), folders (how they filed them, each &#123; id, label, folder &#125;: folder is the folder a row sits in, or null at the top), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.
 
 It takes no inputs.
 
@@ -98,7 +98,7 @@ It takes no inputs.
 
 `save_share_destinations` · Changes things
 
-Changes where this person's shares can go and what their AI does with them; read `share_destinations` first. destinations: each &#123; id, shown, on_by_default &#125; in the order to offer them (one left out keeps its place after these; their own Trillion can never be hidden). actions: the whole list of saved instructions, each &#123; label, words &#125; and optionally id, replacing it (the same list `saved_instructions` reads). default_action_by_site: the whole list of &#123; host_suffix, action_id &#125;. Give any of the three; returns what `share_destinations` returns.
+Changes where this person's shares can go and what their AI does with them; read `share_destinations` first. destinations: each &#123; id, shown, on_by_default &#125; in the order to offer them (one left out keeps its place after these; their own Trillion can never be hidden). actions: the whole list of saved instructions in the order to offer them, each &#123; label, words &#125; and optionally id, folder and workflow, replacing it (the same list `saved_instructions` reads); an action given without folder stays in its folder, and one given without workflow keeps the workflow it starts. folders: the whole list of folders, each &#123; label &#125; and optionally id and folder; left out, the folders stay as they are. default_action_by_site: the whole list of &#123; host_suffix, action_id &#125;. Give any of them; returns what `share_destinations` returns.
 
 **Inputs**
 
@@ -112,9 +112,245 @@ Changes where this person's shares can go and what their AI does with them; read
 | `actions[].id` | string |  |  |
 | `actions[].label` | string |  |  |
 | `actions[].words` | string | Yes |  |
+| `actions[].folder` | string or null |  | The id of the folder it sits in (from folders), or null for the top; left out, it stays where it is |
+| `actions[].workflow` | object or null |  | A workflow this action starts on what is sent: &#123; workflow_id (from `find_workflow`), input &#125;, where an input value &#123; "fill": &#123; "from": "share", "field": "words" &#125; &#125; is taken from the share (words, own_words, links or items); left out, it keeps the one it has; null, it starts none |
+| `actions[].workflow.workflow_id` | string |  |  |
+| `actions[].workflow.input` | object |  |  |
+| `folders` | object[] |  |  |
+| `folders[].id` | string |  |  |
+| `folders[].label` | string | Yes |  |
+| `folders[].folder` | string or null |  | The id of the folder it sits in, or null for the top |
 | `default_action_by_site` | object[] |  |  |
 | `default_action_by_site[].host_suffix` | string | Yes |  |
 | `default_action_by_site[].action_id` | string | Yes |  |
+
+```json Example
+{}
+```
+
+## Read what I shared before
+
+`shares_sent` · Reads only
+
+Everything this person shared into Trillion from any device or AI, newest first: from the Chrome extension, the Android share page, the iPhone Share sheet, the web and `deliver_share`. Each share is &#123; share_id, at, from (where it was sent from), items (the links, words and kept files, as `deliver_share` takes them), own_words, action (&#123; id, label &#125; the AI was asked to do, or null), sent_to (the places it reached, empty for a share kept but not sent), preview (a link's title, site and picture, when read), kept_in (its folder in their Files, when kept there) &#125;. limit (at most 100, default 30); before (next_before from the last page) reads further back. To share one again or hand it to their AI, send its items with `deliver_share`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `limit` | integer |  |  |
+| `before` | string |  | next_before from the previous page |
+
+```json Example
+{}
+```
+
+## Send a share where I share
+
+`deliver_share` · Changes things
+
+Sends one share to places this person shares to (to: ids from `share_destinations`). Their own Trillion gets it handed to their AI with the action's words and own_words as the job (`hand_off`, input carrying items, saved_instruction and own_words; an action that keeps examples first keeps each shared link as a saved example, their ids in input.saved_examples; an action with a workflow starts it on the share, its input filled from the share and checked first, and the AI is handed the run in input.workflow_run); each space gets every kept file (items with file) shared by identity, and one `add_to_space` with the links, words and own_words. Everything is checked before anything is sent. Returns delivered (&#123; id, label &#125; each), stopped_at (&#123; id, label, error &#125;, or null when every place has it): the places before stopped_at have it, handoff_ids (the jobs handed to their AI, each readable with `read_handoff`) and workflow_runs (the runs started, each readable with `read_workflow_run`).
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `to` | string[] | Yes | Place ids from `share_destinations` destinations |
+| `items` | object[] | Yes |  |
+| `items[].kind` | string |  |  |
+| `items[].url` | string |  |  |
+| `items[].title` | string |  |  |
+| `items[].text` | string |  |  |
+| `items[].record` | string |  | A record reference from this person's Trillion; the owner checks its current sharing choice on every Space read |
+| `items[].file` | string |  | A kept file's identity in this person's files |
+| `items[].name` | string |  |  |
+| `request_key` | string | Yes |  |
+| `action` | string |  | An action id from `share_destinations`; left out, the action the first address's site starts on |
+| `own_words` | string |  |  |
+| `to_agent` | string |  | An agent_id from `find_agents` to take it; left out, whichever of their AIs is free takes it |
+| `from_agent` | string |  |  |
+| `from` | string |  | Where the person shared it from, as they would name it (for example Chrome, Android, iPhone); shown in `shares_sent`. Left out, the name your app registered with is shown |
+| `input` | object |  | Anything else the AI gets with it, kept in the handoff input. kept_in: the folder in their Files a device kept this share in, so the share list shows one row for it |
+
+```json Example
+{
+  "to": [
+    "<to>"
+  ],
+  "items": [
+    {}
+  ],
+  "request_key": "<request_key>"
+}
+```
+
+## Make a link to a record
+
+`share_record_by_link` · Changes things
+
+Makes an expiring or open-ended link to one or several records others may read. records lists up to 99 additional record references for one link. scope is &#123; kind: "public" &#125;, &#123; kind: "private", value: recipient relay &#125;, &#123; kind: "email", value: address &#125;, &#123; kind: "phone", value: international number &#125;, or &#123; kind: "code", value: access code &#125;. Recipient-bound links require verified identity when opened. Returns the opaque link code once and its expiry.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools; workflow:&#60;id&#62; for a workflow |
+| `records` | string[] |  |  |
+| `scope` | object | Yes |  |
+| `scope.kind` | string | Yes | One of `public`, `private`, `email`, `phone`, `code`. |
+| `scope.value` | string |  |  |
+| `expires_at` | string or null |  |  |
+
+```json Example
+{
+  "record": "<record>",
+  "scope": {
+    "kind": "public"
+  }
+}
+```
+
+## Make one link for a mixed selection
+
+`share_collection_by_link` · Changes things
+
+Makes one expiring or open-ended link for a mixed selection of records, files, links and words. items keeps up to 100 entries together; record entries use &#123; kind: "record", record &#125;, links use &#123; kind: "link", url, title? &#125;, words use &#123; kind: "text", text, title? &#125;, and nested links use &#123; kind: "share", code &#125;. Nothing is copied. Every source is checked again when the link is opened, and one revoke stops the whole collection.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `items` | object[] | Yes |  |
+| `scope` | object | Yes |  |
+| `scope.kind` | string | Yes | One of `public`, `private`, `email`, `phone`, `code`. |
+| `scope.value` | string |  |  |
+| `expires_at` | string or null |  |  |
+
+```json Example
+{
+  "items": [
+    {}
+  ],
+  "scope": {
+    "kind": "public"
+  }
+}
+```
+
+## Stop a mixed share link
+
+`revoke_share_collection_link` · Changes things and can remove them
+
+Stops one mixed collection link immediately, including every item and nested share reached through it. Use share_id returned by `share_collection_by_link`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `share_id` | string | Yes |  |
+
+```json Example
+{
+  "share_id": "<share_id>"
+}
+```
+
+## See links to a record
+
+`sharing_links_of` · Reads only
+
+Lists the links made for one of this person’s records, including recipient scope, expiry and whether each ended. It never returns the access code.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools; workflow:&#60;id&#62; for a workflow |
+
+```json Example
+{
+  "record": "<record>"
+}
+```
+
+## Stop a share link
+
+`revoke_record_share_link` · Changes things and can remove them
+
+Stops one share link for a record immediately. Use share_id from `sharing_links_of`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes | A pursuit id, decision case_id or message id; file:&#60;identity&#62; for a file; tool:&#60;id&#62; for one of their own tools; workflow:&#60;id&#62; for a workflow |
+| `share_id` | string | Yes |  |
+
+```json Example
+{
+  "record": "<record>",
+  "share_id": "<share_id>"
+}
+```
+
+## See which pursuits and spaces a record is in
+
+`record_scope` · Reads only
+
+Which of this person's pursuits and spaces one of their records belongs to, and why: each pursuit with the link that put the record there (a decision's cited pursuits, a message's about, the person's own choice) and the record it came through, and each space with how (shared into it, or chosen). record is a decision case_id, pursuit id, message id, file name or identity, or tool:&#60;tool id&#62;. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes |  |
+
+```json Example
+{
+  "record": "<record>"
+}
+```
+
+## Put a record in or out of a pursuit or space
+
+`set_record_scope` · Changes things
+
+Puts one of this person's records into pursuits or spaces, or takes it out, as their own choice, only when they asked. add and remove each take pursuits (ids from `list_pursuits`) and spaces (ids from `list_spaces`). Removing takes it out even where its own links put it. A pursuit put into another pursuit is set under it, so pursuits nest as a tree (`list_pursuits` returns parents and children); one pursuit can sit under several, and never under itself or a pursuit inside it. Choosing a space never shares the record there; `share_to_space` does that. A pursuit reparenting returns its parents and children; other writes return what `record_scope` returns.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes |  |
+| `add` | object |  |  |
+| `add.pursuits` | string[] |  | Pursuits ids |
+| `add.spaces` | string[] |  | Spaces ids |
+| `remove` | object |  |  |
+| `remove.pursuits` | string[] |  | Pursuits ids |
+| `remove.spaces` | string[] |  | Spaces ids |
+
+```json Example
+{
+  "record": "<record>"
+}
+```
+
+## Find records in pursuits and spaces
+
+`find_in_scope` · Reads only
+
+This person's records that belong to the pursuits and spaces named: a page of record ids per kind (kinds: decisions, pursuits, messages, files, tools, marketplace-installations, automations, activity, space-items; all when left out), and for things in spaces the space_id and item_id of each. A record is in when it is in any pursuit named and in any space named. Pass next_after as after, with one kind, for the next page. values: true answers instead what can be chosen: each pursuit and space with its title and how many records are in it. It changes nothing.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `pursuits` | string[] |  | Pursuits ids |
+| `spaces` | string[] |  | Spaces ids |
+| `kinds` | string[] |  |  |
+| `after` | string |  |  |
+| `limit` | integer |  |  |
+| `values` | boolean |  |  |
 
 ```json Example
 {}
