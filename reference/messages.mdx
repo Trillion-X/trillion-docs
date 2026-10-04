@@ -140,7 +140,7 @@ What the AIs connected to this account did, newest first: each row says which AI
 
 `trace_item` · Reads only
 
-Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of `read_activity` shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a `read_activity` row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. It changes nothing.
+Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of `read_activity` shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a `read_activity` row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. records lists the person's own records that name the item, newest first (a message about it, the person's stance on it from `agree_or_disagree`, a plan for it), each with ref, kind, title and at: what came after it. It changes nothing.
 
 **Inputs**
 

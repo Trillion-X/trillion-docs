@@ -11,7 +11,7 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `publish_agent` · Changes things
 
-Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery &#123; stream: true &#125; is for an agent on a computer the internet cannot reach: Trillion's helper on that computer (harness/wake-sessions.mjs) holds the live connection for it, each event is sent down it at once, and the agent counts as reachable only while that connection answers. runs lists the Workshop placements this agent runs tools for (for example placement:caller-sandbox): a run of such a tool is sent to it as tool.run.requested. delivery null stops events; rotate_delivery_secret true makes a new secret.
+Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery &#123; url &#125; is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery &#123; stream: true &#125; is for an agent on a computer the internet cannot reach: Trillion's helper on that computer (harness/wake-sessions.mjs) holds the live connection for it, each event is sent down it at once, and the agent counts as reachable only while that connection answers. runs lists the placements this agent runs Marketplace tools for (for example placement:caller-sandbox): a run of such a tool is sent to it as tool.run.requested. delivery null stops events; rotate_delivery_secret true makes a new secret.
 
 **Inputs**
 
@@ -278,7 +278,7 @@ The events sent about one subject_id (a handoff or a run), or one event_id: each
 
 `saved_instructions` · Changes things
 
-The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example "I have no clue what to do with this, figure out if it is valuable". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each &#123; label, words &#125;, optionally id and folder; a folder is &#123; label, kind: "folder" &#125;, optionally id and folder), replaces their list and returns it: read it first, then add, change, rename, remove, reorder (rows keep the order given among the rows of their folder) or file rows in folders (folder: the id of a folder row in the same list). An instruction with workflow &#123; workflow_id, input &#125; (workflow_id from `find_workflow`; an input value &#123; "fill": &#123; "from": "share", "field": "words" &#125; &#125; is taken from what is sent: words, own_words, links or items) also starts that workflow on what is sent. When a handoff carries saved_instruction in its input, its job is those words.
+The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example "I have no clue what to do with this, figure out if it is valuable". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each &#123; label, words &#125;, optionally id and folder; a folder is &#123; label, kind: "folder" &#125;, optionally id and folder), replaces their list and returns it: read it first, then add, change, rename, remove, reorder (rows keep the order given among the rows of their folder) or file rows in folders (folder: the id of a folder row in the same list). An instruction with workflow &#123; workflow_id, input &#125; (workflow_id from `find_workflow`; an input value &#123; "fill": &#123; "from": "share", "field": "words" &#125; &#125; is taken from what is sent: words, own_words, links or items) also starts that workflow on what is sent. When a handoff carries `saved_instructions` in its input (their ids), its job is the words of those instructions.
 
 **Inputs**
 
@@ -639,7 +639,7 @@ Records an effect of a job this agent holds that reaches outside Trillion (a pay
 
 `choose_always_on_ai` · Changes things
 
-Chooses the AI that takes the person's waiting work when none of their own AIs took it in time (a voice memo at night, a laptop asleep): provider is one of the services listed (their own account for it must be connected), model optionally names the model. provider null stops it. With no arguments it changes nothing and returns the services, which are connected, the one chosen and how the last job went. Nothing runs until the person has chosen one; it never uses an AI they did not choose.
+Chooses the AIs that take the person's waiting work when none of their own AIs took it in time (a voice memo at night, a laptop asleep): provider is one of the services listed, or providers lists several in the order they take work (each an id or &#123; provider, model &#125;); their own account for each must be connected. When one turns the work away (out of quota, a refused key) it rests and the next takes the job. provider null stops it. With no arguments it changes nothing and returns the services, which are connected, the ones picked, which are resting and how the last job went. Nothing runs until the person has chosen; it never uses an AI they did not choose.
 
 **Inputs**
 
@@ -647,6 +647,7 @@ Chooses the AI that takes the person's waiting work when none of their own AIs t
 | --- | --- | --- | --- |
 | `provider` | string or null |  |  |
 | `model` | string |  |  |
+| `providers` | array |  |  |
 
 ```json Example
 {}

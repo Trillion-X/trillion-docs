@@ -1,6 +1,6 @@
 ---
 title: "Tools reference"
-description: "Every tool Trillion gives your AI, grouped by the job you want done. 279 tools in all."
+description: "Every tool Trillion gives your AI, grouped by the job you want done. 283 tools in all."
 ---
 
 When your AI is connected to Trillion, it gets a set of tools. You never call them by name: you ask in plain words, like "Use Trillion to help me decide what to focus on this week", and your AI picks the tools that do it.
@@ -17,7 +17,7 @@ These pages list every tool, grouped by the job a person does, with what it does
   <Card title="Messages and activity" icon="comments" href="/reference/messages">
     Keep conversations word for word so every AI you use can read them, and see what your AIs did.
   </Card>
-  <Card title="Workshop tools" icon="wrench" href="/reference/tools">
+  <Card title="Marketplace tools" icon="wrench" href="/reference/tools">
     Find a tool that does the job, run it, build your own and offer it to others.
   </Card>
   <Card title="Workflows" icon="list-check" href="/reference/workflows">
@@ -67,7 +67,7 @@ These pages list every tool, grouped by the job a person does, with what it does
 - **Signed in as you.** Your AI signs in with your passkey once. It only ever reaches your own Trillion and the spaces you are in.
 - **Reads only, or changes things.** Each tool is marked so your AI app knows which ones only read and which change something. Apps that ask before a tool runs use this to decide what to ask about.
 - **Safe to send twice.** Tools that start something take a `request_key` or `source_id`: sending the same one again returns what was already started instead of doing it twice.
-- **Some tools come with a paid plan.** The free plan includes 5 decisions a month and keeps none of them. A paid plan keeps every decision, note and result, and adds the Workshop, files, shared spaces, the network, handing work between your AIs, and fast picks with `score_candidates`. Communities and connecting any AI app come with every account.
+- **Some tools come with a paid plan.** The free plan includes 5 decisions a month and keeps none of them. A paid plan keeps every decision, note and result, and adds running tools from the Marketplace, files, shared spaces, the network, handing work between your AIs, and fast picks with `score_candidates`. Communities and connecting any AI app come with every account.
 
 ## Every tool
 
@@ -85,6 +85,7 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`add_note`](/reference/decisions) | Add a note | Decisions | Changes things |
 | [`decide`](/reference/decisions) | Record the decision | Decisions | Changes things |
 | [`report_result`](/reference/decisions) | Report how it went | Decisions | Changes things |
+| [`agree_or_disagree`](/reference/decisions) | Say whether you agree | Decisions | Changes things |
 | [`list_decisions`](/reference/decisions) | List my decisions | Decisions | Reads only |
 | [`export_decision`](/reference/decisions) | Export a decision | Decisions | Reads only |
 | [`related_decisions`](/reference/decisions) | Find similar decisions | Decisions | Reads only |
@@ -104,17 +105,17 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`correct_message_provenance`](/reference/messages) | Correct a message source | Messages and activity | Changes things and can remove them |
 | [`correct_message_authored_at`](/reference/messages) | Correct when a message was written | Messages and activity | Changes things |
 | [`correct_source_identity`](/reference/messages) | Correct the original chat | Messages and activity | Changes things |
-| [`find_tool_for_job`](/reference/tools) | Find a tool for a job | Workshop tools | Reads only |
-| [`run_tool`](/reference/tools) | Run a tool | Workshop tools | Changes things |
-| [`read_task`](/reference/tools) | Read a tool run | Workshop tools | Reads only |
-| [`describe_tool`](/reference/tools) | Read a tool's descriptor | Workshop tools | Reads only |
-| [`save_tool`](/reference/tools) | Save a tool | Workshop tools | Changes things |
-| [`delete_tool`](/reference/tools) | Delete a saved tool | Workshop tools | Changes things and can remove them |
-| [`publish_tool`](/reference/tools) | Publish a tool | Workshop tools | Changes things |
-| [`unpublish_tool`](/reference/tools) | Withdraw a published tool | Workshop tools | Changes things and can remove them |
-| [`add_to_shared_library`](/reference/tools) | Add to the shared library | Workshop tools | Changes things |
-| [`search_shared_library`](/reference/tools) | Search the shared library | Workshop tools | Reads only |
-| [`remove_from_shared_library`](/reference/tools) | Remove my entry from the shared library | Workshop tools | Changes things and can remove them |
+| [`find_tool_for_job`](/reference/tools) | Find a tool for a job | Marketplace tools | Reads only |
+| [`run_tool`](/reference/tools) | Run a tool | Marketplace tools | Changes things |
+| [`read_task`](/reference/tools) | Read a tool run | Marketplace tools | Reads only |
+| [`describe_tool`](/reference/tools) | Read a tool's descriptor | Marketplace tools | Reads only |
+| [`save_tool`](/reference/tools) | Save a tool | Marketplace tools | Changes things |
+| [`delete_tool`](/reference/tools) | Delete a saved tool | Marketplace tools | Changes things and can remove them |
+| [`publish_tool`](/reference/tools) | Publish a tool | Marketplace tools | Changes things |
+| [`unpublish_tool`](/reference/tools) | Withdraw a published tool | Marketplace tools | Changes things and can remove them |
+| [`add_to_shared_library`](/reference/tools) | Add to the shared library | Marketplace tools | Changes things |
+| [`search_shared_library`](/reference/tools) | Search the shared library | Marketplace tools | Reads only |
+| [`remove_from_shared_library`](/reference/tools) | Remove my entry from the shared library | Marketplace tools | Changes things and can remove them |
 | [`find_workflow`](/reference/workflows) | Find a workflow for a job | Workflows | Reads only |
 | [`describe_workflow`](/reference/workflows) | Read a workflow | Workflows | Reads only |
 | [`start_workflow`](/reference/workflows) | Start a workflow | Workflows | Changes things |
@@ -173,6 +174,7 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`record_file_use`](/reference/files) | Keep that I used a file | Files and media | Changes things |
 | [`save_browser_saved_items`](/reference/files) | Save my browser's pinned tabs and folders | Files and media | Changes things |
 | [`save_x_bookmarks`](/reference/files) | Save my X bookmarks | Files and media | Changes things |
+| [`save_x_likes`](/reference/files) | Save the posts I liked on X | Files and media | Changes things |
 | [`publish_agent`](/reference/hand-off) | Say what this agent does | Hand off work | Changes things |
 | [`set_agent_capacity`](/reference/hand-off) | Report this agent’s capacity | Hand off work | Changes things |
 | [`agent_presence`](/reference/hand-off) | Say this agent is present | Hand off work | Changes things |
@@ -230,7 +232,7 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`set_space_capability`](/reference/spaces) | Turn a part of a space on or off | Shared spaces | Changes things |
 | [`create_space`](/reference/spaces) | Start a space | Shared spaces | Changes things |
 | [`invite_to_space`](/reference/spaces) | Invite someone into a space | Shared spaces | Changes things |
-| [`grant_space_tool`](/reference/spaces) | Grant a Workshop tool in a space | Shared spaces | Changes things |
+| [`grant_space_tool`](/reference/spaces) | Grant a Marketplace tool in a space | Shared spaces | Changes things |
 | [`list_space_tools`](/reference/spaces) | List tools granted in a space | Shared spaces | Reads only |
 | [`revoke_space_tool`](/reference/spaces) | Revoke a tool grant | Shared spaces | Changes things and can remove them |
 | [`sharing_of`](/reference/sharing) | See who a record is shared with | Sharing | Reads only |
@@ -243,6 +245,8 @@ These pages list every tool, grouped by the job a person does, with what it does
 | [`deliver_share`](/reference/sharing) | Send a share where I share | Sharing | Changes things |
 | [`share_record_by_link`](/reference/sharing) | Make a link to a record | Sharing | Changes things |
 | [`share_collection_by_link`](/reference/sharing) | Make one link for a mixed selection | Sharing | Changes things |
+| [`send_share_collection_link`](/reference/sharing) | Email a mixed share link | Sharing | Changes things |
+| [`share_look`](/reference/sharing) | Read or set the brand on shared pages | Sharing | Changes things |
 | [`revoke_share_collection_link`](/reference/sharing) | Stop a mixed share link | Sharing | Changes things and can remove them |
 | [`sharing_links_of`](/reference/sharing) | See links to a record | Sharing | Reads only |
 | [`revoke_record_share_link`](/reference/sharing) | Stop a share link | Sharing | Changes things and can remove them |

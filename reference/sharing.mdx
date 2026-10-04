@@ -86,7 +86,7 @@ Reads one thing another person shared with this person (offer_id from `shared_wi
 
 `share_destinations` · Reads only
 
-Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id "private", and each space they have not hidden, each &#123; id, label, to, on_by_default &#125;), actions (their saved instructions, each &#123; id, label, words, folder &#125;, and workflow &#123; workflow_id, input &#125; when it starts a workflow on what is sent, in the order their list shows them), folders (how they filed them, each &#123; id, label, folder &#125;: folder is the folder a row sits in, or null at the top), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.
+Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id "private", each space and each tool place they have not hidden, each &#123; id, label, description, to, on_by_default &#125;: to is &#123; private: true &#125;, &#123; space_id &#125; or &#123; tool_id &#125;, a tool place being a tool that takes what is shared, such as Tell the people who make Trillion), actions (their saved instructions, each &#123; id, label, words, folder &#125;, and workflow &#123; workflow_id, input &#125; when it starts a workflow on what is sent, in the order their list shows them), folders (how they filed them, each &#123; id, label, folder &#125;: folder is the folder a row sits in, or null at the top), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.
 
 It takes no inputs.
 
@@ -132,7 +132,7 @@ Changes where this person's shares can go and what their AI does with them; read
 
 `shares_sent` · Reads only
 
-Everything this person shared into Trillion from any device or AI, newest first: from the Chrome extension, the Android share page, the iPhone Share sheet, the web and `deliver_share`. Each share is &#123; share_id, at, from (where it was sent from), items (the links, words and kept files, as `deliver_share` takes them), own_words, action (&#123; id, label &#125; the AI was asked to do, or null), sent_to (the places it reached, empty for a share kept but not sent), preview (a link's title, site and picture, when read), kept_in (its folder in their Files, when kept there) &#125;. limit (at most 100, default 30); before (next_before from the last page) reads further back. To share one again or hand it to their AI, send its items with `deliver_share`.
+Everything this person shared into Trillion from any device or AI, newest first: from the Chrome extension, the Android share page, the iPhone Share sheet, the web and `deliver_share`. Each share is &#123; share_id, at, from (where it was sent from), items (the links, words and kept files, as `deliver_share` takes them), own_words, action (&#123; id, label &#125; the AI was asked to do, or null), sent_to (the places it reached, empty for a share kept but not sent), preview (a link's title, site and picture, when read), kept_in (its folder in their Files, when kept there), ai_work (&#123; handoff_id, state, taken_by, finished_at, outcome &#125;: the AI work it became, when it was handed to an AI) &#125;. limit (at most 100, default 30); before (next_before from the last page) reads further back. To share one again or hand it to their AI, send its items with `deliver_share`.
 
 **Inputs**
 
@@ -149,7 +149,7 @@ Everything this person shared into Trillion from any device or AI, newest first:
 
 `deliver_share` · Changes things
 
-Sends one share to places this person shares to (to: ids from `share_destinations`). Their own Trillion gets it handed to their AI with the action's words and own_words as the job (`hand_off`, input carrying items, saved_instruction and own_words; an action that keeps examples first keeps each shared link as a saved example, their ids in input.saved_examples; an action with a workflow starts it on the share, its input filled from the share and checked first, and the AI is handed the run in input.workflow_run); each space gets every kept file (items with file) shared by identity, and one `add_to_space` with the links, words and own_words. Everything is checked before anything is sent. Returns delivered (&#123; id, label &#125; each), stopped_at (&#123; id, label, error &#125;, or null when every place has it): the places before stopped_at have it, handoff_ids (the jobs handed to their AI, each readable with `read_handoff`) and workflow_runs (the runs started, each readable with `read_workflow_run`).
+Sends one selection to places this person shares to (to: ids from `share_destinations`). Items may mix source records, files, workflows, tools, links, words and another open share. Their own Trillion gets it handed to their AI with every chosen action's words and own_words as the job, once to each AI in to_agent (one or a list; left out, whichever is free); an action that keeps examples saves each shared link first, and an action with a workflow starts it on the share. Each Space receives the mixed selection in one request: files, records, workflows and tools stay with their owner, while links and words become Space items. Each tool place runs its tool once with the share. Returns delivered (&#123; id, label &#125; each), stopped_at (&#123; id, label, error &#125;, or null when every place has it): the places before stopped_at have it, handoff_ids (the jobs handed to their AI, each readable with `read_handoff`) and workflow_runs (the runs started, each readable with `read_workflow_run`).
 
 **Inputs**
 
@@ -163,14 +163,17 @@ Sends one share to places this person shares to (to: ids from `share_destination
 | `items[].text` | string |  |  |
 | `items[].record` | string |  | A record reference from this person's Trillion; the owner checks its current sharing choice on every Space read |
 | `items[].file` | string |  | A kept file's identity in this person's files |
+| `items[].workflow_id` | string |  | A saved workflow ID |
+| `items[].tool_id` | string |  | A saved tool ID |
+| `items[].code` | string |  | For kind share: the code of another open share belonging to this person |
 | `items[].name` | string |  |  |
 | `request_key` | string | Yes |  |
-| `action` | string |  | An action id from `share_destinations`; left out, the action the first address's site starts on |
+| `action` | string or string[] |  | One action id from `share_destinations`, or a list of them (the AI is asked to do each); left out, the action the first address's site starts on |
 | `own_words` | string |  |  |
-| `to_agent` | string |  | An agent_id from `find_agents` to take it; left out, whichever of their AIs is free takes it |
+| `to_agent` | string or string[] |  | One agent_id from `find_agents`, or a list of them (each is handed the share once); left out, whichever of their AIs is free takes it |
 | `from_agent` | string |  |  |
 | `from` | string |  | Where the person shared it from, as they would name it (for example Chrome, Android, iPhone); shown in `shares_sent`. Left out, the name your app registered with is shown |
-| `input` | object |  | Anything else the AI gets with it, kept in the handoff input. kept_in: the folder in their Files a device kept this share in, so the share list shows one row for it |
+| `input` | object |  | Anything else the AI gets with it, kept in the handoff input. kept_in: the folder in their Files a device kept this share in, so the share list shows one row for it. things, screen, browser and where: what a tool place is told (the things picked, the address, the browser or device, where they were working) |
 
 ```json Example
 {
@@ -188,7 +191,7 @@ Sends one share to places this person shares to (to: ids from `share_destination
 
 `share_record_by_link` · Changes things
 
-Makes an expiring or open-ended link to one or several records others may read. records lists up to 99 additional record references for one link. scope is &#123; kind: "public" &#125;, &#123; kind: "private", value: recipient relay &#125;, &#123; kind: "email", value: address &#125;, &#123; kind: "phone", value: international number &#125;, or &#123; kind: "code", value: access code &#125;. Recipient-bound links require verified identity when opened. Returns the opaque link code once and its expiry.
+Makes an expiring or open-ended link to one or several records others may read. records lists up to 99 additional record references for one link. scope is &#123; kind: "public" &#125;, &#123; kind: "private", value: recipient relay &#125;, &#123; kind: "email", value: address &#125;, &#123; kind: "phone", value: international number &#125;, or &#123; kind: "code", value: access code &#125;. Recipient-bound links require verified identity when opened. can lists what the recipient may do beyond seeing it (view, sign, pay; each kind of record offers its own, and sign and pay ask the recipient to prove their email with a code, no account needed). when is a rule tree (formula-engine shape) over now, opened, signed, paid and status that must hold for the link to open. look is own (the account brand, see `share_look`) or trillion. Every link opens on /share/&#60;code&#62;. Returns the opaque link code once, its address and its expiry.
 
 **Inputs**
 
@@ -200,6 +203,9 @@ Makes an expiring or open-ended link to one or several records others may read. 
 | `scope.kind` | string | Yes | One of `public`, `private`, `email`, `phone`, `code`. |
 | `scope.value` | string |  |  |
 | `expires_at` | string or null |  |  |
+| `can` | string[] |  |  |
+| `when` | object |  |  |
+| `look` | string |  | One of `own`, `trillion`. |
 
 ```json Example
 {
@@ -214,7 +220,7 @@ Makes an expiring or open-ended link to one or several records others may read. 
 
 `share_collection_by_link` · Changes things
 
-Makes one expiring or open-ended link for a mixed selection of records, files, links and words. items keeps up to 100 entries together; record entries use &#123; kind: "record", record &#125;, links use &#123; kind: "link", url, title? &#125;, words use &#123; kind: "text", text, title? &#125;, and nested links use &#123; kind: "share", code &#125;. Nothing is copied. Every source is checked again when the link is opened, and one revoke stops the whole collection.
+Makes one expiring or open-ended link for a mixed selection of records, files, links and words. items keeps up to 100 entries together; record entries use &#123; kind: "record", record &#125;, links use &#123; kind: "link", url, title? &#125;, words use &#123; kind: "text", text, title? &#125;, and nested links use &#123; kind: "share", code &#125;. Nothing is copied. Every source is checked again when the link is opened, and one revoke stops the whole collection. can lists what the recipient may do beyond seeing it (view, sign, pay; each kind of record offers its own, and sign and pay ask the recipient to prove their email with a code, no account needed). when is a rule tree (formula-engine shape) over now, opened, signed, paid and status that must hold for the link to open. look is own (the account brand, see `share_look`) or trillion. Every link opens on /share/&#60;code&#62;.
 
 **Inputs**
 
@@ -225,6 +231,9 @@ Makes one expiring or open-ended link for a mixed selection of records, files, l
 | `scope.kind` | string | Yes | One of `public`, `private`, `email`, `phone`, `code`. |
 | `scope.value` | string |  |  |
 | `expires_at` | string or null |  |  |
+| `can` | string[] |  |  |
+| `when` | object |  |  |
+| `look` | string |  | One of `own`, `trillion`. |
 
 ```json Example
 {
@@ -235,6 +244,44 @@ Makes one expiring or open-ended link for a mixed selection of records, files, l
     "kind": "public"
   }
 }
+```
+
+## Email a mixed share link
+
+`send_share_collection_link` · Changes things
+
+Emails one mixed collection link to the address named by its email scope. The email carries the link without copying or attaching the shared items. Use share_id returned by `share_collection_by_link`.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `share_id` | string | Yes |  |
+| `note` | string |  |  |
+
+```json Example
+{
+  "share_id": "<share_id>"
+}
+```
+
+## Read or set the brand on shared pages
+
+`share_look` · Changes things
+
+The brand every page this person shares carries for its recipients: name, accent (a #hex colour) and logo (one of their own picture files, by identity). With no fields it reads the brand; with fields it sets it; clear true goes back to Trillion's look. Every page also ends with Made with Trillion.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `name` | string |  |  |
+| `accent` | string |  |  |
+| `logo` | string |  |  |
+| `clear` | boolean |  |  |
+
+```json Example
+{}
 ```
 
 ## Stop a mixed share link
@@ -339,7 +386,7 @@ Puts one of this person's records into pursuits or spaces, or takes it out, as t
 
 `find_in_scope` · Reads only
 
-This person's records that belong to the pursuits and spaces named: a page of record ids per kind (kinds: decisions, pursuits, messages, files, tools, marketplace-installations, automations, activity, space-items; all when left out), and for things in spaces the space_id and item_id of each. A record is in when it is in any pursuit named and in any space named. Pass next_after as after, with one kind, for the next page. values: true answers instead what can be chosen: each pursuit and space with its title and how many records are in it. It changes nothing.
+This person's records that belong to the pursuits and spaces named: a page of private record ids per kind (kinds: decisions, pursuits, messages, files, tools, marketplace-installations, automations, activity, space-items; all when left out), and for things in spaces the space_id and item_id of each. Pursuits made in a selected Space appear as items with their Space and item ids, never as private refs. A record is in when it is in any pursuit named and in any space named. Pass next_after as after, with one kind, for the next page. values: true answers instead what can be chosen: each private pursuit and space with its title and how many records are in it. It changes nothing.
 
 **Inputs**
 

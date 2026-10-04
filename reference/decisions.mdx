@@ -23,7 +23,7 @@ It takes no inputs.
 
 `start_decision` · Changes things
 
-For any request to plan, build, add, change or fix something, or to say how something should work, first call `start_decision`, even when it may already exist, with the options, one of them the generic shape (the mechanism names no person, product or vendor; every open set is a row of data). Answer its questions, decide, then do what it decided. Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each &#123;ref, claim&#125;, where ref is a short name the answers cite), and at least two options (&#123;id, label&#125;). method (optional) is an id from `list_methods`. Then `answer_question` until no question remains, and decide. It decides nothing by itself.
+To plan, build, change or fix anything, or to say how something should work, first call `start_decision`, even if it may exist, with options, one of them the generic shape (no person, product or vendor in it; open sets as data rows). Answer its questions, decide, then do it. Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each &#123;ref, claim&#125;, where ref is a short name the answers cite), and at least two options (&#123;id, label&#125;). method (optional) is an id from `list_methods`. Then `answer_question` until no question remains, and decide. It decides nothing by itself.
 
 **Inputs**
 
@@ -226,6 +226,29 @@ Records what actually happened after a decision (case_id) or a tool run (task_id
   "result": "met",
   "summary": "Launched a week later; 4 people bought in the first two days.",
   "answered_by": "person"
+}
+```
+
+## Say whether you agree
+
+`agree_or_disagree` · Changes things
+
+Records where the person stands on one of their own records: stance "agree" or "disagree" (null takes it back), why in their words, and answered_by "person". record is a decision case_id, pursuit id, message id, file name or identity, or tool:&#60;tool id&#62;. Only send what the person said; never take a stand for them. Disagreeing with a decision opens it for a corrected decision and hands one AI the job of making it. The stance is kept as a record about that record, so `trace_item` on it lists the stance with every message, plan and AI call that came after. Returns the stance, and reopened and handoff_id when it reopened a decision.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `record` | string | Yes |  |
+| `stance` | string or null | Yes | One of `agree`, `disagree`, `null`. |
+| `why` | string |  |  |
+| `answered_by` | string | Yes |  |
+
+```json Example
+{
+  "record": "<record>",
+  "stance": "agree",
+  "answered_by": "<answered_by>"
 }
 ```
 

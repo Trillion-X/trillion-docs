@@ -1,6 +1,6 @@
 {
  "jsonrpc": "2.0",
- "id": 1,
+ "id": 2,
  "result": {
   "tools": [
    {
@@ -766,7 +766,7 @@
    },
    {
     "name": "trace_item",
-    "description": "Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of read_activity shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a read_activity row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. It changes nothing.",
+    "description": "Why did this happen: the chain of AI calls, tools and files that produced this item, and what used it. item is any id a row of read_activity shows (a file's identity, a handoff_id, a case_id, a task id, a tool id). Returns steps in order: the calls that made it, then the calls that made what those used, hop by hop, then the calls that used it or were done for it. Each step is a read_activity row plus link (made, used or for), about (the id that step is for), because (the seq of the step that led to it) and depth. records lists the person's own records that name the item, newest first (a message about it, the person's stance on it from agree_or_disagree, a plan for it), each with ref, kind, title and at: what came after it. It changes nothing.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -881,7 +881,7 @@
    },
    {
     "name": "start_decision",
-    "description": "For any request to plan, build, add, change or fix something, or to say how something should work, first call start_decision, even when it may already exist, with the options, one of them the generic shape (the mechanism names no person, product or vendor; every open set is a row of data). Answer its questions, decide, then do what it decided. Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each {ref, claim}, where ref is a short name the answers cite), and at least two options ({id, label}). method (optional) is an id from list_methods. Then answer_question until no question remains, and decide. It decides nothing by itself.",
+    "description": "To plan, build, change or fix anything, or to say how something should work, first call start_decision, even if it may exist, with options, one of them the generic shape (no person, product or vendor in it; open sets as data rows). Answer its questions, decide, then do it. Opens a decision and returns its case_id and first question. Needs source_id (any unique text for this decision; the same source_id with the same content returns the same decision), goal (what is being decided, in the person's words), evidence (the facts so far, each {ref, claim}, where ref is a short name the answers cite), and at least two options ({id, label}). method (optional) is an id from list_methods. Then answer_question until no question remains, and decide. It decides nothing by itself.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -1346,7 +1346,7 @@
    },
    {
     "name": "find_tool_for_job",
-    "description": "Finds tools that do a job, described in plain words: the Workshop's tools, which are reached only through this and run_tool. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the run_tool call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with report_result, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and save_tool keeps one you build. It runs nothing.",
+    "description": "Every task: first search the Marketplace (find_workflow, find_tool_for_job) for fitting workflows, skills and tools; use the best. Finds tools that do a job, described in plain words: the Marketplace's tools, which are reached only through this and run_tool. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the run_tool call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with report_result, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and save_tool keeps one you build. It runs nothing.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -1375,7 +1375,7 @@
    },
    {
     "name": "run_tool",
-    "description": "Runs one Workshop tool (a tool_id from find_tool_for_job) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); read_task reads it later. An input value {\"from_task\": \"<task id>\", \"output_selector\": \"$.field\"} uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from find_file, list_files or write_file. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with report_result.",
+    "description": "Runs one tool from the Marketplace (a tool_id from find_tool_for_job) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); read_task reads it later. An input value {\"from_task\": \"<task id>\", \"output_selector\": \"$.field\"} uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from find_file, list_files or write_file. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with report_result.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -1410,14 +1410,6 @@
        "type": "string"
       }
      }
-    },
-    "_meta": {
-     "ui": {
-      "resourceUri": "ui://trillion/screen.html"
-     },
-     "openai/outputTemplate": "ui://trillion/screen.html",
-     "openai/toolInvocation/invoking": "Opening Trillion",
-     "openai/toolInvocation/invoked": "Showing Trillion"
     },
     "title": "Run a tool",
     "annotations": {
@@ -1462,7 +1454,7 @@
    },
    {
     "name": "find_space_tool_for_job",
-    "description": "Finds Workshop tools granted in one shared space for a job described in plain words. Returns only tools this space grants, with each tool_id, job, input_schema, where it runs, reported outcomes and a run_space_tool call. It runs nothing and never searches private Trillion.",
+    "description": "Finds Marketplace tools granted in one shared space for a job described in plain words. Returns only tools this space grants, with each tool_id, job, input_schema, where it runs, reported outcomes and a run_space_tool call. It runs nothing and never searches private Trillion.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -2204,7 +2196,7 @@
    },
    {
     "name": "edit_source_project",
-    "description": "Apply one supported visual edit to the verified original source file at its exact revision. Returns the committed source and verification state; a build or live deployment is never inferred from the commit.",
+    "description": "Apply one supported visual edit to the verified original source file at its exact revision: literal text, an existing inline style value, or an existing safe link, local image path, or class value. Attribute edits never add new attributes or executable values. Returns the committed source and verification state; a build or live deployment is never inferred from the commit.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -2493,7 +2485,7 @@
    },
    {
     "name": "search",
-    "description": "Searches everything this person keeps with one question: their files (the words said in a recording, what is seen in it, its name and title, their notes), their Trillion records (decisions, pursuits, messages) and connected services such as GitHub. Each result is one thing with found_in (the places it matched: name, said, seen, written) and, for a recording, moments with start and end in seconds and the words said there, so a clip can be cut from them without guessing. places (optional) keeps only those places, for example [\"said\"] for what is said or [\"name\"] for titles; sources (optional) keeps only those sources, for example [\"files\"]. unavailable names a place or source that could not answer and why; pending names one still working (searching what is seen starts a picture model once per question): ask again in a few seconds. find_file reaches a file by its exact name instead.",
+    "description": "Searches everything this person keeps with one question: their files (the words written inside a document such as a PDF, Word, Excel, slides or text file, the words said in a recording, what is seen in it, its name and title, their notes), their Trillion records (decisions, pursuits, messages) and connected services such as GitHub. Ask it the person's own question (\"what is my EIN\") or the words to find. Each result is one thing with found_in (the places it matched: name, said, seen, written), said (the words around the match, which hold the answer), open_url (the address that opens the file in Trillion: give it to the person as the source link) and, for a recording, moments with start and end in seconds and the words said there, so a clip can be cut from them without guessing. To show a found file in this chat, call show_file with its identity. places (optional) keeps only those places, for example [\"said\"] for what is said or [\"name\"] for titles; sources (optional) keeps only those sources, for example [\"files\"]. unavailable names a place or source that could not answer and why; pending names one still working (searching what is seen starts a picture model once per question): ask again in a few seconds. find_file reaches a file by its exact name instead.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -2623,7 +2615,7 @@
    },
    {
     "name": "files_summary",
-    "description": "Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with start_file_upload under the same name) or stopped (cancel_file_upload). Needs nothing and changes nothing; list_files and find_file show the files themselves.",
+    "description": "Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with start_file_upload under the same name) or stopped (cancel_file_upload), and how full the store that keeps their records is (store: bytes used and each table with its rows and bytes, largest first), so a store filling up is seen before writes are refused. Needs nothing and changes nothing; list_files and find_file show the files themselves.",
     "inputSchema": {
      "type": "object",
      "properties": {}
@@ -3719,7 +3711,7 @@
       },
       "config": {
        "type": "object",
-       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }] or [{ \"access\": \"access:decision-history\", \"says\": \"Members of the $100 a month plan\" }]); spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"reply_to\" } (every digest comes from Trillion's own address); the spaces include courses.",
+       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }], [{ \"invited\": true }] or [{ \"access\": \"<an offer id or access ref your own sales contract grants>\", \"says\": \"Members who bought a membership\" }]); a paid row is met only by what the community's owner sold the member on the owner's own payment connection (a sales contract), never by a Trillion plan, so members are never asked to pay Trillion; spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"reply_to\" } (every digest comes in the community's own name); the spaces include courses.",
        "properties": {
         "title": {
          "type": "string"
@@ -4053,7 +4045,7 @@
    },
    {
     "name": "publish_agent",
-    "description": "Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery { url } is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery { stream: true } is for an agent on a computer the internet cannot reach: Trillion's helper on that computer (harness/wake-sessions.mjs) holds the live connection for it, each event is sent down it at once, and the agent counts as reachable only while that connection answers. runs lists the Workshop placements this agent runs tools for (for example placement:caller-sandbox): a run of such a tool is sent to it as tool.run.requested. delivery null stops events; rotate_delivery_secret true makes a new secret.",
+    "description": "Says what this agent is and what it can do, so other agents on the same account can find it and hand it work. Publishing again with the same agent_id updates the card. Optional capacity states how many jobs this agent can work on at once and expires unless renewed. Optional delivery { url } is an https address this agent answers on: it is then sent a signed event (handoff.created) when work is handed to it and one (handoff.finished) when work it handed off is finished, so it can wait for events instead of asking. The answer carries delivery_secret once, to check each event's trillion-signature; keep it in memory only. delivery { stream: true } is for an agent on a computer the internet cannot reach: Trillion's helper on that computer (harness/wake-sessions.mjs) holds the live connection for it, each event is sent down it at once, and the agent counts as reachable only while that connection answers. runs lists the placements this agent runs Marketplace tools for (for example placement:caller-sandbox): a run of such a tool is sent to it as tool.run.requested. delivery null stops events; rotate_delivery_secret true makes a new secret.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -4582,7 +4574,7 @@
    },
    {
     "name": "saved_instructions",
-    "description": "The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example \"I have no clue what to do with this, figure out if it is valuable\". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each { label, words }, optionally id and folder; a folder is { label, kind: \"folder\" }, optionally id and folder), replaces their list and returns it: read it first, then add, change, rename, remove, reorder (rows keep the order given among the rows of their folder) or file rows in folders (folder: the id of a folder row in the same list). An instruction with workflow { workflow_id, input } (workflow_id from find_workflow; an input value { \"fill\": { \"from\": \"share\", \"field\": \"words\" } } is taken from what is sent: words, own_words, links or items) also starts that workflow on what is sent. When a handoff carries saved_instruction in its input, its job is those words.",
+    "description": "The ready-made instructions this person picks from when they send something to their AIs (a page, a post, a file), for example \"I have no clue what to do with this, figure out if it is valuable\". Without instructions, returns their list (from: saved), or the starter list when they have saved none (from: starters). With instructions (each { label, words }, optionally id and folder; a folder is { label, kind: \"folder\" }, optionally id and folder), replaces their list and returns it: read it first, then add, change, rename, remove, reorder (rows keep the order given among the rows of their folder) or file rows in folders (folder: the id of a folder row in the same list). An instruction with workflow { workflow_id, input } (workflow_id from find_workflow; an input value { \"fill\": { \"from\": \"share\", \"field\": \"words\" } } is taken from what is sent: words, own_words, links or items) also starts that workflow on what is sent. When a handoff carries saved_instructions in its input (their ids), its job is the words of those instructions.",
     "inputSchema": {
      "type": "object",
      "properties": {
@@ -4772,7 +4764,7 @@
    },
    {
     "name": "choose_always_on_ai",
-    "description": "Chooses the AI that takes the person's waiting work when none of their own AIs took it in time (a voice memo at night, a laptop asleep): provider is one of the services listed (their own account for it must be connected), model optionally names the model. provider null stops it. With no arguments it changes nothing and returns the services, which are connected, the one chosen and how the last job went. Nothing runs until the person has chosen one; it never uses an AI they did not choose.",
+    "description": "Chooses the AIs that take the person's waiting work when none of their own AIs took it in time (a voice memo at night, a laptop asleep): provider is one of the services listed, or providers lists several in the order they take work (each an id or { provider, model }); their own account for each must be connected. When one turns the work away (out of quota, a refused key) it rests and the next takes the job. provider null stops it. With no arguments it changes nothing and returns the services, which are connected, the ones picked, which are resting and how the last job went. Nothing runs until the person has chosen; it never uses an AI they did not choose.",
     "inputSchema": {
      "type": "object",
      "properties": {
@@ -4784,6 +4776,30 @@
       },
       "model": {
        "type": "string"
+      },
+      "providers": {
+       "type": "array",
+       "items": {
+        "anyOf": [
+         {
+          "type": "string"
+         },
+         {
+          "type": "object",
+          "properties": {
+           "provider": {
+            "type": "string"
+           },
+           "model": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "provider"
+          ]
+         }
+        ]
+       }
       }
      }
     },
@@ -4901,7 +4917,7 @@
    },
    {
     "name": "share_destinations",
-    "description": "Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id \"private\", and each space they have not hidden, each { id, label, to, on_by_default }), actions (their saved instructions, each { id, label, words, folder }, and workflow { workflow_id, input } when it starts a workflow on what is sent, in the order their list shows them), folders (how they filed them, each { id, label, folder }: folder is the folder a row sits in, or null at the top), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.",
+    "description": "Where this person's shares can go and what their AI should do with them, as every place they share from offers it: destinations in their order (their own Trillion, id \"private\", each space and each tool place they have not hidden, each { id, label, description, to, on_by_default }: to is { private: true }, { space_id } or { tool_id }, a tool place being a tool that takes what is shared, such as Tell the people who make Trillion), actions (their saved instructions, each { id, label, words, folder }, and workflow { workflow_id, input } when it starts a workflow on what is sent, in the order their list shows them), folders (how they filed them, each { id, label, folder }: folder is the folder a row sits in, or null at the top), default_action_by_site (which action a share from a site starts on, matched on the end of the host name), and all_destinations, the same destinations including hidden ones, each with shown.",
     "inputSchema": {
      "type": "object",
      "properties": {}
@@ -5038,7 +5054,7 @@
    },
    {
     "name": "shares_sent",
-    "description": "Everything this person shared into Trillion from any device or AI, newest first: from the Chrome extension, the Android share page, the iPhone Share sheet, the web and deliver_share. Each share is { share_id, at, from (where it was sent from), items (the links, words and kept files, as deliver_share takes them), own_words, action ({ id, label } the AI was asked to do, or null), sent_to (the places it reached, empty for a share kept but not sent), preview (a link's title, site and picture, when read), kept_in (its folder in their Files, when kept there) }. limit (at most 100, default 30); before (next_before from the last page) reads further back. To share one again or hand it to their AI, send its items with deliver_share.",
+    "description": "Everything this person shared into Trillion from any device or AI, newest first: from the Chrome extension, the Android share page, the iPhone Share sheet, the web and deliver_share. Each share is { share_id, at, from (where it was sent from), items (the links, words and kept files, as deliver_share takes them), own_words, action ({ id, label } the AI was asked to do, or null), sent_to (the places it reached, empty for a share kept but not sent), preview (a link's title, site and picture, when read), kept_in (its folder in their Files, when kept there), ai_work ({ handoff_id, state, taken_by, finished_at, outcome }: the AI work it became, when it was handed to an AI) }. limit (at most 100, default 30); before (next_before from the last page) reads further back. To share one again or hand it to their AI, send its items with deliver_share.",
     "inputSchema": {
      "type": "object",
      "properties": {
@@ -5064,7 +5080,7 @@
    },
    {
     "name": "deliver_share",
-    "description": "Sends one share to places this person shares to (to: ids from share_destinations). Their own Trillion gets it handed to their AI with the action's words and own_words as the job (hand_off, input carrying items, saved_instruction and own_words; an action that keeps examples first keeps each shared link as a saved example, their ids in input.saved_examples; an action with a workflow starts it on the share, its input filled from the share and checked first, and the AI is handed the run in input.workflow_run); each space gets every kept file (items with file) shared by identity, and one add_to_space with the links, words and own_words. Everything is checked before anything is sent. Returns delivered ({ id, label } each), stopped_at ({ id, label, error }, or null when every place has it): the places before stopped_at have it, handoff_ids (the jobs handed to their AI, each readable with read_handoff) and workflow_runs (the runs started, each readable with read_workflow_run).",
+    "description": "Sends one selection to places this person shares to (to: ids from share_destinations). Items may mix source records, files, workflows, tools, links, words and another open share. Their own Trillion gets it handed to their AI with every chosen action's words and own_words as the job, once to each AI in to_agent (one or a list; left out, whichever is free); an action that keeps examples saves each shared link first, and an action with a workflow starts it on the share. Each Space receives the mixed selection in one request: files, records, workflows and tools stay with their owner, while links and words become Space items. Each tool place runs its tool once with the share. Returns delivered ({ id, label } each), stopped_at ({ id, label, error }, or null when every place has it): the places before stopped_at have it, handoff_ids (the jobs handed to their AI, each readable with read_handoff) and workflow_runs (the runs started, each readable with read_workflow_run).",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -5108,6 +5124,18 @@
           "type": "string",
           "description": "A kept file's identity in this person's files"
          },
+         "workflow_id": {
+          "type": "string",
+          "description": "A saved workflow ID"
+         },
+         "tool_id": {
+          "type": "string",
+          "description": "A saved tool ID"
+         },
+         "code": {
+          "type": "string",
+          "description": "For kind share: the code of another open share belonging to this person"
+         },
          "name": {
           "type": "string"
          }
@@ -5118,15 +5146,37 @@
        "type": "string"
       },
       "action": {
-       "type": "string",
-       "description": "An action id from share_destinations; left out, the action the first address's site starts on"
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string"
+         }
+        }
+       ],
+       "description": "One action id from share_destinations, or a list of them (the AI is asked to do each); left out, the action the first address's site starts on"
       },
       "own_words": {
        "type": "string"
       },
       "to_agent": {
-       "type": "string",
-       "description": "An agent_id from find_agents to take it; left out, whichever of their AIs is free takes it"
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string"
+         }
+        }
+       ],
+       "description": "One agent_id from find_agents, or a list of them (each is handed the share once); left out, whichever of their AIs is free takes it"
       },
       "from_agent": {
        "type": "string"
@@ -5137,7 +5187,7 @@
       },
       "input": {
        "type": "object",
-       "description": "Anything else the AI gets with it, kept in the handoff input. kept_in: the folder in their Files a device kept this share in, so the share list shows one row for it"
+       "description": "Anything else the AI gets with it, kept in the handoff input. kept_in: the folder in their Files a device kept this share in, so the share list shows one row for it. things, screen, browser and where: what a tool place is told (the things picked, the address, the browser or device, where they were working)"
       }
      }
     },
@@ -5266,7 +5316,7 @@
    },
    {
     "name": "share_record_by_link",
-    "description": "Makes an expiring or open-ended link to one or several records others may read. records lists up to 99 additional record references for one link. scope is { kind: \"public\" }, { kind: \"private\", value: recipient relay }, { kind: \"email\", value: address }, { kind: \"phone\", value: international number }, or { kind: \"code\", value: access code }. Recipient-bound links require verified identity when opened. Returns the opaque link code once and its expiry.",
+    "description": "Makes an expiring or open-ended link to one or several records others may read. records lists up to 99 additional record references for one link. scope is { kind: \"public\" }, { kind: \"private\", value: recipient relay }, { kind: \"email\", value: address }, { kind: \"phone\", value: international number }, or { kind: \"code\", value: access code }. Recipient-bound links require verified identity when opened. can lists what the recipient may do beyond seeing it (view, sign, pay; each kind of record offers its own, and sign and pay ask the recipient to prove their email with a code, no account needed). when is a rule tree (formula-engine shape) over now, opened, signed, paid and status that must hold for the link to open. look is own (the account brand, see share_look) or trillion. Every link opens on /share/<code>. Returns the opaque link code once, its address and its expiry.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -5312,6 +5362,22 @@
         "string",
         "null"
        ]
+      },
+      "can": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "when": {
+       "type": "object"
+      },
+      "look": {
+       "type": "string",
+       "enum": [
+        "own",
+        "trillion"
+       ]
       }
      }
     },
@@ -5326,7 +5392,7 @@
    },
    {
     "name": "share_collection_by_link",
-    "description": "Makes one expiring or open-ended link for a mixed selection of records, files, links and words. items keeps up to 100 entries together; record entries use { kind: \"record\", record }, links use { kind: \"link\", url, title? }, words use { kind: \"text\", text, title? }, and nested links use { kind: \"share\", code }. Nothing is copied. Every source is checked again when the link is opened, and one revoke stops the whole collection.",
+    "description": "Makes one expiring or open-ended link for a mixed selection of records, files, links and words. items keeps up to 100 entries together; record entries use { kind: \"record\", record }, links use { kind: \"link\", url, title? }, words use { kind: \"text\", text, title? }, and nested links use { kind: \"share\", code }. Nothing is copied. Every source is checked again when the link is opened, and one revoke stops the whole collection. can lists what the recipient may do beyond seeing it (view, sign, pay; each kind of record offers its own, and sign and pay ask the recipient to prove their email with a code, no account needed). when is a rule tree (formula-engine shape) over now, opened, signed, paid and status that must hold for the link to open. look is own (the account brand, see share_look) or trillion. Every link opens on /share/<code>.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -5367,12 +5433,54 @@
         "string",
         "null"
        ]
+      },
+      "can": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "when": {
+       "type": "object"
+      },
+      "look": {
+       "type": "string",
+       "enum": [
+        "own",
+        "trillion"
+       ]
       }
      }
     },
     "title": "Make one link for a mixed selection",
     "annotations": {
      "title": "Make one link for a mixed selection",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": false
+    }
+   },
+   {
+    "name": "send_share_collection_link",
+    "description": "Emails one mixed collection link to the address named by its email scope. The email carries the link without copying or attaching the shared items. Use share_id returned by share_collection_by_link.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "share_id"
+     ],
+     "properties": {
+      "share_id": {
+       "type": "string"
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Email a mixed share link",
+    "annotations": {
+     "title": "Email a mixed share link",
      "openWorldHint": false,
      "readOnlyHint": false,
      "destructiveHint": false,
@@ -5422,6 +5530,35 @@
      "title": "See links to a record",
      "openWorldHint": false,
      "readOnlyHint": true,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "share_look",
+    "description": "The brand every page this person shares carries for its recipients: name, accent (a #hex colour) and logo (one of their own picture files, by identity). With no fields it reads the brand; with fields it sets it; clear true goes back to Trillion's look. Every page also ends with Made with Trillion.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "accent": {
+       "type": "string"
+      },
+      "logo": {
+       "type": "string"
+      },
+      "clear": {
+       "type": "boolean"
+      }
+     }
+    },
+    "title": "Read or set the brand on shared pages",
+    "annotations": {
+     "title": "Read or set the brand on shared pages",
+     "openWorldHint": false,
+     "readOnlyHint": false,
      "destructiveHint": false,
      "idempotentHint": true
     }
@@ -5540,7 +5677,7 @@
    },
    {
     "name": "find_in_scope",
-    "description": "This person's records that belong to the pursuits and spaces named: a page of record ids per kind (kinds: decisions, pursuits, messages, files, tools, marketplace-installations, automations, activity, space-items; all when left out), and for things in spaces the space_id and item_id of each. A record is in when it is in any pursuit named and in any space named. Pass next_after as after, with one kind, for the next page. values: true answers instead what can be chosen: each pursuit and space with its title and how many records are in it. It changes nothing.",
+    "description": "This person's records that belong to the pursuits and spaces named: a page of private record ids per kind (kinds: decisions, pursuits, messages, files, tools, marketplace-installations, automations, activity, space-items; all when left out), and for things in spaces the space_id and item_id of each. Pursuits made in a selected Space appear as items with their Space and item ids, never as private refs. A record is in when it is in any pursuit named and in any space named. Pass next_after as after, with one kind, for the next page. values: true answers instead what can be chosen: each private pursuit and space with its title and how many records are in it. It changes nothing.",
     "inputSchema": {
      "type": "object",
      "properties": {
@@ -5587,6 +5724,48 @@
     }
    },
    {
+    "name": "agree_or_disagree",
+    "description": "Records where the person stands on one of their own records: stance \"agree\" or \"disagree\" (null takes it back), why in their words, and answered_by \"person\". record is a decision case_id, pursuit id, message id, file name or identity, or tool:<tool id>. Only send what the person said; never take a stand for them. Disagreeing with a decision opens it for a corrected decision and hands one AI the job of making it. The stance is kept as a record about that record, so trace_item on it lists the stance with every message, plan and AI call that came after. Returns the stance, and reopened and handoff_id when it reopened a decision.",
+    "inputSchema": {
+     "type": "object",
+     "required": [
+      "record",
+      "stance",
+      "answered_by"
+     ],
+     "properties": {
+      "record": {
+       "type": "string"
+      },
+      "stance": {
+       "type": [
+        "string",
+        "null"
+       ],
+       "enum": [
+        "agree",
+        "disagree",
+        null
+       ]
+      },
+      "why": {
+       "type": "string"
+      },
+      "answered_by": {
+       "type": "string"
+      }
+     }
+    },
+    "title": "Say whether you agree",
+    "annotations": {
+     "title": "Say whether you agree",
+     "openWorldHint": false,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
     "name": "content_formats",
     "description": "The content formats this person writes and speaks in: their own saved formats first, then the ones every account starts with (blog post, article, Substack post, newsletter, X thread, Instagram caption, short video, YouTube video, carousel, content series, and writing frameworks such as AIDA), plus example_kinds, where every piece takes its real examples from. Each has id, label, description, input (what it is made from), process (the steps, in order), output (what comes out and where it goes), spec (how to write it from a recording or a thought), slots (its parts in order, each { id, label, hint }), body_template (the parts in [brackets], when it has one), tags and from (\"saved\" or \"starter\"). Read it before writing something for them, and write in their format. It changes nothing.",
     "inputSchema": {
@@ -5604,7 +5783,7 @@
    },
    {
     "name": "save_content_formats",
-    "description": "Replaces this person's own content formats (read content_formats first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each { label, hint }), optionally id, description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what content_formats returns.",
+    "description": "Replaces this person's own content formats (read content_formats first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each { label, hint }), optionally id, category_id or category, icon or logo (how it looks on the Formats screen), description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what content_formats returns.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -5625,6 +5804,22 @@
          },
          "label": {
           "type": "string"
+         },
+         "category_id": {
+          "type": "string",
+          "description": "One of the starters' categories (writing, social, video, persuasion, storytelling, education): its tab and icon on the Formats screen"
+         },
+         "category": {
+          "type": "string",
+          "description": "A category of their own, in a word or two, when none of the starters' fits"
+         },
+         "icon": {
+          "type": "string",
+          "description": "A Lucide icon name for the format"
+         },
+         "logo": {
+          "type": "string",
+          "description": "Where it goes, as a logo slug such as x, instagram, youtube or substack"
          },
          "description": {
           "type": "string"
@@ -6032,7 +6227,7 @@
       },
       "config": {
        "type": "object",
-       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }] or [{ \"access\": \"access:decision-history\", \"says\": \"Members of the $100 a month plan\" }]); spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"reply_to\" } (every digest comes from Trillion's own address); the spaces include courses.",
+       "description": "The community, as data. title and about in the owner's words; join lists who may join ([{ \"free\": true }], [{ \"invited\": true }] or [{ \"access\": \"<an offer id or access ref your own sales contract grants>\", \"says\": \"Members who bought a membership\" }]); a paid row is met only by what the community's owner sold the member on the owner's own payment connection (a sales contract), never by a Trillion plan, so members are never asked to pay Trillion; spaces turns on feed, events, members and levels and says who sees each (\"members\" or \"everyone\"; \"everyone\" is the free view, open to anyone signed in or not); events_by is \"owner\" or \"members\"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example { \"id\": \"points\", \"op\": \"weighted_count\", \"inputs\": [{ \"match\": { \"kind\": \"post\" } }], \"params\": { \"weights\": [3] } }; levels are { \"measure\": \"points\", \"bands\": [{ \"name\": \"New\", \"min\": 0, \"max\": 10 }, { \"name\": \"Regular\", \"min\": 10 }] }; rewards are [{ \"id\", \"title\", \"says\", \"needs\": { \"measure\", \"at_least\" }, \"per_person\" }]; owner_name is the name members see for the owner; roles are { \"host\": { \"may\": [\"put_on_events\", \"remove_posts\", \"set_roles\", \"send_digests\"] } }; feed is { \"order\": \"ranked\", \"votes_per_member\": 10, \"signals\": [{ \"key\", \"label\", \"weight\", \"field\": \"votes\" | \"replies\" | \"age_hours\", \"saturates_at\", \"falls\" }] }; courses are [{ \"id\", \"title\", \"about\", \"lessons\": [{ \"id\", \"title\", \"body\" }] }] (a lesson done is the fact kind lesson_completed); streak is { \"cadence\": { \"period\": \"week\", \"times\": 1 }, \"of\": { \"match\": { \"kind\": \"event_attended\" } }, \"label\" }; digest is { \"every_days\": 7, \"cadence\", \"nudge_at\": 0..1, \"subject\" } with mail { \"reply_to\" } (every digest comes in the community's own name); the spaces include courses.",
        "properties": {
         "title": {
          "type": "string"
@@ -7275,7 +7470,7 @@
    },
    {
     "name": "grant_space_tool",
-    "description": "Grants one current Space member specific operations on a published Workshop tool. Name member_id to grant someone else; leaving it out grants only yourself. Name operations to limit use; leaving them out grants discover, describe, run and read. It stores a definition reference, never tool code or private connections. Only the person who started the space can grant it.",
+    "description": "Grants one current Space member specific operations on a tool published in the Marketplace. Name member_id to grant someone else; leaving it out grants only yourself. Name operations to limit use; leaving them out grants discover, describe, run and read. It stores a definition reference, never tool code or private connections. Only the person who started the space can grant it.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -7312,9 +7507,9 @@
       }
      }
     },
-    "title": "Grant a Workshop tool in a space",
+    "title": "Grant a Marketplace tool in a space",
     "annotations": {
-     "title": "Grant a Workshop tool in a space",
+     "title": "Grant a Marketplace tool in a space",
      "openWorldHint": false,
      "readOnlyHint": false,
      "destructiveHint": false,
@@ -7323,7 +7518,7 @@
    },
    {
     "name": "list_space_tools",
-    "description": "Lists Workshop tool references granted to you in a space. The space owner can name another member_id. An operation filters the list.",
+    "description": "Lists the Marketplace tools granted to you in a space. The space owner can name another member_id. An operation filters the list.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -8110,7 +8305,7 @@
    },
    {
     "name": "find_workflow",
-    "description": "Finds workflows that get a job done in several checked steps, described in plain words: Trillion's own, this account's saved ones and ones other accounts published. Returns each workflow_id, its job, its steps and next_call, the start_workflow call that runs it. It runs nothing. Use it when a job has a known method (research, a review, a plan) rather than a single tool call; find_tool_for_job finds single tools.",
+    "description": "Every task: first search the Marketplace (find_workflow, find_tool_for_job) for fitting workflows, skills and tools; use the best. Finds workflows that get a job done in several checked steps, described in plain words: Trillion's own, this account's saved ones and ones other accounts published. Returns each workflow_id, its job, its steps and next_call, the start_workflow call that runs it. It runs nothing. Use it when a job has a known method (research, a review, a plan) rather than a single tool call; find_tool_for_job finds single tools.",
     "inputSchema": {
      "type": "object",
      "properties": {
@@ -8254,7 +8449,7 @@
    },
    {
     "name": "save_workflow",
-    "description": "Keeps a workflow this account wrote, for example from a skill file, a checklist or a process the person already follows, so any AI signed in to this account can find it and run it. Send workflow: id (\"workflow:your-name\"), job (plain words; find_workflow matches it), label, input_schema (JSON Schema, \"type\": \"object\"), and steps, each with id, title, do (what to do), submit (a JSON Schema with \"type\": \"object\" for what the step hands back) and checks. Each check has says (what it asks for, in plain words), kind, and paths: a path is a list of keys starting with \"this\" (this step's output), \"input\" or \"steps\" then an earlier step's id, where \"*\" means every item of a list; of and in may also be a list of paths. Kinds: subset-of (every value at path is one of the values at of), covers (the values at path include every value at of, or every value in values), mentioned-in (every value at path appears inside some text at in), excludes-words (no text at path contains any of words), distinct-at-least (path holds at least count different values), exists (every value at path names a workflow or tool this account can find: catalog \"workflow\" or \"tool\"). A step done by a Workshop tool instead of the AI has run_tool: { tool_id, input }, where an input value { \"from\": path } takes the first value there and { \"all_from\": path } every value there; Trillion runs it where the tool lives when the run reaches the step, and checks its output like any other. Instead of steps, a workflow may give definition: { steps, edges }, the step graph Trillion's workflow engine runs, for branches, steps that run at the same time and loops: a step { id, kind: \"ask\", config: { name, input } } is answered by the AI (name \"ai\", input { do, submit }), a Workshop tool (name its tool id) or one of this account's agents (name \"agent:<agent_id>\"); an input value { \"$kind\": \"binding\", \"values\": path } takes the first value at a path (\"take\": \"all\" every value); a step { id, kind: \"check\", config: { subject: <step id>, rules: [checks as above] } } checks another step's output; edges are { from, to, kind: \"always\" }. The reply names similar_workflows that already do a job this close: improve that one instead of keeping two. describe_workflow on workflow:l078-research-to-plan shows a complete one. A refused save lists every problem at once. Saving the same id again replaces it; runs already started keep their version. It stays visible only to this account until publish_workflow.",
+    "description": "Keeps a workflow this account wrote, for example from a skill file, a checklist or a process the person already follows, so any AI signed in to this account can find it and run it. Send workflow: id (\"workflow:your-name\"), job (plain words; find_workflow matches it), label, input_schema (JSON Schema, \"type\": \"object\"), and steps, each with id, title, do (what to do), submit (a JSON Schema with \"type\": \"object\" for what the step hands back) and checks. Each check has says (what it asks for, in plain words), kind, and paths: a path is a list of keys starting with \"this\" (this step's output), \"input\" or \"steps\" then an earlier step's id, where \"*\" means every item of a list; of and in may also be a list of paths. Kinds: subset-of (every value at path is one of the values at of), covers (the values at path include every value at of, or every value in values), mentioned-in (every value at path appears inside some text at in), excludes-words (no text at path contains any of words), distinct-at-least (path holds at least count different values), exists (every value at path names a workflow or tool this account can find: catalog \"workflow\" or \"tool\"). A step done by a Marketplace tool instead of the AI has run_tool: { tool_id, input }, where an input value { \"from\": path } takes the first value there and { \"all_from\": path } every value there; Trillion runs it where the tool lives when the run reaches the step, and checks its output like any other. Instead of steps, a workflow may give definition: { steps, edges }, the step graph Trillion's workflow engine runs, for branches, steps that run at the same time and loops: a step { id, kind: \"ask\", config: { name, input } } is answered by the AI (name \"ai\", input { do, submit }), a Marketplace tool (name its tool id) or one of this account's agents (name \"agent:<agent_id>\"); an input value { \"$kind\": \"binding\", \"values\": path } takes the first value at a path (\"take\": \"all\" every value); a step { id, kind: \"check\", config: { subject: <step id>, rules: [checks as above] } } checks another step's output; edges are { from, to, kind: \"always\" }. made_from (optional) lists the workflows this one was made from, such as another account's published workflow changed for this person: each must be findable, and the one it names then counts this as a variation (find_workflow and describe_workflow show made_from and the variations). The reply names similar_workflows that already do a job this close: improve that one instead of keeping two. describe_workflow on workflow:l078-research-to-plan shows a complete one. A refused save lists every problem at once. Saving the same id again replaces it; runs already started keep their version. It stays visible only to this account until publish_workflow.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -8263,7 +8458,16 @@
      "properties": {
       "workflow": {
        "type": "object",
-       "description": "The workflow: id, job, label, input_schema, and steps or definition"
+       "description": "The workflow: id, job, label, input_schema, and steps or definition",
+       "properties": {
+        "made_from": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         },
+         "description": "The workflows this one was made from (\"workflow:...\")"
+        }
+       }
       }
      }
     },
@@ -8655,7 +8859,7 @@
    },
    {
     "name": "timed_work",
-    "description": "What this person's Trillion does by itself at a time (schedules, scheduled tool runs, reads of connected accounts, deliveries to agents, retries) and could not do: each thing set aside after a failure, with its error in plain words, how many times it failed, and when it is tried again; one that failed every automatic try is held and waits for try_timed_work_again or the next Trillion update. Also the last wake: how many things were due, ran, failed and were left for the next wake, and how long the oldest one had waited. It changes nothing.",
+    "description": "What this person's Trillion does by itself at a time (schedules, scheduled tool runs, reads of connected accounts, deliveries to agents, retries) and could not do: each thing set aside after a failure, with its error in plain words, how many times it failed, and when it is tried again; one that failed every automatic try is held and waits for try_timed_work_again or the next Trillion update. Also the last wake: how many things were due, ran, failed and were left for the next wake, and how long the oldest one had waited. What is running right now is listed under running (key, source, started_at), never as a failure; a run an update of Trillion cut off is run again at once and not counted. It changes nothing.",
     "inputSchema": {
      "type": "object",
      "properties": {}
@@ -9189,7 +9393,7 @@
          },
          "action": {
           "type": "object",
-          "description": "For a button field: { label, definition_ids: [<Workshop tool id>], input?, copy?: [{ key: <tool input>, from: \"answers.<field id>\" | \"record.title\" }] }. Each row shows the button; pressing it runs the tool with that row's values, and the tool receives only the inputs its schema takes."
+          "description": "For a button field: { label, definition_ids: [<Marketplace tool id>], input?, copy?: [{ key: <tool input>, from: \"answers.<field id>\" | \"record.title\" }] }. Each row shows the button; pressing it runs the tool with that row's values, and the tool receives only the inputs its schema takes."
          }
         }
        },
@@ -9340,6 +9544,27 @@
     "title": "Save my X bookmarks",
     "annotations": {
      "title": "Save my X bookmarks",
+     "openWorldHint": true,
+     "readOnlyHint": false,
+     "destructiveHint": false,
+     "idempotentHint": true
+    }
+   },
+   {
+    "name": "save_x_likes",
+    "description": "Saves the posts this person liked on X (Twitter) into their Trillion files (/Saved links/X - Likes.json, newest first), keeping every one already saved. Leave since out to save every like X hands out; give since, the newest id a read returned, to save only the ones liked after it and get them back as items. Trillion also does this by itself every 30 minutes once X is connected, handing each new like to the person's rules. Needs X connected on the Connections screen with likes allowed; list_connections says whether it is.",
+    "inputSchema": {
+     "type": "object",
+     "properties": {
+      "since": {
+       "type": "string",
+       "description": "The newest liked post id an earlier read returned"
+      }
+     }
+    },
+    "title": "Save the posts I liked on X",
+    "annotations": {
+     "title": "Save the posts I liked on X",
      "openWorldHint": true,
      "readOnlyHint": false,
      "destructiveHint": false,
@@ -10022,7 +10247,7 @@
    },
    {
     "name": "open_layout",
-    "description": "Opens a layout your AIs made (layout_id from read_layouts) now on the person's open Trillion page; the arrangement it replaces is kept as Previous layout. On the person's screen (Layouts), use it when they work across two or more screens at once (a decision and its files, Media beside a draft, messages beside a space) or ask to see things together: make the layout and open it (open_now true) instead of offering it; their old arrangement stays one click away as Previous layout.",
+    "description": "Opens a layout your AIs made (layout_id from read_layouts) now on the person's open Trillion page; the arrangement it replaces is kept as Previous layout. To open one at a time of day or when something happens, use set_schedule or set_rule with then { \"tool_id\": \"tool:open-a-layout\", \"input\": { \"layout_id\": \"...\" } }. On the person's screen (Layouts), use it when they work across two or more screens at once (a decision and its files, Media beside a draft, messages beside a space) or ask to see things together: make the layout and open it (open_now true) instead of offering it; their old arrangement stays one click away as Previous layout.",
     "inputSchema": {
      "type": "object",
      "required": [
@@ -10171,7 +10396,7 @@
    },
    {
     "name": "show_screen",
-    "description": "Shows the person one of their Trillion screens right here in the chat, drawn by Trillion itself in their own look, live and usable (they can open, sort, filter and act there as in Trillion). screen is a screen's address (/decisions, /files, /decisions/<case_id>, /lists/<list_id>), its name (Decisions, Files, Progress, Spaces, Automations, Workshop) or a tool id whose own screen to show (tool:drives); input (optional) is what that screen opens on. Use it whenever the person wants to see something Trillion keeps, instead of describing it or pasting its data: the screens are Home (/home), Find anything (/find), Notifications (/notifications), Message your AIs (/message), Your tray (/tray), Write (/write), Record (/record), Record audio (/record-audio), Record video (/record-video), Formats (/formats), Files (/files), Media (/media), Decisions (/decisions), Audience questions (/audience-questions), AI activity (/activity), AI work (/ai-work), Sent (/sent), Task map (/message-task-canvas), Messages (/messages), Network (/network), Spaces (/spaces), Progress (/progress), Book a session (/book), Clients (/clients), Get started (/get-started), Use Trillion in your AI (/ai), Tours (/tours), Connections (/connections), Sharing (/sharing), Notification settings (/notification-settings), Plan & billing (/plan), Account & security (/account), Business (/business), Automations (/automations), Funnels (/funnels), Lists (/lists), Workshop (/workshop), Marketplace (/marketplace), Public apps (/public-apps), Draw (/draw).",
+    "description": "Shows the person one of their Trillion screens right here in the chat, drawn by Trillion itself in their own look, live and usable (they can open, sort, filter and act there as in Trillion). screen is a screen's address (/decisions, /files, /decisions/<case_id>, /lists/<list_id>), its name (Decisions, Files, Progress, Spaces, Automations, Marketplace, Runs) or a tool id whose own screen to show (tool:drives); input (optional) is what that screen opens on. Use it whenever the person wants to see something Trillion keeps, instead of describing it or pasting its data: the screens are Home (/home), Find anything (/find), Notifications (/notifications), Message your AIs (/message), Your tray (/tray), Write (/write), Record (/record), Record audio (/record-audio), Record video (/record-video), Formats (/formats), Files (/files), Media (/media), Decisions (/decisions), Audience questions (/audience-questions), AI activity (/activity), Work map (/work-map), AI work (/ai-work), Sent (/sent), Task map (/message-task-canvas), Messages (/messages), Network (/network), Spaces (/spaces), Progress (/progress), Book a session (/book), Clients (/clients), Get started (/get-started), Use Trillion in your AI (/ai), Tours (/tours), Connections (/connections), Sharing (/sharing), Notification settings (/notification-settings), Plan & billing (/plan), Account & security (/account), Business (/business), Automations (/automations), Funnels (/funnels), Lists (/lists), Runs (/runs), Marketplace (/marketplace), Public apps (/public-apps), Draw (/draw).",
     "inputSchema": {
      "type": "object",
      "required": [

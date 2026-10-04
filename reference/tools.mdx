@@ -1,9 +1,9 @@
 ---
-title: "Workshop tools"
+title: "Marketplace tools"
 description: "Find a tool that does the job, run it, build your own and offer it to others."
 ---
 
-The Workshop holds tools that do one job each: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job. When no tool fits, your AI can build one and keep it. The Workshop comes with a paid plan.
+The Marketplace holds everything your AI can use, yours and everyone's. A tool does one job: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job; every run is listed in Runs. When no tool fits, your AI can build one, keep it under Yours, and publish it for everyone. Running tools from the Marketplace comes with a paid plan.
 
 You do not call these tools yourself. You ask your AI in plain words, and it picks the tool. This page shows what each one does, so you know what to ask for.
 
@@ -11,7 +11,7 @@ You do not call these tools yourself. You ask your AI in plain words, and it pic
 
 `find_tool_for_job` · Reads only
 
-Finds tools that do a job, described in plain words: the Workshop's tools, which are reached only through this and `run_tool`. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the `run_tool` call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with `report_result`, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and `save_tool` keeps one you build. It runs nothing.
+Every task: first search the Marketplace (`find_workflow`, `find_tool_for_job`) for fitting workflows, skills and tools; use the best. Finds tools that do a job, described in plain words: the Marketplace's tools, which are reached only through this and `run_tool`. Returns candidates, each with tool_id, job, input_schema, where it runs (runs_on), who made it, a price when it has one, earlier_runs and next_call, the `run_tool` call that runs it. Ranked by how well the job matches, then by what people said happened after earlier runs: in earlier_runs, reported_met and reported_failed are what people reported with `report_result`, while contract_passed only means the output had the right shape, not that the job was done. When no tool does the job, make_one offers tools that build one from a public repository, and `save_tool` keeps one you build. It runs nothing.
 
 **Inputs**
 
@@ -30,7 +30,7 @@ Finds tools that do a job, described in plain words: the Workshop's tools, which
 
 `run_tool` · Changes things
 
-Runs one Workshop tool (a tool_id from `find_tool_for_job`) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); `read_task` reads it later. An input value &#123;"from_task": "&#60;task id&#62;", "output_selector": "$.field"&#125; uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from `find_file`, `list_files` or `write_file`. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with `report_result`.
+Runs one tool from the Marketplace (a tool_id from `find_tool_for_job`) on an input that matches its input_schema. Needs tool_id, input and request_key (any unique text; sending the same request_key again returns the same task instead of running twice). Returns its checked result, or a task id when it takes longer than wait_seconds (up to 50), waits for a computer that is asleep, or is scheduled with run_at (repeat_every_hours repeats it); `read_task` reads it later. An input value &#123;"from_task": "&#60;task id&#62;", "output_selector": "$.field"&#125; uses an earlier task's output. A file input is a file's identity (1f: then 64 hex) from `find_file`, `list_files` or `write_file`. job (optional) says what this run is for, in plain words. A completed run's contract means the output had the right shape; ask the person whether it did the job and record it with `report_result`.
 
 **Inputs**
 

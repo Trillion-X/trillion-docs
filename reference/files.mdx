@@ -200,7 +200,7 @@ Stops an upload from `start_file_upload` that will not be finished: its name is 
 
 `files_summary` · Reads only
 
-Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with `start_file_upload` under the same name) or stopped (`cancel_file_upload`). Needs nothing and changes nothing; `list_files` and `find_file` show the files themselves.
+Counts what this person keeps in their namespace: how many files and bytes are stored and how many names point at them, and lists every upload still in progress (uploads: its upload id, names, byte_length, new_bytes arrived, the app that started it and when), so an upload whose id was lost can be finished (send its bytes again with `start_file_upload` under the same name) or stopped (`cancel_file_upload`), and how full the store that keeps their records is (store: bytes used and each table with its rows and bytes, largest first), so a store filling up is seen before writes are refused. Needs nothing and changes nothing; `list_files` and `find_file` show the files themselves.
 
 It takes no inputs.
 
@@ -305,7 +305,7 @@ It takes no inputs.
 
 `search` · Reads only
 
-Searches everything this person keeps with one question: their files (the words said in a recording, what is seen in it, its name and title, their notes), their Trillion records (decisions, pursuits, messages) and connected services such as GitHub. Each result is one thing with found_in (the places it matched: name, said, seen, written) and, for a recording, moments with start and end in seconds and the words said there, so a clip can be cut from them without guessing. places (optional) keeps only those places, for example ["said"] for what is said or ["name"] for titles; sources (optional) keeps only those sources, for example ["files"]. unavailable names a place or source that could not answer and why; pending names one still working (searching what is seen starts a picture model once per question): ask again in a few seconds. `find_file` reaches a file by its exact name instead.
+Searches everything this person keeps with one question: their files (the words written inside a document such as a PDF, Word, Excel, slides or text file, the words said in a recording, what is seen in it, its name and title, their notes), their Trillion records (decisions, pursuits, messages) and connected services such as GitHub. Ask it the person's own question ("what is my EIN") or the words to find. Each result is one thing with found_in (the places it matched: name, said, seen, written), said (the words around the match, which hold the answer), open_url (the address that opens the file in Trillion: give it to the person as the source link) and, for a recording, moments with start and end in seconds and the words said there, so a clip can be cut from them without guessing. To show a found file in this chat, call `show_file` with its identity. places (optional) keeps only those places, for example ["said"] for what is said or ["name"] for titles; sources (optional) keeps only those sources, for example ["files"]. unavailable names a place or source that could not answer and why; pending names one still working (searching what is seen starts a picture model once per question): ask again in a few seconds. `find_file` reaches a file by its exact name instead.
 
 **Inputs**
 
@@ -609,6 +609,22 @@ Saves this person's X (Twitter) bookmarks into their Trillion files (/Saved link
 | Input | Type | Required | What it is |
 | --- | --- | --- | --- |
 | `since` | string |  | The newest bookmark id an earlier read returned |
+
+```json Example
+{}
+```
+
+## Save the posts I liked on X
+
+`save_x_likes` · Changes things
+
+Saves the posts this person liked on X (Twitter) into their Trillion files (/Saved links/X - Likes.json, newest first), keeping every one already saved. Leave since out to save every like X hands out; give since, the newest id a read returned, to save only the ones liked after it and get them back as items. Trillion also does this by itself every 30 minutes once X is connected, handing each new like to the person's rules. Needs X connected on the Connections screen with likes allowed; `list_connections` says whether it is.
+
+**Inputs**
+
+| Input | Type | Required | What it is |
+| --- | --- | --- | --- |
+| `since` | string |  | The newest liked post id an earlier read returned |
 
 ```json Example
 {}

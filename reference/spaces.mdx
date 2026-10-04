@@ -49,7 +49,7 @@ Starts a space with this person as its first member and owner: a group, project,
 | --- | --- | --- | --- |
 | `label` | string | Yes | One of `one-to-one`, `stay`, `group`, `project`, `event`, `community`. |
 | `title` | string | Yes |  |
-| `config` | object |  | The community, as data. title and about in the owner's words; join lists who may join ([&#123; "free": true &#125;] or [&#123; "access": "access:decision-history", "says": "Members of the $100 a month plan" &#125;]); spaces turns on feed, events, members and levels and says who sees each ("members" or "everyone"; "everyone" is the free view, open to anyone signed in or not); events_by is "owner" or "members"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example &#123; "id": "points", "op": "weighted_count", "inputs": [&#123; "match": &#123; "kind": "post" &#125; &#125;], "params": &#123; "weights": [3] &#125; &#125;; levels are &#123; "measure": "points", "bands": [&#123; "name": "New", "min": 0, "max": 10 &#125;, &#123; "name": "Regular", "min": 10 &#125;] &#125;; rewards are [&#123; "id", "title", "says", "needs": &#123; "measure", "at_least" &#125;, "per_person" &#125;]; owner_name is the name members see for the owner; roles are &#123; "host": &#123; "may": ["put_on_events", "remove_posts", "set_roles", "send_digests"] &#125; &#125;; feed is &#123; "order": "ranked", "votes_per_member": 10, "signals": [&#123; "key", "label", "weight", "field": "votes" \| "replies" \| "age_hours", "saturates_at", "falls" &#125;] &#125;; courses are [&#123; "id", "title", "about", "lessons": [&#123; "id", "title", "body" &#125;] &#125;] (a lesson done is the fact kind lesson_completed); streak is &#123; "cadence": &#123; "period": "week", "times": 1 &#125;, "of": &#123; "match": &#123; "kind": "event_attended" &#125; &#125;, "label" &#125;; digest is &#123; "every_days": 7, "cadence", "nudge_at": 0..1, "subject" &#125; with mail &#123; "reply_to" &#125; (every digest comes from Trillion's own address); the spaces include courses. |
+| `config` | object |  | The community, as data. title and about in the owner's words; join lists who may join ([&#123; "free": true &#125;], [&#123; "invited": true &#125;] or [&#123; "access": "&#60;an offer id or access ref your own sales contract grants&#62;", "says": "Members who bought a membership" &#125;]); a paid row is met only by what the community's owner sold the member on the owner's own payment connection (a sales contract), never by a Trillion plan, so members are never asked to pay Trillion; spaces turns on feed, events, members and levels and says who sees each ("members" or "everyone"; "everyone" is the free view, open to anyone signed in or not); events_by is "owner" or "members"; measures count facts about each member (kinds: joined, post, reply, event_rsvp, event_attended, introduction_accepted, decision_reported, which carries result: met, failed or unknown) with op count, weighted_count, sum or distinct, for example &#123; "id": "points", "op": "weighted_count", "inputs": [&#123; "match": &#123; "kind": "post" &#125; &#125;], "params": &#123; "weights": [3] &#125; &#125;; levels are &#123; "measure": "points", "bands": [&#123; "name": "New", "min": 0, "max": 10 &#125;, &#123; "name": "Regular", "min": 10 &#125;] &#125;; rewards are [&#123; "id", "title", "says", "needs": &#123; "measure", "at_least" &#125;, "per_person" &#125;]; owner_name is the name members see for the owner; roles are &#123; "host": &#123; "may": ["put_on_events", "remove_posts", "set_roles", "send_digests"] &#125; &#125;; feed is &#123; "order": "ranked", "votes_per_member": 10, "signals": [&#123; "key", "label", "weight", "field": "votes" \| "replies" \| "age_hours", "saturates_at", "falls" &#125;] &#125;; courses are [&#123; "id", "title", "about", "lessons": [&#123; "id", "title", "body" &#125;] &#125;] (a lesson done is the fact kind lesson_completed); streak is &#123; "cadence": &#123; "period": "week", "times": 1 &#125;, "of": &#123; "match": &#123; "kind": "event_attended" &#125; &#125;, "label" &#125;; digest is &#123; "every_days": 7, "cadence", "nudge_at": 0..1, "subject" &#125; with mail &#123; "reply_to" &#125; (every digest comes in the community's own name); the spaces include courses. |
 | `config.title` | string |  |  |
 | `config.about` | string |  |  |
 | `config.join` | object[] |  |  |
@@ -491,7 +491,7 @@ Hides one thing in a space from everyone who may not hide or show it (they see o
 
 `find_space_tool_for_job` · Reads only
 
-Finds Workshop tools granted in one shared space for a job described in plain words. Returns only tools this space grants, with each tool_id, job, input_schema, where it runs, reported outcomes and a `run_space_tool` call. It runs nothing and never searches private Trillion.
+Finds Marketplace tools granted in one shared space for a job described in plain words. Returns only tools this space grants, with each tool_id, job, input_schema, where it runs, reported outcomes and a `run_space_tool` call. It runs nothing and never searches private Trillion.
 
 **Inputs**
 
@@ -648,11 +648,11 @@ Invites one person into a space and tells them: makes a one-time invite link, wr
 }
 ```
 
-## Grant a Workshop tool in a space
+## Grant a Marketplace tool in a space
 
 `grant_space_tool` · Changes things
 
-Grants one current Space member specific operations on a published Workshop tool. Name member_id to grant someone else; leaving it out grants only yourself. Name operations to limit use; leaving them out grants discover, describe, run and read. It stores a definition reference, never tool code or private connections. Only the person who started the space can grant it.
+Grants one current Space member specific operations on a tool published in the Marketplace. Name member_id to grant someone else; leaving it out grants only yourself. Name operations to limit use; leaving them out grants discover, describe, run and read. It stores a definition reference, never tool code or private connections. Only the person who started the space can grant it.
 
 **Inputs**
 
@@ -675,7 +675,7 @@ Grants one current Space member specific operations on a published Workshop tool
 
 `list_space_tools` · Reads only
 
-Lists Workshop tool references granted to you in a space. The space owner can name another member_id. An operation filters the list.
+Lists the Marketplace tools granted to you in a space. The space owner can name another member_id. An operation filters the list.
 
 **Inputs**
 

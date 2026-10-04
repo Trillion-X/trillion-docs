@@ -41,11 +41,11 @@
 
 ## Tool reference
 
-- [Tools reference](https://docs.gettrillion.ai/reference/overview): Every tool Trillion gives your AI, grouped by the job you want done. 279 tools in all.
+- [Tools reference](https://docs.gettrillion.ai/reference/overview): Every tool Trillion gives your AI, grouped by the job you want done. 283 tools in all.
 - [Setup and goals](https://docs.gettrillion.ai/reference/setup-and-goals): Start Trillion with a new person and keep what they are working toward.
 - [Decisions](https://docs.gettrillion.ai/reference/decisions): Walk a decision through its questions, record the choice, and learn from how it turned out.
 - [Messages and activity](https://docs.gettrillion.ai/reference/messages): Keep conversations word for word so every AI you use can read them, and see what your AIs did.
-- [Workshop tools](https://docs.gettrillion.ai/reference/tools): Find a tool that does the job, run it, build your own and offer it to others.
+- [Marketplace tools](https://docs.gettrillion.ai/reference/tools): Find a tool that does the job, run it, build your own and offer it to others.
 - [Workflows](https://docs.gettrillion.ai/reference/workflows): Get a job done in several checked steps, and keep your own step-by-step methods.
 - [Rules, schedules and connected accounts](https://docs.gettrillion.ai/reference/automations): Make Trillion run a tool or workflow by itself when something happens or at a set time.
 - [Files and media](https://docs.gettrillion.ai/reference/files): Save, find, read and show your files, and find moments in your recordings.

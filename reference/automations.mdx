@@ -260,7 +260,7 @@ It takes no inputs.
 
 `timed_work` · Reads only
 
-What this person's Trillion does by itself at a time (schedules, scheduled tool runs, reads of connected accounts, deliveries to agents, retries) and could not do: each thing set aside after a failure, with its error in plain words, how many times it failed, and when it is tried again; one that failed every automatic try is held and waits for `try_timed_work_again` or the next Trillion update. Also the last wake: how many things were due, ran, failed and were left for the next wake, and how long the oldest one had waited. It changes nothing.
+What this person's Trillion does by itself at a time (schedules, scheduled tool runs, reads of connected accounts, deliveries to agents, retries) and could not do: each thing set aside after a failure, with its error in plain words, how many times it failed, and when it is tried again; one that failed every automatic try is held and waits for `try_timed_work_again` or the next Trillion update. Also the last wake: how many things were due, ran, failed and were left for the next wake, and how long the oldest one had waited. What is running right now is listed under running (key, source, started_at), never as a failure; a run an update of Trillion cut off is run again at once and not counted. It changes nothing.
 
 It takes no inputs.
 

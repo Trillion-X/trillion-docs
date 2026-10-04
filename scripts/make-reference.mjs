@@ -141,7 +141,7 @@ writeFileSync(join(docsRoot, 'reference', 'overview.mdx'), [
   '- **Signed in as you.** Your AI signs in with your passkey once. It only ever reaches your own Trillion and the spaces you are in.',
   '- **Reads only, or changes things.** Each tool is marked so your AI app knows which ones only read and which change something. Apps that ask before a tool runs use this to decide what to ask about.',
   '- **Safe to send twice.** Tools that start something take a `request_key` or `source_id`: sending the same one again returns what was already started instead of doing it twice.',
-  '- **Some tools come with a paid plan.** The free plan includes 5 decisions a month and keeps none of them. A paid plan keeps every decision, note and result, and adds the Workshop, files, shared spaces, the network, handing work between your AIs, and fast picks with `score_candidates`. Communities and connecting any AI app come with every account.',
+  '- **Some tools come with a paid plan.** The free plan includes 5 decisions a month and keeps none of them. A paid plan keeps every decision, note and result, and adds running tools from the Marketplace, files, shared spaces, the network, handing work between your AIs, and fast picks with `score_candidates`. Communities and connecting any AI app come with every account.',
   '',
   '## Every tool',
   '',

@@ -23,7 +23,7 @@ It takes no inputs.
 
 `save_content_formats` · Changes things
 
-Replaces this person's own content formats (read `content_formats` first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each &#123; label, hint &#125;), optionally id, description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what `content_formats` returns.
+Replaces this person's own content formats (read `content_formats` first, then send the whole list with your change). Each format: label, and spec (how it goes, in words) or slots (its parts in order, each &#123; label, hint &#125;), optionally id, category_id or category, icon or logo (how it looks on the Formats screen), description, content_type (such as text/markdown), input, process (its steps in order) and output (what comes out and where it goes), body_template (the parts in [brackets]) and tags. Use it to keep a format they studied from a post they shared or one they describe. A format with a starter's id replaces that starter for them. Returns what `content_formats` returns.
 
 **Inputs**
 
@@ -32,6 +32,10 @@ Replaces this person's own content formats (read `content_formats` first, then s
 | `formats` | object[] | Yes |  |
 | `formats[].id` | string |  |  |
 | `formats[].label` | string | Yes |  |
+| `formats[].category_id` | string |  | One of the starters' categories (writing, social, video, persuasion, storytelling, education): its tab and icon on the Formats screen |
+| `formats[].category` | string |  | A category of their own, in a word or two, when none of the starters' fits |
+| `formats[].icon` | string |  | A Lucide icon name for the format |
+| `formats[].logo` | string |  | Where it goes, as a logo slug such as x, instagram, youtube or substack |
 | `formats[].description` | string |  |  |
 | `formats[].content_type` | string |  |  |
 | `formats[].input` | string |  |  |

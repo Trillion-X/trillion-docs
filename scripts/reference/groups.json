@@ -29,6 +29,7 @@
         "add_note",
         "decide",
         "report_result",
+        "agree_or_disagree",
         "list_decisions",
         "export_decision",
         "related_decisions",
@@ -61,10 +62,10 @@
     },
     {
       "id": "tools",
-      "title": "Workshop tools",
+      "title": "Marketplace tools",
       "icon": "wrench",
       "description": "Find a tool that does the job, run it, build your own and offer it to others.",
-      "intro": "The Workshop holds tools that do one job each: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job. When no tool fits, your AI can build one and keep it. The Workshop comes with a paid plan.",
+      "intro": "The Marketplace holds everything your AI can use, yours and everyone's. A tool does one job: transcribe a recording, cut a video, call a web service. Your AI finds one by describing the job in plain words, runs it, and asks you whether it did the job; every run is listed in Runs. When no tool fits, your AI can build one, keep it under Yours, and publish it for everyone. Running tools from the Marketplace comes with a paid plan.",
       "tools": [
         "find_tool_for_job",
         "run_tool",
@@ -84,7 +85,7 @@
       "title": "Workflows",
       "icon": "list-check",
       "description": "Get a job done in several checked steps, and keep your own step-by-step methods.",
-      "intro": "A workflow is a job done in several steps, where each step's result is checked before the next one starts. Your AI does most steps itself; a step that names a Workshop tool is run by Trillion. You can keep your own workflows, for example from a checklist you already follow.",
+      "intro": "A workflow is a job done in several steps, where each step's result is checked before the next one starts. Your AI does most steps itself; a step that names a Marketplace tool is run by Trillion. You can keep your own workflows, for example from a checklist you already follow.",
       "tools": [
         "find_workflow",
         "describe_workflow",
@@ -161,7 +162,8 @@
         "recent_files",
         "record_file_use",
         "save_browser_saved_items",
-        "save_x_bookmarks"
+        "save_x_bookmarks",
+        "save_x_likes"
       ]
     },
     {
@@ -259,6 +261,8 @@
         "deliver_share",
         "share_record_by_link",
         "share_collection_by_link",
+        "send_share_collection_link",
+        "share_look",
         "revoke_share_collection_link",
         "sharing_links_of",
         "revoke_record_share_link",
