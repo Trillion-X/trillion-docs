@@ -29,6 +29,7 @@
 
 ## Guides: Apps
 
+- [Every way to reach Trillion](https://docs.gettrillion.ai/apps/overview): The Trillion apps for your phone, browser and computer, and every AI app you can connect, with where to get each one.
 - [Chrome extension](https://docs.gettrillion.ai/apps/chrome-extension): Send to Trillion sends any page, post, picture or selection from your browser to your AIs, with what you want done with it.
 - [iPhone app](https://docs.gettrillion.ai/apps/iphone): The Trillion app for iPhone: your needle mover on Home, voice memos with live words, and Add to Trillion in every Share sheet.
 

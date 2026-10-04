@@ -1,0 +1,32 @@
+{
+  "_what": "Settings for scripts/make-ways-in.mjs: which Trillion records it reads, where it writes, which docs page tells more about a row (by the row's id in those records), the app screen a row with no docs page links to, and the page's words. A row with no entry under pages links to connect_screen.",
+  "sources": {
+    "devices": "src/devices.json",
+    "ai_clients": "src/ai-clients.json"
+  },
+  "output": "apps/overview.mdx",
+  "connect_screen": "https://app.gettrillion.ai/ai",
+  "pages": {
+    "iphone": "/apps/iphone",
+    "extension": "/apps/chrome-extension",
+    "claude": "/connect/claude-desktop",
+    "chatgpt": "/connect/chatgpt",
+    "chat": "/connect/muse",
+    "claude-code": "/connect/claude-code",
+    "codex": "/connect/codex",
+    "gemini-cli": "/connect/gemini-cli",
+    "cursor": "/connect/cursor",
+    "any": "/connect/other-apps"
+  },
+  "words": {
+    "title": "Every way to reach Trillion",
+    "description": "The Trillion apps for your phone, browser and computer, and every AI app you can connect, with where to get each one.",
+    "intro": "Trillion is one account you reach from wherever you are: the apps below for your devices, the web at app.gettrillion.ai, and any AI app you already use. Everything you send from one place is there in all the others.",
+    "devices_heading": "Apps for your devices",
+    "ai_heading": "From the AI you already use",
+    "ai_intro": "Connect your AI once and it can use Trillion in every chat. Each card says how.",
+    "for": "for",
+    "or": "or",
+    "more": "How it works"
+  }
+}

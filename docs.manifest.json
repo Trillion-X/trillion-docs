@@ -138,6 +138,7 @@
         {
           "group": "Apps",
           "pages": [
+            "apps/overview",
             "apps/chrome-extension",
             "apps/iphone"
           ]
