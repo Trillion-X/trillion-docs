@@ -28,6 +28,14 @@
     "navbar": {
       "links": [
         {
+          "label": "Use cases",
+          "href": "https://app.gettrillion.ai/share/trillion-use-cases"
+        },
+        {
+          "label": "Compare",
+          "href": "https://app.gettrillion.ai/share/trillion-compared"
+        },
+        {
           "label": "gettrillion.ai",
           "href": "https://gettrillion.ai"
         }

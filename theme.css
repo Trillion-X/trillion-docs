@@ -51,6 +51,17 @@
 /* Light: the "trillion" look. */
 :root {
   color-scheme: light;
+  --trillion-space-unit: 4px;
+  --trillion-space-1: 4px;
+  --trillion-space-2: 8px;
+  --trillion-space-3: 12px;
+  --trillion-space-4: 16px;
+  --trillion-space-5: 20px;
+  --trillion-space-6: 24px;
+  --trillion-space-8: 32px;
+  --trillion-space-10: 40px;
+  --trillion-space-12: 48px;
+  --trillion-space-16: 64px;
   --trillion-black-pure: #f4f0e8;
   --trillion-black-rich: #fffdf8;
   --trillion-surface-base: #f4f0e8;
@@ -151,6 +162,17 @@
 /* Dark: the "trillion-black" look. */
 html.dark {
   color-scheme: dark;
+  --trillion-space-unit: 4px;
+  --trillion-space-1: 4px;
+  --trillion-space-2: 8px;
+  --trillion-space-3: 12px;
+  --trillion-space-4: 16px;
+  --trillion-space-5: 20px;
+  --trillion-space-6: 24px;
+  --trillion-space-8: 32px;
+  --trillion-space-10: 40px;
+  --trillion-space-12: 48px;
+  --trillion-space-16: 64px;
   --trillion-black-pure: #000000;
   --trillion-black-rich: #0d0d0d;
   --trillion-surface-base: #000000;
