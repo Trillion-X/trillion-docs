@@ -1,0 +1,34 @@
+# Checks the docs on every push and pull request, and says whether docs.gettrillion.ai shows them: after a push to
+# main it waits for Mintlify's build, and every six hours it checks again, so old docs never stay unnoticed.
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run docs:check
+  live:
+    needs: [check]
+    if: always() && github.event_name != 'pull_request' && needs.check.result != 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/check-live-docs.mjs --wait-seconds ${{ github.event_name == 'push' && 900 || 0 }}

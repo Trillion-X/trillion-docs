@@ -13,6 +13,8 @@ The public help site for Trillion at https://docs.gettrillion.ai, built with Min
 | `scripts/make-ways-in.mjs` | Writes `apps/overview.mdx` (every way to reach Trillion) from the Trillion app's own `src/devices.json` (apps per device, install link per system or honest not-yet words) and `src/ai-clients.json` (every AI app it connects to); `--check` fails when the page and the records differ. Names no device or AI app. |
 | `scripts/ways-in.json` | Settings for `make-ways-in.mjs`: which records it reads, which docs page tells more about a row (by row id), the app screen a row with no docs page links to, and the page's words. |
 | `scripts/validate-public-boundary.mjs` | Fails when a file holds a local computer path, a retired product name, leftover starter-kit text or an unfinished-work marker. |
+| `scripts/check-live-docs.mjs` | Says whether docs.gettrillion.ai shows this repository: compares the live `/llms.txt` with `llms.txt` here; `--wait-seconds N` waits for a new build; fails naming the Mintlify Git Settings fix. Reads only the public site. |
+| `.github/workflows/docs.yml` | On every push and pull request runs `npm run docs:check`; after a push to main waits up to 15 minutes for the live site to show it, and every six hours checks the live site again, so old docs fail loudly. |
 | `docs.json` | Generated Mintlify settings and navigation. Never edit by hand. |
 | `theme.css` | Generated: the font faces plus every look variable as `--trillion-*`, light under `:root`, dark under `html.dark`. Never edit by hand. |
 | `theme.js` | Generated: keeps the browser's bar colour (`theme-color`) on the look's page colour as light and dark switch. Never edit by hand. |
