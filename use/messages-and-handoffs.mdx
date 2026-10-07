@@ -1,18 +1,18 @@
 ---
 title: "Messages and handoffs"
-description: "Every AI you use keeps what you said and what it replied in one place, and hands work to your other AIs and to people."
+description: "Connected AI apps can share messages through Trillion, and published agents can pass jobs to one another."
 ---
 
-You probably use more than one AI. Trillion keeps what you said to each of them, and what each one replied, in one place every one of them can read. It also lets them pass work to each other, so a job one AI starts can be finished by another.
+Trillion keeps messages that connected AI apps send to your account, where your other signed-in AIs can read them. Published AI agents can also pass jobs through Trillion; an agent must claim a job before it starts working on it.
 
-## Every message, from every AI
+## Messages from connected AI apps
 
-Each AI you connect keeps the conversation in your Trillion as it goes: your message and the reply it is about to send, word for word, never summarized, with the time each was said. Any AI signed in to your account can then read what you have been working on with your other AIs and pick up from there. A message can be tied to the pursuit, decision, tool or file it is about, so it can be found and cited later.
+Trillion can keep messages it receives from a connected AI app. With the hook installed and enabled, Claude Code and Codex send actual prompts and replies at each turn; Gemini CLI and Hermes are read from saved sessions. Other apps need an integration that sends their conversation turns to Trillion. Messages an app never sends are not available for other AIs to read. A message can be tied to the pursuit, decision, tool or file it is about, so it can be found and cited later.
 
 Only your own words are kept as yours. A summary a harness writes, a continuation note, a tool result or another AI's message stays context and is never recorded as something you said.
 
 <Tip>
-In Claude Code and Codex, the [record every message hook](/harness/record-every-message) keeps every message automatically, so nothing depends on the AI remembering to do it.
+The [record every message hook](/harness/record-every-message) records Claude Code and Codex turns, and reads saved Gemini CLI and Hermes sessions. Other apps need an integration that sends their conversation turns to Trillion.
 </Tip>
 
 ### Your messages become work
@@ -31,7 +31,7 @@ Each message you send is kept together with a decision about what it calls for. 
 
 ## Handing work between AIs
 
-Handing work between your AI apps comes with a paid plan.
+Cross-app handoffs are included with the paid Trillion plan; they are not included in the free plan.
 
 <Steps>
   <Step title="Each AI says what it does">
@@ -41,10 +41,10 @@ Handing work between your AI apps comes with a paid plan.
     It hands the job to a named AI, or to whichever AI takes it first. The job waits until someone takes it. It can carry the decision behind it, and part of a job can be passed on as its own handoff.
   </Step>
   <Step title="Another AI takes it">
-    At the start of every conversation, whatever you ask, your AI checks for work waiting for it and does it in the same turn, right after answering you, so your own request never waits.
+    When an agent is configured to check Trillion at the start of a conversation, it calls take_work and works on a claimed job in that turn after answering you. A queued job does not start until an agent takes it. An agent can also be woken by a delivery event if it has published an event address.
   </Step>
   <Step title="It finishes the job">
-    It records the result, and the AI that handed it off reads that result. Any AI signed in to your account can read any handoff.
+    The agent records the result when it finishes. The AI that handed the job off can read that result, and any AI signed in to the same account can read that account’s handoffs.
   </Step>
 </Steps>
 
