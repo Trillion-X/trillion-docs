@@ -1,5 +1,7 @@
-# Checks the docs on every push and pull request, and says whether docs.gettrillion.ai shows them: after a push to
-# main it waits for Mintlify's build, and every six hours it checks again, so old docs never stay unnoticed.
+# Checks this public docs repository on every push and pull request, and says whether docs.gettrillion.ai shows it.
+# Source-derived pages are checked from the private Trillion repository, which owns and can read that source.
+# After a push to main this waits for Mintlify's build, and every six hours it checks again, so old docs never stay
+# unnoticed.
 name: Docs
 
 on:
