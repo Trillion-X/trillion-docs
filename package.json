@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "docs:generate": "node scripts/generate-docs.mjs",
-    "docs:check": "node scripts/make-ways-in.mjs --check && node scripts/generate-docs.mjs --check && node scripts/validate-public-boundary.mjs && node scripts/validate-docs.mjs && mint validate",
+    "docs:check": "node scripts/validate-public-boundary.mjs && node scripts/validate-docs.mjs && mint validate",
+    "docs:source-check": "node scripts/make-ways-in.mjs --check && node scripts/generate-docs.mjs --check && npm run docs:check",
     "dev": "npx mint dev",
     "docs:reference": "node scripts/make-reference.mjs .",
     "docs:ways-in": "node scripts/make-ways-in.mjs"
