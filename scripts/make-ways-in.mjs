@@ -1,10 +1,11 @@
 // scripts/make-ways-in.mjs
 //
-// Purpose: write apps/overview.mdx, "Every way to reach Trillion", from the Trillion app's own records, so the docs
-// list exactly the apps and AI connections the app itself offers:
-//   - src/devices.json     : the Trillion apps for a person's devices, each with its install link per system or its
-//                            honest not-yet words (the same rows start_setup and the app's devices section read)
-//   - src/ai-clients.json  : every AI app Trillion connects to (the same rows the app's connect screen reads)
+// Purpose: write apps/overview.mdx, "Every way to reach Trillion", from the Trillion product DATA the app reads (its
+// product-data package, the engine's product/ folder, named in ways-in.json), so the docs list exactly the apps and AI
+// connections the app itself offers:
+//   - devices.json     : the Trillion apps for a person's devices, each with its install link per system or its
+//                        honest not-yet words (the same rows start_setup and the app's devices section read)
+//   - ai-clients.json  : every AI app Trillion connects to (the same rows the app's connect screen reads)
 // scripts/ways-in.json says which docs page tells more about a row (by row id) and the page's own words.
 //
 // Invariants:

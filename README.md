@@ -10,7 +10,7 @@ The public help site for Trillion at https://docs.gettrillion.ai, built with Min
 | `scripts/generate-docs.mjs` | Writes `docs.json`, `theme.css`, `theme.js` and `llms.txt` from the manifest; `--check` fails when any of them is out of date. Colours come from the Trillion app's own looks through the app's own resolver. |
 | `scripts/validate-docs.mjs` | Fails when a page is missing from the navigation, a navigation route has no page, or a link inside a page lands nowhere. What counts as a page skips everything `.mintignore` keeps off the site. |
 | `scripts/make-reference.mjs` | Writes `reference/overview.mdx` and one `reference/<group>.mdx` per group from `scripts/reference/tools.json` (the live `tools/list` as a new account sees it) and `scripts/reference/groups.json` (which page each tool is on); refuses when a live tool is unplaced, placed twice or no longer exists. |
-| `scripts/make-ways-in.mjs` | Writes `apps/overview.mdx` (every way to reach Trillion) from the Trillion app's own `src/devices.json` (apps per device, install link per system or honest not-yet words) and `src/ai-clients.json` (every AI app it connects to); `--check` fails when the page and the records differ. Names no device or AI app. |
+| `scripts/make-ways-in.mjs` | Writes `apps/overview.mdx` (every way to reach Trillion) from the Trillion product DATA the app reads as its `product-data` package (`node_modules/product-data/`, the engine's `product/` folder): `devices.json` (apps per device, install link per system or honest not-yet words) and `ai-clients.json` (every AI app it connects to); `--check` fails when the page and the records differ. Names no device or AI app. |
 | `scripts/ways-in.json` | Settings for `make-ways-in.mjs`: which records it reads, which docs page tells more about a row (by row id), the app screen a row with no docs page links to, and the page's words. |
 | `scripts/validate-public-boundary.mjs` | Fails when a file holds a local computer path, a retired product name, leftover starter-kit text or an unfinished-work marker. |
 | `scripts/check-live-docs.mjs` | Says whether docs.gettrillion.ai shows this repository: compares the live `/llms.txt` with `llms.txt` here; `--wait-seconds N` waits for a new build; fails naming the Mintlify Git Settings fix. Reads only the public site. |
@@ -42,7 +42,7 @@ The public help site for Trillion at https://docs.gettrillion.ai, built with Min
 | `npm run docs:check` | Every-way-in page matches the app's records, generated files current, public boundary clean, pages and navigation agree, links land, then `mint validate`. |
 | `npm run dev` | Local preview with `npx mint dev`. |
 
-The generator reads the Trillion checkout beside this repository (`../trillion`); set `TRILLION_REPO` to point elsewhere.
+The generator reads the Trillion checkout beside this repository (`../trillion`, after its `npm install` links product-data); set `TRILLION_REPO` to point elsewhere.
 
 ## How colours are chosen
 

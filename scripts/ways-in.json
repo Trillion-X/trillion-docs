@@ -1,8 +1,8 @@
 {
   "_what": "Settings for scripts/make-ways-in.mjs: which Trillion records it reads, where it writes, which docs page tells more about a row (by the row's id in those records), the app screen a row with no docs page links to, and the page's words. A row with no entry under pages links to connect_screen.",
   "sources": {
-    "devices": "src/devices.json",
-    "ai_clients": "src/ai-clients.json"
+    "devices": "node_modules/product-data/devices.json",
+    "ai_clients": "node_modules/product-data/ai-clients.json"
   },
   "output": "apps/overview.mdx",
   "connect_screen": "https://app.gettrillion.ai/ai",
